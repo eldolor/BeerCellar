@@ -2,6 +2,7 @@ package com.cm.beer.activity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -17,6 +18,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -29,6 +31,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,10 +63,11 @@ public class CommunityBeerView extends Activity {
 	String mUrl;
 	CommunityBeer mCommunityBeer;
 
-	Button mYes;
-	Button mNo;
-	TextView mRatingThankYouMessage;
-	TextView mReviewHelpfulMessage;
+	// Button mYes;
+	// Button mNo;
+	WebView mFacebookLikeWebView;
+	// TextView mRatingThankYouMessage;
+	// TextView mReviewHelpfulMessage;
 	TextView mReviewedByLabel;
 	TextView mReviewedBy;
 	TextView mReviewedByReviewCount;
@@ -212,7 +216,7 @@ public class CommunityBeerView extends Activity {
 						mCommunityBeer.userId, mCommunityBeer.beerId, mUser
 								.getUserId(), "Y");
 				new AsyncPostReviewHelpfulRating().execute(_url);
-				mRatingThankYouMessage.setVisibility(View.VISIBLE);
+				// mRatingThankYouMessage.setVisibility(View.VISIBLE);
 
 				Log.i(TAG, "onActivityResult:");
 			}
@@ -222,7 +226,7 @@ public class CommunityBeerView extends Activity {
 						mCommunityBeer.userId, mCommunityBeer.beerId, mUser
 								.getUserId(), "N");
 				new AsyncPostReviewHelpfulRating().execute(_url);
-				mRatingThankYouMessage.setVisibility(View.VISIBLE);
+				// mRatingThankYouMessage.setVisibility(View.VISIBLE);
 
 				Log.i(TAG, "onActivityResult:");
 			}
@@ -316,17 +320,22 @@ public class CommunityBeerView extends Activity {
 		mFavorites.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
 				PorterDuff.Mode.MULTIPLY);
 		/****************************************/
-		mYes = (Button) findViewById(R.id.review_helpful_yes);
-		mYes.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
-				PorterDuff.Mode.MULTIPLY);
+		// mYes = (Button) findViewById(R.id.review_helpful_yes);
+		// mYes.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
+		// PorterDuff.Mode.MULTIPLY);
 		/****************************************/
-		mNo = (Button) findViewById(R.id.review_helpful_no);
-		mNo.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
-				PorterDuff.Mode.MULTIPLY);
+		// mNo = (Button) findViewById(R.id.review_helpful_no);
+		// mNo.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
+		// PorterDuff.Mode.MULTIPLY);
 		/****************************************/
-		mRatingThankYouMessage = (TextView) findViewById(R.id.rating_thank_you_message);
+		mFacebookLikeWebView = (WebView) findViewById(R.id.facebook_like_webview);
+		mFacebookLikeWebView.getSettings().setJavaScriptEnabled(true);
 		/****************************************/
-		mReviewHelpfulMessage = (TextView) findViewById(R.id.review_helpful_message);
+		// mRatingThankYouMessage = (TextView)
+		// findViewById(R.id.rating_thank_you_message);
+		/****************************************/
+		// mReviewHelpfulMessage = (TextView)
+		// findViewById(R.id.review_helpful_message);
 		/****************************************/
 		mThumbnailView = (ImageView) findViewById(R.id.thumbnail);
 		/****************************************/
@@ -394,14 +403,31 @@ public class CommunityBeerView extends Activity {
 			Log.i(TAG, "populateFields");
 		}
 		// GET USER ID
-		setupYes();
-		setupNo();
+		// setupYes();
+		// setupNo();
+
+		try {
+			String facebookToken = this.getSharedPreferences(
+					((AppConfig.SHARED_PREFERENCES_DYNAMIC_CONTEXT.replace(" ",
+							"_")) + "_FACEBOOK"), Context.MODE_PRIVATE)
+					.getString(AppConfig.FACEBOOK_ACCESS_TOKEN, null);
+			String url = AppConfig.FACEBOOK_LIKE_URL_BASE
+					+ mCommunityBeer.beerId + AppConfig.FACEBOOK_LIKE_URL_ETC
+					+ AppConfig.FACEBOOK_LIKE_URL_ACCESS_TOKEN + facebookToken;
+			// String encodedUrl = URLEncoder.encode(url, "UTF-8");
+			Log.i(TAG, "FacebookLikeButton URL: " + url);
+			mFacebookLikeWebView.loadUrl(url);
+		} catch (Exception e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
+		}
 
 		// setup view user profile button
 		setupViewUserProfile();
 
 		// setup review helpful count message
-		setupReviewHelpfulCount();
+		// setupReviewHelpfulCount();
 
 		mThumbnailView.setImageDrawable(mDrawableManager.fetchDrawable(Util
 				.getImageUrl(mCommunityBeer.beerId)));
@@ -417,7 +443,7 @@ public class CommunityBeerView extends Activity {
 				&& (!mCommunityBeer.userId.equals(""))) {
 			mReviewedBy.setText(mCommunityBeer.userName);
 			// setup review count
-			setupReviewCount();
+			// setupReviewCount();
 			// setup follow reviewer button
 			setupFollowReviewer();
 
@@ -741,71 +767,71 @@ public class CommunityBeerView extends Activity {
 
 	}
 
-	private void setupYes() {
-		mYes.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// If user id does not exist
-				if (mUser.isLoggedIn()) {
-					String _url = Util.getSetReviewHelpfulUrl(
-							mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-									.getUserId(), "Y");
-					new AsyncPostReviewHelpfulRating().execute(_url);
-					mTracker.trackEvent("CommunityBeerView", "ReviewHelpful",
-							"Clicked", 0);
-					mTracker.dispatch();
-					/** Remove content from cache **/
-					mContentManager.removeContent(Util
-							.getReviewHelpfulCountUrl(mCommunityBeer.beerId));
-					/** Fetch updated Review Helpful Count **/
-					mContentManager.fetchContentOnThread(Util
-							.getReviewHelpfulCountUrl(mCommunityBeer.beerId),
-							mReviewHelpfulCountHandler);
-					mRatingThankYouMessage.setVisibility(View.VISIBLE);
-					mReviewHelpfulMessage.setVisibility(View.VISIBLE);
-				} else {
-					Intent intent = new Intent(mMainActivity.getApplication(),
-							LoginIntercept.class);
-					intent.putExtra("FACEBOOK_PERMISSIONS",
-							AppConfig.FACEBOOK_PERMISSIONS);
-					startActivityForResult(intent,
-							LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_Y);
-
-				}
-			}
-		});
-
-	}
-
-	private void setupNo() {
-		mNo.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// If user id does not exist
-				if (mUser.isLoggedIn()) {
-					String _url = Util.getSetReviewHelpfulUrl(
-							mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-									.getUserId(), "N");
-					new AsyncPostReviewHelpfulRating().execute(_url);
-					mTracker.trackEvent("CommunityBeerView",
-							"ReviewNotHelpful", "Clicked", 0);
-					mTracker.dispatch();
-					mRatingThankYouMessage.setVisibility(View.VISIBLE);
-					mReviewHelpfulMessage.setVisibility(View.VISIBLE);
-				} else {
-					Intent intent = new Intent(mMainActivity.getApplication(),
-							LoginIntercept.class);
-					intent.putExtra("FACEBOOK_PERMISSIONS",
-							AppConfig.FACEBOOK_PERMISSIONS);
-					startActivityForResult(intent,
-							LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N);
-
-				}
-			}
-		});
-	}
+	// private void setupYes() {
+	// mYes.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View arg0) {
+	// // If user id does not exist
+	// if (mUser.isLoggedIn()) {
+	// String _url = Util.getSetReviewHelpfulUrl(
+	// mCommunityBeer.userId, mCommunityBeer.beerId, mUser
+	// .getUserId(), "Y");
+	// new AsyncPostReviewHelpfulRating().execute(_url);
+	// mTracker.trackEvent("CommunityBeerView", "ReviewHelpful",
+	// "Clicked", 0);
+	// mTracker.dispatch();
+	// /** Remove content from cache **/
+	// mContentManager.removeContent(Util
+	// .getReviewHelpfulCountUrl(mCommunityBeer.beerId));
+	// /** Fetch updated Review Helpful Count **/
+	// mContentManager.fetchContentOnThread(Util
+	// .getReviewHelpfulCountUrl(mCommunityBeer.beerId),
+	// mReviewHelpfulCountHandler);
+	// mRatingThankYouMessage.setVisibility(View.VISIBLE);
+	// mReviewHelpfulMessage.setVisibility(View.VISIBLE);
+	// } else {
+	// Intent intent = new Intent(mMainActivity.getApplication(),
+	// LoginIntercept.class);
+	// intent.putExtra("FACEBOOK_PERMISSIONS",
+	// AppConfig.FACEBOOK_PERMISSIONS);
+	// startActivityForResult(intent,
+	// LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_Y);
+	//
+	// }
+	// }
+	// });
+	//
+	// }
+	//
+	// private void setupNo() {
+	// mNo.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View arg0) {
+	// // If user id does not exist
+	// if (mUser.isLoggedIn()) {
+	// String _url = Util.getSetReviewHelpfulUrl(
+	// mCommunityBeer.userId, mCommunityBeer.beerId, mUser
+	// .getUserId(), "N");
+	// new AsyncPostReviewHelpfulRating().execute(_url);
+	// mTracker.trackEvent("CommunityBeerView",
+	// "ReviewNotHelpful", "Clicked", 0);
+	// mTracker.dispatch();
+	// mRatingThankYouMessage.setVisibility(View.VISIBLE);
+	// mReviewHelpfulMessage.setVisibility(View.VISIBLE);
+	// } else {
+	// Intent intent = new Intent(mMainActivity.getApplication(),
+	// LoginIntercept.class);
+	// intent.putExtra("FACEBOOK_PERMISSIONS",
+	// AppConfig.FACEBOOK_PERMISSIONS);
+	// startActivityForResult(intent,
+	// LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N);
+	//
+	// }
+	// }
+	// });
+	// }
 
 	/**
 	 * 
@@ -995,14 +1021,14 @@ public class CommunityBeerView extends Activity {
 						String _reviewHelpfulMessage = yes + " out of "
 								+ (yes + no) + " found this review helpful:";
 						Log.d(TAG, _reviewHelpfulMessage);
-						mReviewHelpfulMessage.setText(_reviewHelpfulMessage);
+						// mReviewHelpfulMessage.setText(_reviewHelpfulMessage);
 					} catch (JSONException e) {
 						Log.e(TAG, "error: "
 								+ ((e.getMessage() != null) ? e.getMessage()
 										.replace(" ", "_") : ""), e);
 					}
 				} else {
-					mReviewHelpfulMessage.setVisibility(View.GONE);
+					// mReviewHelpfulMessage.setVisibility(View.GONE);
 				}
 			}
 		};

@@ -681,7 +681,7 @@ public class BeerEdit extends Activity implements
 						intent.putExtra("ROWID", String.valueOf(mRowId
 								.longValue()));
 						intent.putExtra("STORAGE", "EXTERNAL");
-						intent.putExtra("REQUESTCODE", AppConfig.UPDATE_USER_PHOTO_REQUEST);
+						intent.putExtra("REQUESTCODE", AppConfig.SELECT_IMAGE_REQUEST_CODE);
 						startActivityForResult(intent,
 								AppConfig.SELECT_IMAGE_REQUEST_CODE);
 

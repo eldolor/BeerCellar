@@ -5,40 +5,16 @@
 		android:layout_width="fill_parent" android:layout_height="fill_parent">
 		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="fill_parent" android:layout_height="fill_parent">
-			<TextView android:id="@+id/review_helpful_label"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:layout_marginTop="5dp" android:layout_marginLeft="5dp"
-				android:textSize="12sp" android:gravity="center_vertical"
-				android:text="@string/review_helpful_label" />
 			<Button android:id="@+id/favorites" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:layout_marginTop="5dp"
-				android:layout_marginRight="5dp" android:textSize="12sp"
-				android:gravity="center_vertical" android:layout_alignParentRight="true" />
-			<Button android:id="@+id/review_helpful_yes"
+				android:textSize="12sp" android:gravity="center_vertical"
+				android:layout_alignParentLeft="true" />
+			<WebView android:id="@+id/facebook_like_webview"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:layout_below="@+id/review_helpful_label"
 				android:layout_marginLeft="5dp" android:layout_marginTop="5dp"
-				android:text="@string/yes_label" android:gravity="center_vertical" />
-			<Button android:id="@+id/review_helpful_no"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:layout_below="@+id/review_helpful_label"
-				android:layout_toRightOf="@+id/review_helpful_yes"
-				android:layout_marginLeft="5dp" android:layout_marginTop="5dp"
-				android:text="@string/no_label" android:gravity="center_vertical" />
-			<TextView android:id="@+id/rating_thank_you_message"
-				android:layout_below="@+id/review_helpful_yes" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:layout_marginTop="5dp"
-				android:textSize="12sp" android:layout_marginLeft="5dp"
-				android:gravity="center_vertical" android:text="@string/rating_thank_you_message"
-				android:visibility="gone" />
-			<TextView android:id="@+id/review_helpful_message"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:layout_below="@+id/rating_thank_you_message"
-				android:layout_marginTop="5dp" android:layout_marginLeft="5dp"
-				android:gravity="center_vertical" android:textSize="16sp"
-				android:textColor="@drawable/beer_yellow" />
+				android:layout_toRightOf="@+id/favorites" />
 			<ImageView android:id="@+id/thumbnail"
-				android:layout_below="@+id/review_helpful_message"
+				android:layout_below="@+id/favorites"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:layout_marginTop="10dp" android:layout_marginLeft="5dp" />
 			<RatingBar android:id="@+id/rating"

@@ -498,7 +498,7 @@
 
 	<string name="upload_or_capture_photo_dialog_title">Please select:</string>
 	<string name="upload_or_capture_photo_capture_label">Take a Picture</string>
-	<string name="upload_or_capture_photo_upload_label">Upload a Picture</string>
+	<string name="upload_or_capture_photo_upload_label">Select a Picture</string>
 	<!--  End Beer Edit -->
 
 	<string name="back_to_beer_list_label">Back To Beer List</string>

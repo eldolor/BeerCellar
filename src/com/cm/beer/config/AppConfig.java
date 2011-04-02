@@ -32,6 +32,12 @@ public class AppConfig {
 			+ "_1";
 	/** END: SHARED PREFERENCES **/
 
+	/** BEGIN: FACEBOOK LIKE BUTTON **/
+	public static final String FACEBOOK_LIKE_URL_BASE = "http://www.facebook.com/plugins/like.php?href=http://beercellarcommunity.appspot.com/?beerid=";
+	public static final String FACEBOOK_LIKE_URL_ETC = "&layout=standard&show_faces=false&width=200&action=like&font&colorscheme=light&height=35";
+	public static final String FACEBOOK_LIKE_URL_ACCESS_TOKEN = "&access_token=";
+	/** END: FACEBOOK LIKE BUTTON **/
+
 	/** BEGIN: Notification Service **/
 	public static final long NOTIFICATION_CHECK_INTERVAL = ((60 * 60) * 1000L);
 	/** 1 hr **/
