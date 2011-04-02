@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+	<!--  Begin Application Specific Settings -->
+	<string name="app_name">Beer Cellar</string>
+	<string name="title_beer_list">Beer Cellar: Beer List</string>
+	<string name="title_beer_label">Beer Cellar: Beer Label</string>
+	<string name="title_share_on_facebook">Beer Cellar: Share on Facebook</string>
+	<string name="title_new_beer">Beer Cellar: New Beer</string>
+	<string name="title_backup_beer_list">Beer Cellar: Backup Beer List</string>
+	<string name="title_search_beer_list">Beer Cellar: Search Beer List</string>
+	<string name="title_send_error_report">Beer Cellar: Send Error Report</string>
+	<string name="title_more_about_this_beer">Beer Cellar: More About This Beer</string>
+	<string name="title_around_me">Beer Cellar: Around Me</string>
+	<string name="title_share_with_community">Beer Cellar: Share with Community</string>
+	<string name="title_community">Beer Cellar: Community</string>
+	<string name="title_view_map">Beer Cellar: View Map</string>
+	<string name="title_view_beer">Beer Cellar: View Beer</string>
+	<string name="title_search_results">Beer Cellar: Search Results</string>
+	<string name="title_beer_of_the_day">Beer Cellar: Beer Of The Day</string>
+	<string name="title_login">Log In to Beer Cellar</string>
+	<string name="title_signup">Sign Up for Beer Cellar</string>
+
+	<!--  End Application Specific Settings -->
+	
+	<!-- Begin Storage -->
+	<string name="internal_storage_label">Internal Storage</string>
+	<string name="external_storage_label">SD Card</string>
+	<string name="external_storage_no_images">There are no images on the SD Card</string>
+	<!-- End Storage -->
+	
+	<!-- Begin User -->
+	<string name="user_name">User Name:</string>
+	<string name="user_id">Email:</string>
+	<string name="password">Password:</string>
+	<string name="about_yourself">About Yourself:</string>
+	<string name="country">Country:</string>
+	<string name="zipcode">Zip or Postal Code:</string>
+	<string name="login_user_id_hint"></string>
+	<string name="login">Log In</string>
+	<string name="recover_password">Forgot Password</string>
+	<string name="signup">Sign Up</string>
+	<string name="login_successful">Logged In</string>
+	<string name="login_failed">Either your username or your password were
+		incorrect</string>
+	<string name="login_failed_user_does_not_exist">You dont have an account with us yet. Click on Sign
+		Up to create one.</string>
+	<string name="recover_password_successful">Your password has been emailed to you.</string>
+	<string name="recover_password_failed">Unable to recover your password. Please try
+		again...</string>
+	<string name="recover_password_failed_user_does_not_exist">You dont have an account with us yet. Click on Sign
+		Up to create one.</string>
+
+	<string name="userid_missing">Please enter your email.</string>
+	<string name="password_missing">Please enter your password.</string>
+	<string name="username_missing">Please enter your user name.</string>
+	<string name="invalid_email_address">Please enter a valid email address.</string>
+
+	<string name="signup_successful">Your account was created successfully</string>
+	<string name="signup_failed">Unable to create your account. Please try again...</string>
+	<string name="signup_failed_existing_user">You already have an account with us. Please
+		login...</string>
+
+	<string name="upload_label">Upload</string>
+
+	<string name="current_password">Current Password:</string>
+	<string name="new_password">New Password:</string>
+	<string name="change_password">Change Password</string>
+	<string name="password_change_successful">Your password was changed successfully</string>
+	<string name="password_change_failed">Unable to change your password. Please try again...</string>
+
+
+	<!-- End User -->
+	<!-- Begin User Profile -->
+	<string name="view_user_reviews_label">View All Beer Reviews</string>
+	<string name="view_user_favorites_label">View Favorite Beer Reviews</string>
+	<string name="view_user_following_label">View Following</string>
+	<string name="update_photo_label">Update Photo</string>
+	<string name="update_photo_unsuccessful">Unable to upload your photo</string>
+	<string name="try_again">Try Again</string>
+	<string name="select_another_photo">Select Another Photo</string>
+	<string name="downloading_user_photo_message">Downloading user photo...</string>
+	<string name="follow_label">Follow</string>
+	<string name="update_photo_prompt">Do you really look like this?</string>
+	<string name="unable_to_download_user_profile_message">Unable to connect to the server. Please try again
+		later...</string>
+	<string name="update_profile">Update Profile</string>
+	<string name="profile_update_successful">Your profile was updated successfully</string>
+	<string name="profile_update_failed">Unable to update your profile. Please try again...</string>
+	<!-- End User Profile -->
+
+	<!--  Begin Rate and Review Reminder Settings -->
+	<string name="rate_and_review_reminder_title"></string>
+	<string name="rate_and_review_reminder_message">We hope you like using Beer Cellar. Please take a
+		moment to rate Beer Cellar on the market, or even write a review.</string>
+	<string name="rate_and_review_reminder_rate_label">Rate Beer Cellar</string>
+	<string name="rate_and_review_reminder_remind_me_later_label">Remind me later</string>
+	<string name="rate_and_review_reminder_no_label">No, Thanks</string>
+	<!--  End Rate and Review Reminder Settings -->
+
+	<string name="please_try_again_later_message">Please try again later...</string>
+
+	<!-- Begin Notifications -->
+	<string name="notification_new_beer_reviews">new beer reviews</string>
+	<string name="notification_new_beer_reviews_from_following">new beer reviews from people you are following</string>
+	<string name="new_version_available_title">New Version Available</string>
+	<string name="new_version_available_message">Please click on Yes to upgrade to the new version.</string>
+	<string name="notification_beer_of_the_day">Beer Of The Day</string>
+	<!-- End Notifications -->
+
+	<!-- Begin Preferences -->
+	<string name="preferences">Preferences</string>
+	<string name="receive_new_beer_reviews_notification_from_following_label">Receive new beer review notifications from people
+		that you are following</string>
+	<string name="receive_new_beer_reviews_notification_label">Receive new beer review notifications</string>
+	<string name="receive_beer_of_the_day_notification_label">Receive beer of the day notification</string>
+	<string name="email_subscription_label">Receive emails from Beer Cellar Community</string>
+	<!-- End Preferences -->
+
+
+	<!--  Begin Google Maps -->
+	<string name="maps_api_key">ABQIAAAA-cDJ8Vf2F2lmQaIUdwOZ2hS2126eF5bBFs-C0RHAmRyBkktpqxRO7UXoEdTnKHVzrZSe63QPJkbAQQ</string>
+	<!--  End Google Maps -->
+
+	<!-- Begin Did You Know -->
+	<string name="did_you_know_title">Did You Know?</string>
+	<string name="do_not_show_did_you_know">Do not show again</string>
+	<!-- End Did You Know -->
+
+	<!-- Begin Messages -->
+	<string name="progress_uploading_message">Uploading. Please wait...</string>
+	<string name="progress_signup_message">Creating account. Please wait...</string>
+	<string name="progress_login_message">Log In in progress. Please wait...</string>
+	<string name="progress_recover_password_message">Recovering your password. Please wait...</string>
+	<string name="progress_searching_message">Searching. Please wait...</string>
+	<string name="progress_loading_message">Loading. Please wait...</string>
+	<string name="progress_saving_message">Saving. Please wait...</string>
+	<string name="progress_deleting_message">Deleting. Please wait...</string>
+	<string name="external_storage_not_available_message">Please insert an SD card!</string>
+	<string name="external_storage_not_writable_message">The SD card is not writable!</string>
+	<string name="posting_dialog_message">Posting. Please wait...</string>
+	<string name="facebook_wall_post_unsuccessful_message">Unable to Post message to your wall!</string>
+	<string name="picture_taken_message">Picture taken</string>
+	<string name="picture_not_taken_message">Picture was not taken!</string>
+	<string name="backing_up_database_message">Backing up your Beer List database...</string>
+	<string name="database_backedup_successfully_message">Your Beer List database was backed up successfully</string>
+	<string name="database_backup_failed_message">Unable to back up your Beer List database!</string>
+	<string name="restoring_database_message">Restoring your Beer List database...</string>
+	<string name="database_restored_successfully_message">Your Beer List database was restored successfully</string>
+	<string name="database_restore_failed_message">Unable to restore your Beer List database!</string>
+
+	<!-- End Messages -->
+
+	<!-- Begin Send Error Report -->
+	<string name="send_error_report_message">Click OK to collect the
+		application log and send it
+		in an
+		email to
+		beercellar@beercellarcommunity.com.\r\n\r\nYou will
+		have
+		an
+		opportunity to
+		review and modify the data before it is sent.</string>
+	<string name="install_log_collector_message">Click OK to install the Free Log Collector
+		application from the
+		Android Market.\r\n\r\nLog Collector will collect
+		the
+		application log and
+		send it in an email to
+		beercellar@beercellarcommunity.com.\r\n\r\nYou will
+		have an
+		opportunity
+		to
+		review and modify the data before it is sent.\r\n\r\nPlease retry
+		sending
+		the
+		error
+		report, after you are done installing Log Collector.
+	</string>
+	<string name="device_info_fmt">
+		Application version:
+		<xliff:g id="application_version">%s</xliff:g>
+		\n
+		Device model:
+		<xliff:g id="device_model">%s</xliff:g>
+		\n
+		Firmware version:
+		<xliff:g id="firmware_revision">%s</xliff:g>
+		\n
+		Kernel version:
+		<xliff:g id="kernel_version">%s</xliff:g>
+		\n
+		Build number:
+		<xliff:g id="build_number">%s</xliff:g>
+		\n
+	</string>
+	<!-- End Send Error Report -->
+
+	<!--  Begin Beer Help -->
+	<string name="instructions">Help</string>
+	<string name="instructions_title">Beer Cellar</string>
+	<!--  End Beer Help -->
+
+
+
+	<!--  Begin Facebook -->
+	<string name="login_to_facebook">Login to Facebook to post a message on your wall!
+	</string>
+	<string name="post">Post to my Wall</string>
+	<string name="facebook_post_message_to_your_friends_label">Message to your friends:</string>
+	<string name="on_facebook_login">you are logged in to Facebook!</string>
+
+	<string name="on_facebook_logout_begin">Logging out...</string>
+	<string name="on_facebook_logout">Logged out of Facebook...</string>
+	<string name="on_facebook_wall_post_unsuccessful">Unable to Post on your Wall. Please try again
+		later...</string>
+	<string name="on_facebook_wall_post">Your message was posted on your wall</string>
+	<!--  End Facebook -->
+
+
+	<!--  Begin EULA -->
+	<string name="eula_title">License Agreement</string>
+	<string name="eula_accept">Accept</string>
+	<string name="eula_refuse">Don\'t Accept</string>
+	<!--  End EULA -->
+
+	<!--  Begin Beer List -->
+	<string name="beer_list">Beer List</string>
+	<string name="hint_beer_list_page">Press and hold on a Beer to find out more about it</string>
+	<string name="no_beers">Click on Menu, and New Beer, to start your beer
+		list</string>
+	<string name="loading_beer_list_dialog_title">Beer List</string>
+	<!--  End Beer List -->
+
+
+	<!--  Begin Beer Search -->
+	<string name="search_result_no_beers">No Beers in your Beer List matched your search
+		criteria</string>
+	<!--  End Beer Search -->
+
+	<!--  Begin Menus -->
+	<string name="menu_insert">New Beer</string>
+	<string name="menu_delete">Delete Beer</string>
+	<string name="menu_share">Share on Facebook</string>
+	<string name="menu_backup">Backup Beer List</string>
+	<string name="menu_search">Search Beer List</string>
+	<string name="menu_sort">Sort</string>
+	<string name="menu_about">About Beer Cellar</string>
+	<string name="menu_about_this_beer">More About This Beer</string>
+	<string name="menu_send_error_report">Send Error Report</string>
+	<string name="menu_show_location">Show Location</string>
+	<!--  End Menus -->
+
+	<!--  Begin Manage Data -->
+	<string name="export_db_to_sd">Backup Beer List to SD card</string>
+	<string name="restore_db">Restore Beer List from SD Card</string>
+	<string name="restore_note_dialog_title">Are you sure?</string>
+	<string name="restore_note_dialog_message">All changes made since the last backup will be
+		lost!</string>
+	<string name="restore_note_dialog_ok">OK</string>
+	<string name="restore_note_dialog_cancel">Cancel</string>
+	<!--  End Manage Data -->
+
+	<!-- Begin Sort By -->
+	<string name="sort_by_dialog_title">Sort By:</string>
+	<string name="sort_by_beer">Beer</string>
+	<string name="sort_by_style">Style</string>
+	<string name="sort_by_country">Country</string>
+	<string name="sort">Sort</string>
+	
+	<!-- End Sort By -->
+	
+	<!-- Begin Delete Beer -->
+	<string name="delete_note_dialog_title">Delete Beer</string>
+	<string name="delete_note_dialog_message">Are you sure?</string>
+	<string name="delete_note_list_item_dialog_message">Delete beer from Beer List</string>
+	<string name="delete_note_from_community_list_item_dialog_message">Remove from Beer Cellar Community</string>
+	<!-- End Delete Beer -->
+
+
+	<!-- Begin Labels -->
+	<string name="search_label">Search</string>
+	<string name="cancel_label">Cancel</string>
+	<string name="back_label">Back</string>
+	<string name="save_label">Save</string>
+	<string name="edit_label">Edit</string>
+	<string name="delete_label">Delete</string>
+	<string name="backup_label">Backup</string>
+	<string name="restore_label">Restore</string>
+	<string name="done_label">Done</string>
+	<string name="ok_label">OK</string>
+	<string name="yes_label">Yes</string>
+	<string name="no_label">No</string>
+	<string name="logout_label">Logout</string>
+	<string name="logged_out_label">Logged Out</string>
+	<string name="translate_label">Translate</string>
+	<string name="translating_label">Translating...</string>
+	<string name="translated_label">Translated</string>
+	<string name="add_to_favorites_label">Favorite</string>
+	<string name="remove_from_favorites_label">Favorite</string>
+	<string name="select_label">Select</string>
+	<!-- End Labels -->
+
+
+	<!--  Begin Beer Edit -->
+	<string name="beer_edit_beer_hint">Golden Monkey</string>
+	<string name="beer_edit_alcohol_hint">9.5</string>
+	<string name="beer_edit_price_hint">12.95</string>
+	<string name="beer_edit_style_hint">Belgian-style Ale</string>
+	<string name="beer_edit_brewery_hint">Victory Brewing Company</string>
+	<string name="beer_edit_brewery_link_hint">http://victorybeer.com/</string>
+	<string name="beer_edit_state_hint">Pennsylvania</string>
+	<string name="beer_edit_country_hint">United States</string>
+
+	<string name="beer_edit_take_picture_label">Take a Picture!</string>
+	<string name="beer_edit_beer_label">Beer:</string>
+	<string name="beer_edit_share_label">Share with Community:</string>
+	<string name="beer_edit_alcohol_label">Alcohol %:</string>
+	<string name="beer_edit_price_label">Price:</string>
+	<string name="beer_edit_style_label">Style:</string>
+	<string name="beer_edit_brewery_label">Brewery:</string>
+	<string name="beer_edit_state_label">State/Province/Region:</string>
+	<string name="beer_edit_country_label">Country:</string>
+	<string name="beer_edit_notes_label">Notes:</string>
+	<string name="saving_picture">Saving picture...</string>
+	<string name="picture_saved">Picture saved on SD card</string>
+	<string name="picture_not_saved">Unable to save Picture on SD card. Your SD Card
+		might be Full!</string>
+	<string name="picture_ok_button_label">OK</string>
+	<string name="picture_redo_button_label">Try Again</string>
+	<string name="beer_edit_interrupt_rating_dialog_title">Rating</string>
+	<string name="beer_edit_interrupt_rating_dialog_message">Would you like to rate the Beer?</string>
+	<string name="beer_edit_interrupt_characteristics_dialog_title">Beer Characteristics</string>
+	<string name="beer_edit_interrupt_characteristics_dialog_message">
+		Would you like to describe the Color, Aroma,
+		Body,
+		Mouthfeel,
+		Aftertaste of the Beer?</string>
+
+	<string name="color_label">Color:</string>
+	<string name="clarity_label">Clarity:</string>
+	<string name="foam_label">Foam:</string>
+	<string name="aroma_label">Aroma:</string>
+	<string name="aroma_button_label">Select Aroma</string>
+	<string name="characteristics_label">Describe Aroma, Mouthfeel, Body, Aftertaste and
+		more</string>
+	<string name="characteristics_button_label">Select Beer Characteristics</string>
+	<string name="characteristics_header_label">Beer Characteristics:</string>
+	<string name="mouthfeel_label">Mouthfeel:</string>
+	<string name="body_label">Body:</string>
+	<string name="aftertaste_label">Aftertaste:</string>
+
+	<string-array name="characteristics_clarity">
+		<item></item>
+		<item>Bright</item>
+		<item>Cloudy</item>
+		<item>Dull</item>
+	</string-array>
+	<string-array name="characteristics_foam">
+		<item></item>
+		<item>Creamy</item>
+		<item>Small Bubbles</item>
+		<item>Large Bubbles</item>
+	</string-array>
+	<string-array name="characteristics_body">
+		<item></item>
+		<item>Creamy</item>
+		<item>Viscous</item>
+		<item>Full Bodied</item>
+		<item>Medium Bodied</item>
+		<item>Light Bodied</item>
+		<item>Bland</item>
+		<item>Thin or Watery</item>
+	</string-array>
+	<string-array name="characteristics_aroma">
+		<item>Alcoholic</item>
+		<item>Apple</item>
+		<item>Acidic</item>
+		<item>Brazil Nut</item>
+		<item>Burnt Sugar</item>
+		<item>Burnt Rubber</item>
+		<item>Burnt Match</item>
+		<item>Berry</item>
+		<item>Butter</item>
+		<item>Butterscotch</item>
+		<item>Banana</item>
+		<item>Citrus</item>
+		<item>Coconut</item>
+		<item>Cardboard</item>
+		<item>Clean</item>
+		<item>Cloves</item>
+		<item>Complex</item>
+		<item>Caramel</item>
+		<item>Cheesy</item>
+		<item>Cedar</item>
+		<item>Corn</item>
+		<item>Cooked Vegetables</item>
+		<item>Dirty</item>
+		<item>Damp Cellar</item>
+		<item>Earthy</item>
+		<item>Expressive</item>
+		<item>Estery</item>
+		<item>Flat</item>
+		<item>Floral</item>
+		<item>Fruity</item>
+		<item>Flour</item>
+		<item>Fresh Cut Grass</item>
+		<item>Grainy</item>
+		<item>Grapefruit</item>
+		<item>Grassy</item>
+		<item>Gasoline</item>
+		<item>Hazelnut</item>
+		<item>Hoppy</item>
+		<item>Husk Like</item>
+		<item>Leathery</item>
+		<item>Lacquer</item>
+		<item>Meaty</item>
+		<item>Moldy</item>
+		<item>Malty</item>
+		<item>Medicinal</item>
+		<item>Metallic</item>
+		<item>Machine Oil</item>
+		<item>Musty</item>
+		<item>Melon</item>
+		<item>Nutty</item>
+		<item>Molasses</item>
+		<item>Natural Gas</item>
+		<item>Oily</item>
+		<item>Phenolic</item>
+		<item>Perfume</item>
+		<item>Pine</item>
+		<item>Rose Like</item>
+		<item>Rotten</item>
+		<item>Rancid Butter</item>
+		<item>Rotten Egg</item>
+		<item>Resinous</item>
+		<item>Roses</item>
+		<item>Raw Grain</item>
+		<item>Resin</item>
+		<item>Skunky</item>
+		<item>Spruce</item>
+		<item>Seasoned Wood</item>
+		<item>Sour Milk</item>
+		<item>Stale</item>
+		<item>Straw</item>
+		<item>Solvent Like</item>
+		<item>Sherry Like</item>
+		<item>Sawdust</item>
+		<item>Toffee</item>
+		<item>Vegetal</item>
+		<item>Vegetable Oil</item>
+		<item>Vanilla</item>
+		<item>Vinegar</item>
+		<item>Woodsy</item>
+		<item>Worty</item>
+		<item>Wet Soil</item>
+		<item>Walnut</item>
+		<item>Yeasty</item>
+		<item>Not Very Aromatic</item>
+	</string-array>
+	<string-array name="characteristics_mouthfeel">
+		<item></item>
+		<item>Alcoholic</item>
+		<item>Alkaline</item>
+		<item>Astringent</item>
+		<item>Crisp</item>
+		<item>Creamy</item>
+		<item>Harsh</item>
+		<item>Metallic</item>
+		<item>Mouthcoating</item>
+		<item>Oily</item>
+		<item>Overcarbonated</item>
+		<item>Powdery</item>
+		<item>Silky</item>
+		<item>Smooth</item>
+		<item>Spicy</item>
+		<item>Undercarbonated</item>
+		<item>Watery</item>
+		<item>Winey</item>
+	</string-array>
+	<string-array name="characteristics_aftertaste">
+		<item></item>
+		<item>Bitter</item>
+		<item>Salty</item>
+		<item>Sour</item>
+		<item>Sweet</item>
+		<item>Tart</item>
+	</string-array>
+	<string-array name="characteristics_color">
+		<item></item>
+		<item>Straw Yellow</item>
+		<item>Yellow</item>
+		<item>Gold</item>
+		<item>Amber</item>
+		<item>Dark Brown</item>
+		<item>Black</item>
+	</string-array>
+
+	<string name="upload_or_capture_photo_dialog_title">Please select:</string>
+	<string name="upload_or_capture_photo_capture_label">Take a Picture</string>
+	<string name="upload_or_capture_photo_upload_label">Upload a Picture</string>
+	<!--  End Beer Edit -->
+
+	<string name="back_to_beer_list_label">Back To Beer List</string>
+	<string name="title_view_business">Location</string>
+
+	<!--  Begin Around Me -->
+	<string name="no_businesses">Could not find any Breweries or Bars around your
+		current location.</string>
+	<string name="around_me">Around Me</string>
+	<string name="around_me_progress_dialog_title">Around Me</string>
+	<string name="around_me_progress_searching_message">Searching for Breweries and Bars around your
+		current
+		location. Please wait...</string>
+	<string name="call">Call</string>
+	<string name="view_map">View Map</string>
+	<string name="hint_around_me_page">Press and hold on a selection to either directly
+		Call
+		or View Map</string>
+	<!--  End Around Me -->
+
+
+	<!--  Begin Community -->
+	<string name="community_name">Beer Cellar Community</string>
+	<string name="community_description">Beer Cellar Community is a growing community of
+		beer
+		enthusiasts that want to share their beer drinking experiences
+		with
+		others</string>
+	<string name="community_login">Beer Cellar</string>
+	<string name="community_post_anonymously">Share Anonymously</string>
+	<string name="community_do_not_share">Do Not Share</string>
+	<string name="share_with_community_message_header">Share
+		your Beer Review with the Beer Cellar
+		Community</string>
+	<string name="share_with_community_message_1">Use your Facebook Account</string>
+	<string name="share_with_community_message_2">Use your Beer Cellar Account or Create one</string>
+	<string name="share_with_community_message_3">Share Anonymously</string>
+	<string name="share_with_community_message_4">Choose Not to Share</string>
+
+	<string name="community">Community</string>
+	<string name="community_beers_from_around_the_world">Beers From Around The World</string>
+	<string name="community_top_rated_beers">Top Rated Beers</string>
+	<string name="community_worst_beers">Worst Beers</string>
+	<string name="community_beers_by_country">Beers By Country</string>
+	<string name="community_beers_by_state">Beers By State/Province/Region</string>
+	<string name="community_search_beers">Search Beers</string>
+	<string name="community_my_beers">My Beer Reviews</string>
+	<string name="community_progress_dialog_title">Beer Cellar Community</string>
+	<string name="community_progress_searching_message">Searching...</string>
+	<string name="community_progress_loading_message">Loading...</string>
+	<string name="hint_community_page">Press and hold on a Beer to find out more about it</string>
+	<string name="community_search_no_beers">Could not find any Beers that matched your search
+		criteria. Please try again later...</string>
+	<string name="beer_cellar_community">Beer Cellar Community</string>
+
+	<string name="community_view_user_profile_label">View Profile</string>
+	<string name="community_beer_reviewed_by">Reviewed by:</string>
+	<string name="community_beer_beer_label">Beer:</string>
+	<string name="community_beer_alcohol_label">Alcohol %:</string>
+	<string name="community_beer_price_label">Price:</string>
+	<string name="community_beer_style_label">Style:</string>
+	<string name="community_beer_brewery_label">Brewery:</string>
+	<string name="community_beer_brewery_link_label">Brewery Link:</string>
+	<string name="community_beer_state_label">State/Province/Region:</string>
+	<string name="community_beer_country_label">Country:</string>
+	<string name="community_beer_notes_label">Notes:</string>
+
+	<string name="community_beer_list_footer_view_label">-- Load More --</string>
+	<string name="community_landing_page_message">http://beercellarcommunity.appspot.com</string>
+
+	<string name="on_sharing_with_community">Thank you for sharing your Beer Review with
+		the Beer
+		Cellar Community</string>
+	<string name="back_to_community_menu">Would you like to go back to the Beer Cellar
+		Community Menu?</string>
+	<string name="back_to_main_menu">Would you like to go back to the Main Menu?</string>
+	<string name="review_helpful_label">Was this review helpful to you?</string>
+	<string name="rating_thank_you_message">Thanks for your feedback.</string>
+	<!-- Begin:The following are set dynamically within CommunityBeers -->
+	<string name="title_my_beer_reviews">Beer Cellar Community: My Beer Reviews</string>
+	<string name="title_most_helpful_beer_reviews">Beer Cellar Community: Most Helpful Beer Reviews</string>
+	<string name="title_beers_from_around_the_world">Beer Cellar Community: Beers From Around the World</string>
+	<string name="title_top_rated_beers">Beer Cellar Community: Top Rated Beers</string>
+	<string name="title_worst_beers">Beer Cellar Community: Worst Beers</string>
+	<string name="title_beers_by_country">Beer Cellar Community: Beers by Country</string>
+	<string name="title_beers_by_state">Beer Cellar Community: Beers by
+		State/Province/Region</string>
+	<string name="title_search_beers">Beer Cellar Community: Search Beers</string>
+	<string name="title_following">Beer Cellar Community: Following</string>
+	<string name="title_followers">Beer Cellar Community: Followers</string>
+	<string name="title_new_beer_reviews">Beer Cellar Community: New Beer Reviews</string>
+	<string name="title_favorite_beer_reviews">Beer Cellar Community: Favorite Beer Reviews</string>
+	<!-- Begin:The following are set dynamically within CommunityBeers -->
+
+	<string name="community_not_following_anyone_message">You are currently not following any beer reviewers</string>
+	<string name="community_no_followers_message">You currently have no followers</string>
+
+	<!--  End Community -->
+
+	<!-- Begin Camera Settings -->
+	<string name="select_white_balance_label">Select White Balance</string>
+	<string name="select_antibanding_label">Select Antibanding</string>
+	<string name="select_color_effect_label">Select Color Effect</string>
+	<string name="select_flash_mode_label">Select Flash Mode</string>
+	<string name="select_focus_mode_label">Select Focus Mode</string>
+	<string name="select_scene_mode_label">Select Scene Mode</string>
+	<!-- End Camera Settings -->
+
+</resources>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.cm.beer.activity" android:versionCode="17"
+	android:versionName="Marzen">
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature android:name="android.hardware.camera" />
+	<uses-feature android:name="android.hardware.camera.autofocus" />
+	<uses-feature android:name="android.hardware.camera.flash"
+		android:required="false" />
+
+	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+	<application android:icon="@drawable/icon" android:label="@string/app_name"
+		android:debuggable="false">
+		<activity android:name=".Main" android:label="@string/app_name"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation"
+			android:screenOrientation="portrait">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".BeerEdit" android:label="@string/title_new_beer"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".BeerList" android:label="@string/title_beer_list"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CameraPreview" android:label="@string/title_beer_label"
+			android:theme="@android:style/Theme.Light" android:screenOrientation="landscape">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".ShareOnFacebook" android:label="@string/title_share_on_facebook"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".ViewImage" android:label="@string/title_beer_label"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".ManageData" android:label="@string/title_backup_beer_list"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".Search" android:label="@string/title_search_beer_list"
+			android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CollectAndSendLog" android:label="@string/title_send_error_report"
+			android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".BeerWebView" android:theme="@android:style/Theme.Light"
+			android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".AroundMe" android:label="@string/title_around_me"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".ShareWithCommunity" android:label="@string/title_share_with_community"
+			android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunityOptions" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunityBeers" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunityBeerView" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunityCountries" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunityStates" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunitySearch" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".LoginIntercept" android:label="@string/title_login"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".BeerView" android:label="@string/title_view_beer"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".SearchResults" android:label="@string/title_search_results"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunityFollow" android:theme="@android:style/Theme.Light"
+			android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".Interrupt" android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".SetPreferences" android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CameraSettings" android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".Characteristics" android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunitySignIn" android:label="@string/title_login"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunitySignUp" android:label="@string/title_signup"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".UserProfile" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".UploadUserPhoto" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".UpdateUserProfile" android:label="@string/title_community"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CommunityChangePassword"
+			android:label="@string/title_community" android:theme="@android:style/Theme.Light"
+			android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".UploadPhoto" android:label="@string/title_new_beer"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".SDCardExplorer" android:label="@string/app_name"
+			android:theme="@android:style/Theme.Light" android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+			</intent-filter>
+		</activity>
+		<service android:enabled="true" android:name=".NotificationService"></service>
+	</application>
+	<uses-sdk android:minSdkVersion="4" />
+
+</manifest> 

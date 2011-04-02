@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="?android:attr/listPreferredItemHeight"
+	android:padding="6dip">
+	<TextView android:id="@+id/community_option"
+		android:layout_width="wrap_content" android:layout_height="39dip"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true" android:singleLine="true"
+		android:ellipsize="marquee" android:layout_gravity="center_vertical"
+		android:textStyle="normal" android:textSize="20sp"
+		android:layout_marginLeft="5dp" />
+	<TextView android:id="@+id/community_option_arrow"
+		android:layout_width="wrap_content" android:layout_height="39dip"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true" android:singleLine="true"
+		android:layout_gravity="center_vertical"
+		android:textStyle="bold" android:textSize="20sp"
+		android:layout_marginRight="10dp" android:text=">"/>
+</RelativeLayout>
+    

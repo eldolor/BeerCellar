@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<Button android:id="@+id/save" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+		android:layout_marginTop="20dp" android:text="@string/save_label"
+		android:padding="10dp" android:gravity="center_vertical" />
+	<Button android:id="@+id/cancel" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/save"
+		android:layout_marginLeft="5dp" android:layout_marginTop="20dp"
+		android:text="@string/cancel_label" android:padding="10dp"
+		android:gravity="center_vertical" />
+	<Button android:id="@+id/delete" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/cancel"
+		android:layout_marginLeft="40dp" android:layout_marginTop="20dp"
+		android:text="@string/delete_label" android:padding="10dp"
+		android:gravity="center_vertical" />
+	<ScrollView android:id="@+id/ScrollView01"
+		android:layout_width="fill_parent" android:layout_below="@id/save"
+		android:layout_marginTop="20dp" android:layout_height="fill_parent">
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent" android:layout_height="fill_parent">
+			<TableLayout android:id="@+id/cameraTable"
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginTop="10dp" android:shrinkColumns="1">
+				<TableRow>
+					<ImageView android:id="@+id/camera" android:layout_width="100dip"
+						android:layout_height="100dip" android:layout_marginLeft="5dp"
+						android:src="@drawable/camera_button" android:layout_gravity="center_vertical"
+						android:focusableInTouchMode="true" />
+					<ImageView android:id="@+id/thumbnail"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:layout_gravity="center_vertical"
+						android:layout_marginRight="5dp" />
+				</TableRow>
+			</TableLayout>
+			<RatingBar android:id="@+id/rating" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_below="@+id/cameraTable"
+				android:layout_marginLeft="5dp" android:layout_marginTop="10dp"
+				android:numStars="5" android:rating="0" android:stepSize="1.0"
+				android:gravity="center_vertical" android:focusableInTouchMode="true" />
+
+			<TextView android:id="@+id/date_created_label"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_below="@+id/rating" android:layout_marginLeft="5dp"
+				android:layout_marginTop="10dp" android:gravity="center_vertical" />
+			<TextView android:id="@+id/date_updated_label"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_below="@+id/date_created_label"
+				android:layout_marginLeft="5dp" android:layout_marginTop="2dp"
+				android:gravity="center_vertical" />
+			<View android:id="@+id/divider1" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/date_updated_label" />
+
+			<TextView android:id="@+id/beer_label" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_below="@+id/divider1"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/community_beer_beer_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider2" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/beer_label" />
+			<AutoCompleteTextView android:id="@+id/beer"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/divider2" android:layout_marginRight="5dp"
+				android:layout_marginLeft="5dp" android:text="" android:lines="1"
+				android:hint="@string/beer_edit_beer_hint" android:gravity="left"
+				android:focusableInTouchMode="true" android:singleLine="true"
+				android:nextFocusDown="@+id/alcohol" android:textColor="@drawable/black" />
+
+
+			<TextView android:id="@+id/characteristics_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/beer" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/characteristics_label" android:textStyle="bold" />
+			<View android:id="@+id/divider_characteristics"
+				android:background="@drawable/divider" android:layout_width="fill_parent"
+				android:layout_height="1dp" android:layout_below="@+id/characteristics_label" />
+			<Button android:id="@+id/characteristics_button"
+				android:layout_below="@+id/divider_characteristics"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp" android:text="@string/characteristics_button_label"
+				android:padding="10dp" android:gravity="center_vertical"
+				android:nextFocusDown="@+id/year" />
+			<TableLayout android:id="@+id/characteristics_table"
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:shrinkColumns="1" android:layout_below="@+id/characteristics_button">
+				<TableRow android:layout_height="wrap_content">
+					<TextView android:id="@+id/color_label" android:text="@string/color_label"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" />
+					<TextView android:id="@+id/color"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" android:textSize="22sp" />
+				</TableRow>
+				<TableRow android:layout_height="wrap_content">
+					<TextView android:id="@+id/clarity_label" android:text="@string/clarity_label"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" />
+					<TextView android:id="@+id/clarity"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" android:textSize="22sp" />
+				</TableRow>
+				<TableRow android:layout_height="wrap_content">
+					<TextView android:id="@+id/foam_label" android:text="@string/foam_label"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" />
+					<TextView android:id="@+id/foam" android:layout_marginTop="15dp"
+						android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+						android:layout_marginRight="5dp" android:visibility="gone"
+						android:textSize="22sp" />
+				</TableRow>
+				<TableRow android:layout_height="wrap_content">
+					<TextView android:id="@+id/aroma_label" android:text="@string/aroma_label"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" />
+					<TextView android:id="@+id/aroma"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" android:textSize="22sp" />
+				</TableRow>
+				<TableRow android:layout_height="wrap_content">
+					<TextView android:id="@+id/mouthfeel_label" android:text="@string/mouthfeel_label"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" />
+					<TextView android:id="@+id/mouthfeel"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" android:textSize="22sp" />
+				</TableRow>
+				<TableRow android:layout_height="wrap_content">
+					<TextView android:id="@+id/body_label" android:text="@string/body_label"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" />
+					<TextView android:id="@+id/body" android:layout_marginTop="15dp"
+						android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+						android:layout_marginRight="5dp" android:visibility="gone"
+						android:textSize="22sp" />
+				</TableRow>
+				<TableRow android:layout_height="wrap_content">
+					<TextView android:id="@+id/aftertaste_label" android:text="@string/aftertaste_label"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" />
+					<TextView android:id="@+id/aftertaste"
+						android:layout_marginTop="15dp" android:layout_height="wrap_content"
+						android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+						android:visibility="gone" android:textSize="22sp" />
+				</TableRow>
+			</TableLayout>
+
+
+			<TextView android:id="@+id/share_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/characteristics_table"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/beer_edit_share_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/dividerShare" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/share_label" />
+			<CheckBox android:id="@+id/share" android:layout_below="@+id/dividerShare"
+				android:layout_marginLeft="5dp" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:checked="true"
+				android:nextFocusDown="@+id/alcohol" />
+
+			<TextView android:id="@+id/alcohol_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/share" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_alcohol_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider3" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/alcohol_label" />
+			<EditText android:id="@+id/alcohol" android:layout_below="@+id/divider3"
+				android:layout_width="80dp" android:layout_height="wrap_content"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:text="" android:hint="@string/beer_edit_alcohol_hint"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:inputType="numberDecimal"
+				android:nextFocusDown="@+id/price" android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/price_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/alcohol" android:layout_marginTop="30dp"
+				android:layout_marginLeft="5dp" android:gravity="left"
+				android:text="@string/community_beer_price_label" android:textStyle="bold" />
+			<View android:id="@+id/divider4" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/price_label" />
+			<EditText android:id="@+id/price" android:layout_width="80dp"
+				android:layout_height="wrap_content" android:layout_marginRight="5dp"
+				android:layout_marginLeft="5dp" android:layout_below="@+id/divider4"
+				android:hint="@string/beer_edit_price_hint" android:gravity="left"
+				android:focusableInTouchMode="true" android:singleLine="true"
+				android:inputType="numberDecimal" android:nextFocusDown="@+id/style"
+				android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/style_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/price" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_style_label" android:textStyle="bold" />
+			<View android:id="@+id/divider5" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/style_label" />
+			<AutoCompleteTextView android:id="@+id/style"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:layout_below="@+id/divider5" android:text=""
+				android:hint="@string/beer_edit_style_hint" android:gravity="left"
+				android:focusableInTouchMode="true" android:singleLine="true"
+				android:nextFocusDown="@+id/brewery" android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/brewery_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/style" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_brewery_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider6" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/brewery_label" />
+			<EditText android:id="@+id/brewery" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginRight="5dp"
+				android:layout_marginLeft="5dp" android:layout_below="@+id/divider6"
+				android:hint="@string/beer_edit_brewery_hint" android:gravity="left"
+				android:focusableInTouchMode="true" android:singleLine="true"
+				android:nextFocusDown="@+id/brewery_link" android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/brewery_link_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/brewery" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_brewery_link_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider_brewery_link" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/brewery_link_label" />
+			<EditText android:id="@+id/brewery_link"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:layout_below="@+id/divider_brewery_link" android:hint="@string/beer_edit_brewery_link_hint"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:inputType="textUri"
+				android:nextFocusDown="@+id/state" android:textColor="@drawable/black" />
+
+
+			<TextView android:id="@+id/state_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/brewery_link" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_state_label" android:textStyle="bold" />
+			<View android:id="@+id/divider7" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/state_label" />
+			<AutoCompleteTextView android:id="@+id/state"
+				android:layout_below="@+id/divider7" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginRight="5dp"
+				android:layout_marginLeft="5dp" android:hint="@string/beer_edit_state_hint"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:nextFocusDown="@+id/country"
+				android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/country_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/state" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_country_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider8" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/country_label" />
+			<AutoCompleteTextView android:id="@+id/country"
+				android:layout_below="@+id/divider8" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginRight="5dp"
+				android:layout_marginLeft="5dp" android:hint="@string/beer_edit_country_hint"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:nextFocusDown="@+id/notes"
+				android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/notes_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/country" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_notes_label" android:textStyle="bold" />
+			<View android:id="@+id/divider9" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/notes_label" />
+			<EditText android:id="@+id/notes" android:layout_below="@+id/divider9"
+				android:layout_width="fill_parent" android:layout_height="144sp"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:text="" android:gravity="left" android:focusableInTouchMode="true"
+				android:textColor="@drawable/black" />
+
+		</RelativeLayout>
+	</ScrollView>
+</RelativeLayout>

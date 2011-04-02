@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<drawable name="beer_yellow">#BF9D17</drawable>
+	<drawable name="hyperlink_blue">#0000ff</drawable>
+	<drawable name="cyan">#00ffff</drawable>
+	<drawable name="white">#ffffff</drawable>
+	<drawable name="black">#000000</drawable>
+	<drawable name="burgundy">#5b0100</drawable>
+</resources>

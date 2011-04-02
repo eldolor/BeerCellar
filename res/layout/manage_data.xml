@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:gravity="center" android:orientation="vertical">
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="wrap_content" android:layout_height="wrap_content">
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true">
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:gravity="center" android:orientation="vertical">
+				<ImageView android:id="@+id/exportdbtosdbutton"
+					android:layout_width="100dip" android:layout_height="100dip"
+					android:src="@drawable/backup_button" />
+				<TextView android:id="@+id/backup_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:text="@string/backup_label" android:textStyle="bold" />
+			</LinearLayout>
+		</RelativeLayout>
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_alignParentRight="true">
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:gravity="center" android:orientation="vertical">
+				<ImageView android:id="@+id/restoreDbButton"
+					android:layout_width="100dip" android:layout_height="100dip"
+					android:src="@drawable/restore_button" />
+				<TextView android:id="@+id/restore_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:text="@string/restore_label" android:textStyle="bold" />
+			</LinearLayout>
+		</RelativeLayout>
+	</RelativeLayout>
+	<TextView android:id="@+id/last_backup" android:layout_width="wrap_content"
+		android:layout_height="50dip" android:textSize="14sp" android:gravity="center_vertical"
+		android:textStyle="normal" android:layout_margin="50dip" />
+
+</LinearLayout>

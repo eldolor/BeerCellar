@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="72dp"
+	android:padding="6dip">
+	<TextView android:id="@+id/item3" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+		android:textSize="12sp" android:ellipsize="marquee"
+		android:singleLine="true" android:layout_alignParentBottom="true"
+		android:textColor="@drawable/beer_yellow" />
+	<TextView android:id="@+id/item2" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+		android:textSize="12sp" android:ellipsize="marquee"
+		android:singleLine="true" android:layout_above="@+id/item3" />
+	<TextView android:id="@+id/item1" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+		android:textSize="22sp" android:ellipsize="marquee"
+		android:singleLine="true" android:layout_above="@+id/item2" />
+</RelativeLayout>
+    

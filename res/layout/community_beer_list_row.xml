@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="132dp"
+	android:padding="6dip">
+	<ImageView android:id="@+id/list_thumbnail"
+		android:layout_width="75dp" android:layout_height="48dp"
+		android:layout_alignParentTop="true" android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true" android:layout_marginRight="6dip"
+		android:src="@drawable/bottle" />
+	<TextView android:id="@+id/text5" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/list_thumbnail"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true" android:layout_gravity="center_vertical"
+		android:textStyle="normal" android:textSize="12sp" android:ellipsize="marquee"
+		android:singleLine="true" />
+	<TextView android:id="@+id/text4" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/list_thumbnail"
+		android:layout_gravity="center_vertical" android:textStyle="normal"
+		android:textSize="12sp" android:ellipsize="marquee"
+		android:singleLine="true" android:layout_above="@+id/text5"
+		/>
+	<TextView android:id="@+id/text3" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/list_thumbnail"
+		android:layout_gravity="center_vertical" android:textStyle="normal"
+		android:textSize="12sp" android:ellipsize="marquee"
+		android:singleLine="true" android:layout_above="@+id/text4"
+		android:textColor="@drawable/beer_yellow" />
+	<TextView android:id="@+id/text2" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/list_thumbnail"
+		android:layout_gravity="center_vertical" android:textStyle="normal"
+		android:textSize="18sp" android:ellipsize="marquee"
+		android:singleLine="true" android:layout_above="@+id/text3" />
+	<TextView android:id="@+id/text1" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/list_thumbnail"
+		android:layout_gravity="center_vertical" android:textStyle="normal"
+		android:textSize="18sp" android:ellipsize="marquee"
+		android:singleLine="true" android:layout_above="@+id/text2" />
+	<RatingBar android:id="@+id/list_ratingbar" style="?android:attr/ratingBarStyleSmall"
+		android:layout_toRightOf="@+id/list_thumbnail" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+		android:layout_above="@+id/text1" />
+</RelativeLayout>
+    

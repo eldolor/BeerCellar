@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:gravity="center" android:orientation="vertical">
+	<TextView android:id="@+id/message" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+		android:layout_marginTop="10dp" android:gravity="left"
+		android:textStyle="bold" />
+	<Button android:id="@+id/done" android:layout_below="@+id/message"
+		android:layout_width="100dp" android:layout_height="wrap_content"
+		android:layout_marginLeft="5dp" android:layout_marginTop="10dp"
+		android:text="@string/done_label" android:padding="10dp"
+		android:gravity="center" android:visibility="gone" />
+	<ScrollView android:id="@+id/ScrollView01"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_below="@+id/done">
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="wrap_content" android:layout_height="wrap_content">
+			<TextView android:id="@+id/user_id_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp" android:layout_marginTop="10dp"
+				android:gravity="left" android:text="@string/user_id"
+				android:textStyle="bold" android:layout_below="@+id/message" />
+			<View android:id="@+id/divider2" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/user_id_label" />
+			<EditText android:id="@+id/user_id" android:layout_below="@+id/divider2"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:nextFocusDown="@+id/password"
+				android:textColor="@drawable/black" android:inputType="textEmailAddress" />
+
+			<TextView android:id="@+id/password_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/password"
+				android:textStyle="bold" android:layout_below="@+id/user_id" />
+			<View android:id="@+id/divider3" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/password_label" />
+			<EditText android:id="@+id/password" android:layout_below="@+id/divider3"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:nextFocusDown="@+id/user_name"
+				android:textColor="@drawable/black" android:inputType="textPassword" />
+
+			<TextView android:id="@+id/user_name_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/user_name"
+				android:textStyle="bold" android:layout_below="@+id/password" />
+			<View android:id="@+id/divider1" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/user_name_label" />
+			<EditText android:id="@+id/user_name" android:layout_below="@+id/divider1"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:nextFocusDown="@+id/about_yourself"
+				android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/about_yourself_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/about_yourself"
+				android:textStyle="bold" android:layout_below="@+id/user_name" />
+			<View android:id="@+id/divider6" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/about_yourself_label" />
+			<EditText android:id="@+id/about_yourself"
+				android:layout_below="@+id/divider6" android:layout_width="fill_parent"
+				android:layout_height="144sp" android:layout_marginRight="5dp"
+				android:layout_marginLeft="5dp" android:gravity="left"
+				android:focusableInTouchMode="true" android:singleLine="true"
+				android:nextFocusDown="@+id/country" android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/country_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/country"
+				android:textStyle="bold" android:layout_below="@+id/about_yourself" />
+			<View android:id="@+id/divider4" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/country_label" />
+			<AutoCompleteTextView android:id="@+id/country"
+				android:layout_below="@+id/divider4" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginRight="5dp"
+				android:layout_marginLeft="5dp" android:gravity="left"
+				android:focusableInTouchMode="true" android:singleLine="true"
+				android:nextFocusDown="@+id/zipcode" android:textColor="@drawable/black" />
+
+			<TextView android:id="@+id/zipcode_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/zipcode"
+				android:textStyle="bold" android:layout_below="@+id/country" />
+			<View android:id="@+id/divider5" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/zipcode_label" />
+			<EditText android:id="@+id/zipcode" android:layout_below="@+id/divider5"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:nextFocusDown="@+id/signup"
+				android:textColor="@drawable/black" android:inputType="number" />
+
+			<Button android:id="@+id/signup" android:layout_width="100dp"
+				android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+				android:layout_marginTop="20dp" android:text="@string/signup"
+				android:padding="10dp" android:gravity="center"
+				android:layout_below="@+id/zipcode" />
+		</RelativeLayout>
+	</ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:gravity="center">
+
+		<WebView android:id="@+id/webview" android:layout_width="fill_parent"
+			android:layout_height="fill_parent" />
+		<ImageView android:id="@+id/back_button"
+			android:layout_width="100dip" android:layout_height="100dip"
+			android:src="@drawable/restore_button" android:layout_gravity="center_vertical"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentRight="true" android:padding="6dip" />
+
+	</RelativeLayout>
+</LinearLayout>

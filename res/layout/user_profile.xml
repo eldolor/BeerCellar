@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<ScrollView android:id="@+id/ScrollView01"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent" android:layout_height="fill_parent">
+			<TextView android:id="@+id/message" android:layout_width="wrap_content"
+				android:layout_height="fill_parent" android:layout_marginTop="5dp"
+				android:layout_marginLeft="5dp" android:gravity="center"
+				android:textSize="14sp" />
+			<ImageView android:id="@+id/thumbnail"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginTop="10dp" android:layout_marginLeft="5dp"
+				android:layout_below="@+id/message" android:visibility="gone"
+				android:gravity="center" />
+			<TextView android:id="@+id/update_photo_prompt"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_marginTop="5dp" android:layout_marginLeft="5dp"
+				android:textSize="22sp" android:layout_below="@+id/thumbnail"
+				android:visibility="gone" android:gravity="center" />
+			<Button android:id="@+id/update_photo" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_below="@+id/update_photo_prompt"
+				android:layout_marginTop="10dp" android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp" android:gravity="center"
+				android:text="@string/update_photo_label" android:visibility="gone" />
+			<View android:id="@+id/divider_thumbnail" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/update_photo" android:gravity="center" />
+			<TextView android:id="@+id/user_name" android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:layout_below="@+id/divider_thumbnail"
+				android:layout_marginTop="10dp" android:layout_marginLeft="5dp"
+				android:textSize="22sp" android:gravity="center" />
+			<TextView android:id="@+id/user_review_count"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_below="@+id/user_name" android:layout_marginTop="10dp"
+				android:layout_marginLeft="5dp" android:gravity="center"
+				android:textSize="22sp" />
+			<TextView android:id="@+id/user_follow_count"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_below="@+id/user_review_count"
+				android:layout_marginTop="10dp" android:layout_marginLeft="5dp"
+				android:textSize="22sp" android:gravity="center" />
+			<TextView android:id="@+id/user_bio"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:layout_below="@+id/user_follow_count"
+				android:layout_marginTop="10dp" android:layout_marginLeft="5dp"
+				android:textSize="22sp" android:gravity="center" />
+			<View android:id="@+id/divider_section_1" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/user_bio" />
+			<Button android:id="@+id/follow_user" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_below="@+id/divider_section_1"
+				android:layout_marginTop="10dp" android:layout_marginBottom="10dp"
+				android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+				android:gravity="center" android:text="@string/follow_label" />
+			<View android:id="@+id/divider_follow_user" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/follow_user" />
+			<Button android:id="@+id/view_user_reviews"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/divider_follow_user"
+				android:layout_marginTop="10dp" android:layout_marginBottom="10dp"
+				android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+				android:gravity="center" android:text="@string/view_user_reviews_label" />
+			<View android:id="@+id/divider_view_user_reviews"
+				android:background="@drawable/divider" android:layout_width="fill_parent"
+				android:layout_height="1dp" android:layout_below="@+id/view_user_reviews" />
+			<Button android:id="@+id/view_user_favorites"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/divider_view_user_reviews"
+				android:layout_marginTop="10dp" android:layout_marginBottom="10dp"
+				android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+				android:gravity="center" android:text="@string/view_user_favorites_label" />
+			<View android:id="@+id/divider_view_user_favorites"
+				android:background="@drawable/divider" android:layout_width="fill_parent"
+				android:layout_height="1dp" android:layout_below="@+id/view_user_favorites" />
+			<Button android:id="@+id/view_user_following"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/divider_view_user_favorites"
+				android:layout_marginTop="10dp" android:layout_marginBottom="10dp"
+				android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+				android:gravity="center" android:text="@string/view_user_following_label" />
+		</RelativeLayout>
+	</ScrollView>
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true" android:gravity="right">
+		<ImageView android:id="@+id/community_icon"
+			android:layout_width="75dip" android:layout_height="75dip"
+			android:src="@drawable/community_button" />
+	</RelativeLayout>
+</RelativeLayout>
+	

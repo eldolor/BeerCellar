@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<Button android:id="@+id/save" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+		android:layout_marginTop="20dp" android:text="@string/save_label"
+		android:padding="10dp" android:gravity="center_vertical" />
+	<Button android:id="@+id/cancel" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_toRightOf="@+id/save"
+		android:layout_marginLeft="5dp" android:layout_marginTop="20dp"
+		android:text="@string/cancel_label" android:padding="10dp"
+		android:gravity="center_vertical" />
+	<ScrollView android:id="@+id/ScrollView01"
+		android:layout_width="fill_parent" android:layout_below="@id/save"
+		android:layout_marginTop="20dp" android:layout_height="fill_parent">
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+			<TextView
+				android:id="@+id/receive_new_beer_reviews_notification_from_following_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/beer" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/receive_new_beer_reviews_notification_from_following_label" android:textStyle="bold" />
+			<View android:id="@+id/divider1" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/receive_new_beer_reviews_notification_from_following_label" />
+			<CheckBox android:id="@+id/receive_new_beer_reviews_from_following_notification"
+				android:layout_below="@+id/divider1" android:layout_marginLeft="5dp"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:checked="true" />
+
+			<TextView android:id="@+id/receive_new_beer_reviews_notification_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/receive_new_beer_reviews_from_following_notification"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/receive_new_beer_reviews_notification_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider2" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/receive_new_beer_reviews_notification_label" />
+			<CheckBox android:id="@+id/receive_new_beer_reviews_notification"
+				android:layout_below="@+id/divider2" android:layout_marginLeft="5dp"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:checked="true" />
+
+			<TextView android:id="@+id/receive_beer_of_the_day_notification_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/receive_new_beer_reviews_notification"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/receive_beer_of_the_day_notification_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider5" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/receive_beer_of_the_day_notification_label" />
+			<CheckBox android:id="@+id/receive_beer_of_the_day_notification"
+				android:layout_below="@+id/divider5" android:layout_marginLeft="5dp"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:checked="true" />
+
+			<TextView android:id="@+id/email_subscription_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/receive_beer_of_the_day_notification"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/email_subscription_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider3" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/email_subscription_label" />
+			<CheckBox android:id="@+id/email_subscription"
+				android:layout_below="@+id/divider3" android:layout_marginLeft="5dp"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:checked="true" />
+
+			<TextView android:id="@+id/logout_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/email_subscription"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/logout_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider4" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/logout_label" />
+			<Button android:id="@+id/logout" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_below="@+id/divider4"
+				android:layout_marginLeft="5dp" android:text="@string/logout_label"
+				android:padding="10dp" android:gravity="center_vertical" />
+
+		</RelativeLayout>
+	</ScrollView>
+</RelativeLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="wrap_content"
+	android:layout_height="wrap_content" android:padding="10dp"
+	android:gravity="center">
+	<TextView android:id="@+id/message" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="@string/rate_and_review_reminder_message"
+		android:textSize="22sp" />
+	<Button android:id="@+id/rate_and_review_reminder_rate_button"
+		android:layout_width="150dp" android:layout_height="wrap_content"
+		android:layout_marginTop="10dp" android:text="@string/rate_and_review_reminder_rate_label" />
+	<Button android:id="@+id/rate_and_review_reminder_remind_me_later_button"
+		android:layout_width="150dp" android:layout_height="wrap_content"
+		android:layout_marginTop="5dp"
+		android:text="@string/rate_and_review_reminder_remind_me_later_label" />
+	<Button android:id="@+id/rate_and_review_reminder_no_button"
+		android:layout_width="150dp" android:layout_height="wrap_content"
+		android:layout_marginTop="5dp" android:text="@string/rate_and_review_reminder_no_label" />
+
+</LinearLayout>
