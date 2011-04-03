@@ -413,9 +413,10 @@ public class CommunityBeerView extends Activity {
 					.getString(AppConfig.FACEBOOK_ACCESS_TOKEN, null);
 			String url = AppConfig.FACEBOOK_LIKE_URL_BASE
 					+ mCommunityBeer.beerId + AppConfig.FACEBOOK_LIKE_URL_ETC
+					+ AppConfig.FACEBOOK_LIKE_URL_LOCALE + Locale.getDefault()
 					+ AppConfig.FACEBOOK_LIKE_URL_ACCESS_TOKEN + facebookToken;
 			// String encodedUrl = URLEncoder.encode(url, "UTF-8");
-			Log.i(TAG, "FacebookLikeButton URL: " + url);
+			Log.d(TAG, "FacebookLikeButton URL: " + url);
 			mFacebookLikeWebView.loadUrl(url);
 		} catch (Exception e) {
 			Log.e(TAG, "error: "

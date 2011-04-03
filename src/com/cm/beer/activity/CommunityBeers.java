@@ -1003,51 +1003,51 @@ public class CommunityBeers extends ListActivity {
 					}
 				}
 				/***********************************************/
-				{
-					final TextView textView = ((TextView) v
-							.findViewById(R.id.text3));
-					if (textView != null) {
-						// setup review helpful message
-						final Handler reviewHelpfulCountHandler = new Handler() {
-							@Override
-							public void handleMessage(Message message) {
-								String jsonStr = (String) message.obj;
-								if ((jsonStr != null)
-										&& (jsonStr.startsWith("{"))) {
-									JSONObject json;
-									try {
-										json = new JSONObject(jsonStr);
-										int yes = json.getInt("yes");
-										int no = json.getInt("no");
-										String _reviewHelpfulMessage = yes
-												+ " out of " + (yes + no)
-												+ " found this review helpful";
-										Log.d(TAG, _reviewHelpfulMessage);
-										textView.setText(_reviewHelpfulMessage);
-									} catch (JSONException e) {
-										Log
-												.e(
-														TAG,
-														"error: "
-																+ ((e
-																		.getMessage() != null) ? e
-																		.getMessage()
-																		.replace(
-																				" ",
-																				"_")
-																		: ""),
-														e);
-									}
-								} else {
-									textView.setVisibility(View.GONE);
-								}
-							}
-						};
-						mContentManager.fetchContentOnThread(Util
-								.getReviewHelpfulCountUrl(beer.beerId),
-								reviewHelpfulCountHandler);
-					}
-				}
+//				{
+//					final TextView textView = ((TextView) v
+//							.findViewById(R.id.text3));
+//					if (textView != null) {
+//						// setup review helpful message
+//						final Handler reviewHelpfulCountHandler = new Handler() {
+//							@Override
+//							public void handleMessage(Message message) {
+//								String jsonStr = (String) message.obj;
+//								if ((jsonStr != null)
+//										&& (jsonStr.startsWith("{"))) {
+//									JSONObject json;
+//									try {
+//										json = new JSONObject(jsonStr);
+//										int yes = json.getInt("yes");
+//										int no = json.getInt("no");
+//										String _reviewHelpfulMessage = yes
+//												+ " out of " + (yes + no)
+//												+ " found this review helpful";
+//										Log.d(TAG, _reviewHelpfulMessage);
+//										textView.setText(_reviewHelpfulMessage);
+//									} catch (JSONException e) {
+//										Log
+//												.e(
+//														TAG,
+//														"error: "
+//																+ ((e
+//																		.getMessage() != null) ? e
+//																		.getMessage()
+//																		.replace(
+//																				" ",
+//																				"_")
+//																		: ""),
+//														e);
+//									}
+//								} else {
+//									textView.setVisibility(View.GONE);
+//								}
+//							}
+//						};
+//						mContentManager.fetchContentOnThread(Util
+//								.getReviewHelpfulCountUrl(beer.beerId),
+//								reviewHelpfulCountHandler);
+//					}
+//				}
 				/***********************************************/
 				{
 					String text = (!beer.state.equals("")) ? (beer.state + " " + beer.country)

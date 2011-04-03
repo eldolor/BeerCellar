@@ -19,17 +19,11 @@
 		android:textSize="12sp" android:ellipsize="marquee"
 		android:singleLine="true" android:layout_above="@+id/text5"
 		/>
-	<TextView android:id="@+id/text3" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_toRightOf="@+id/list_thumbnail"
-		android:layout_gravity="center_vertical" android:textStyle="normal"
-		android:textSize="12sp" android:ellipsize="marquee"
-		android:singleLine="true" android:layout_above="@+id/text4"
-		android:textColor="@drawable/beer_yellow" />
 	<TextView android:id="@+id/text2" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_toRightOf="@+id/list_thumbnail"
 		android:layout_gravity="center_vertical" android:textStyle="normal"
 		android:textSize="18sp" android:ellipsize="marquee"
-		android:singleLine="true" android:layout_above="@+id/text3" />
+		android:singleLine="true" android:layout_above="@+id/text4" />
 	<TextView android:id="@+id/text1" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_toRightOf="@+id/list_thumbnail"
 		android:layout_gravity="center_vertical" android:textStyle="normal"
