@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
-	<RelativeLayout android:id="@+id/top"
+	<RelativeLayout android:id="@+id/header"
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_marginTop="10dp">
 		<Button android:id="@+id/favorites" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:textSize="12sp"
 			android:gravity="center_vertical" android:layout_alignParentLeft="true" />
-		<WebView android:id="@+id/facebook_like_webview"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
+		<com.cm.beer.util.FacebookLikeButtonWebView android:id="@+id/facebook_like_webview"
+			android:layout_width="wrap_content" android:layout_height="50dp" 
 			android:layout_marginLeft="10dp" android:layout_toRightOf="@+id/favorites" />
 	</RelativeLayout>
 	<ScrollView android:id="@+id/ScrollView01"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:layout_below="@+id/top">
+		android:layout_below="@+id/header">
 		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="fill_parent" android:layout_height="fill_parent">
 			<ImageView android:id="@+id/thumbnail"

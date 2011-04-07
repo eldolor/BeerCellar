@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
@@ -28,9 +29,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,8 +44,10 @@ import com.cm.beer.config.AppConfig;
 import com.cm.beer.transfer.CommunityBeer;
 import com.cm.beer.util.ContentManager;
 import com.cm.beer.util.DrawableManager;
+import com.cm.beer.util.FacebookLikeButtonWebView;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
+import com.facebook.android.Facebook;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class CommunityBeerView extends Activity {
@@ -64,7 +69,7 @@ public class CommunityBeerView extends Activity {
 
 	// Button mYes;
 	// Button mNo;
-	WebView mFacebookLikeWebView;
+	FacebookLikeButtonWebView mFacebookLikeWebView;
 	// TextView mRatingThankYouMessage;
 	// TextView mReviewHelpfulMessage;
 	TextView mReviewedByLabel;
@@ -121,6 +126,7 @@ public class CommunityBeerView extends Activity {
 	protected static final int LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N = 1;
 	protected static final int LOGIN_INTERCEPT_REQUEST_CODE_FOR_FOLLOW = 2;
 	protected static final int LOGIN_INTERCEPT_REQUEST_CODE_FOR_ADD_TO_FAVORITES = 3;
+	protected static final int LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON = 4;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -263,7 +269,17 @@ public class CommunityBeerView extends Activity {
 				// Get favorites
 				String _favoritesUrl = Util.getFavoritesUrl(mUser.getUserId());
 				mContentManager.fetchContentOnThread(_favoritesUrl);
+
+				setupFacebookLikeButton();
+
 				Log.i(TAG, "onActivityResult:");
+			}
+		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON) {
+			if (resultCode == RESULT_OK) {
+
+				Log
+						.i(TAG,
+								"onActivityResult:LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON");
 			}
 		}
 	}
@@ -327,7 +343,7 @@ public class CommunityBeerView extends Activity {
 		// mNo.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
 		// PorterDuff.Mode.MULTIPLY);
 		/****************************************/
-		mFacebookLikeWebView = (WebView) findViewById(R.id.facebook_like_webview);
+		mFacebookLikeWebView = (FacebookLikeButtonWebView) findViewById(R.id.facebook_like_webview);
 		mFacebookLikeWebView.getSettings().setJavaScriptEnabled(true);
 		/****************************************/
 		// mRatingThankYouMessage = (TextView)
@@ -405,23 +421,7 @@ public class CommunityBeerView extends Activity {
 		// setupYes();
 		// setupNo();
 
-		try {
-			String facebookToken = this.getSharedPreferences(
-					((AppConfig.SHARED_PREFERENCES_DYNAMIC_CONTEXT.replace(" ",
-							"_")) + "_FACEBOOK"), Context.MODE_PRIVATE)
-					.getString(AppConfig.FACEBOOK_ACCESS_TOKEN, null);
-			String url = AppConfig.FACEBOOK_LIKE_URL_BASE
-					+ mCommunityBeer.beerId + AppConfig.FACEBOOK_LIKE_URL_ETC
-					+ AppConfig.FACEBOOK_LIKE_URL_LOCALE + Locale.getDefault()
-					+ AppConfig.FACEBOOK_LIKE_URL_ACCESS_TOKEN + facebookToken;
-			// String encodedUrl = URLEncoder.encode(url, "UTF-8");
-			Log.d(TAG, "FacebookLikeButton URL: " + url);
-			mFacebookLikeWebView.loadUrl(url);
-		} catch (Exception e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
-		}
+		setupFacebookLikeButton();
 
 		// setup view user profile button
 		setupViewUserProfile();
@@ -529,6 +529,29 @@ public class CommunityBeerView extends Activity {
 		setupAddToFavorites();
 
 		setupCommunityIcon();
+	}
+
+	private void setupFacebookLikeButton() {
+		try {
+			String facebookToken = this.getSharedPreferences(
+					((AppConfig.SHARED_PREFERENCES_DYNAMIC_CONTEXT.replace(" ",
+							"_")) + "_FACEBOOK"), Context.MODE_PRIVATE)
+					.getString(AppConfig.FACEBOOK_ACCESS_TOKEN, null);
+			String url = AppConfig.FACEBOOK_LIKE_URL_BASE
+					+ mCommunityBeer.beerId + AppConfig.FACEBOOK_LIKE_URL_ETC
+					+ AppConfig.FACEBOOK_LIKE_URL_LOCALE + Locale.getDefault()
+					+ AppConfig.FACEBOOK_LIKE_URL_ACCESS_TOKEN + facebookToken;
+			// String encodedUrl = URLEncoder.encode(url, "UTF-8");
+			Log.d(TAG, "FacebookLikeButton URL: " + url);
+			mFacebookLikeWebView
+					.setWebViewClient(new FacebookLikeButtonWebViewClient());
+			mFacebookLikeWebView.loadUrl(url);
+		} catch (Exception e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
+		}
+
 	}
 
 	private void setupViewUserProfile() {
@@ -1646,6 +1669,57 @@ public class CommunityBeerView extends Activity {
 			Log.i(TAG, "onPostExecute finished");
 		}
 
+	}
+
+
+	// ----------------------------------------------------------------------//
+	private class FacebookLikeButtonWebViewClient extends WebViewClient {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.webkit.WebViewClient#shouldOverrideUrlLoading(android.webkit
+		 * .WebView, java.lang.String)
+		 */
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
+		}
+
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "onPageStarted::" + url);
+			}
+			super.onPageStarted(view, url, favicon);
+		}
+
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "onPageFinished::" + url);
+			}
+			super.onPageFinished(view, url);
+		}
+
+		@Override
+		public void onReceivedError(WebView view, int errorCode,
+				String description, String failingUrl) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "onReceivedError::" + failingUrl + "::" + errorCode
+						+ "::" + description);
+			}
+			super.onReceivedError(view, errorCode, description, failingUrl);
+		}
+
+		@Override
+		public void onLoadResource(WebView view, String url) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "onLoadResource::" + url);
+			}
+			super.onLoadResource(view, url);
+		}
 	}
 
 }
