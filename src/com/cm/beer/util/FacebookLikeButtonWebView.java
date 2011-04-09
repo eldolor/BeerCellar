@@ -1,16 +1,13 @@
 package com.cm.beer.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.webkit.WebView;
 
 import com.cm.beer.activity.CommunityBeerView;
-import com.cm.beer.activity.LoginIntercept;
 import com.cm.beer.activity.R;
-import com.cm.beer.config.AppConfig;
 import com.facebook.android.Facebook;
 
 // ----------------------------------------------------------------------//

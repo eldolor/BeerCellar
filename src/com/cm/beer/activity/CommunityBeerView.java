@@ -28,9 +28,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
@@ -48,7 +46,6 @@ import com.cm.beer.util.DrawableManager;
 import com.cm.beer.util.FacebookLikeButtonWebView;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
-import com.facebook.android.Facebook;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class CommunityBeerView extends Activity {
