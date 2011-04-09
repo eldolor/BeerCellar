@@ -64,6 +64,7 @@ public class LoginIntercept extends Activity {
 
 	String[] mFacebookPermissions;
 	Intent mOriginalIntent;
+	String mFacebookOnly;
 
 	User mUser;
 
@@ -95,7 +96,9 @@ public class LoginIntercept extends Activity {
 				&& (extras.getStringArray("FACEBOOK_PERMISSIONS") != null) ? extras
 				.getStringArray("FACEBOOK_PERMISSIONS")
 				: new String[] {});
-
+		mFacebookOnly = ((extras != null)
+				&& (extras.getString("FACEBOOK_ONLY") != null) ? extras
+				.getString("FACEBOOK_ONLY") : "N");
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
 		mTracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
@@ -107,16 +110,22 @@ public class LoginIntercept extends Activity {
 		setContentView(R.layout.login_intercept);
 		mLoginButton = (LoginButton) findViewById(R.id.login);
 		mCommunityLoginButton = (Button) findViewById(R.id.communityLoginButton);
-		mCommunityLoginButton.getBackground().setColorFilter(
-				AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
-		mCommunityLoginButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Log.i(TAG, "mCommunityLoginButton:onClick:userId:");
-				Intent intent = new Intent(mMainActivity, CommunitySignIn.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivityForResult(intent, SIGN_IN_REQUEST);
-			}
-		});
+		if (mFacebookOnly.equals("N")) {
+			mCommunityLoginButton.getBackground().setColorFilter(
+					AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
+			mCommunityLoginButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Log.i(TAG, "mCommunityLoginButton:onClick:userId:");
+					Intent intent = new Intent(mMainActivity,
+							CommunitySignIn.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivityForResult(intent, SIGN_IN_REQUEST);
+				}
+			});
+		} else {
+			findViewById(R.id.shareWithCommunityMessage2).setVisibility(View.GONE);
+			mCommunityLoginButton.setVisibility(View.GONE);
+		}
 
 		mText = (TextView) findViewById(R.id.txt);
 

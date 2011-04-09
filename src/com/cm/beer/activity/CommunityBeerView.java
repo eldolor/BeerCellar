@@ -213,26 +213,28 @@ public class CommunityBeerView extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_Y) {
-//			if (resultCode == RESULT_OK) {
-//				String _url = Util.getSetReviewHelpfulUrl(
-//						mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-//								.getUserId(), "Y");
-//				new AsyncPostReviewHelpfulRating().execute(_url);
-//				// mRatingThankYouMessage.setVisibility(View.VISIBLE);
-//
-//				Log.i(TAG, "onActivityResult:");
-//			}
-//		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N) {
-//			if (resultCode == RESULT_OK) {
-//				String _url = Util.getSetReviewHelpfulUrl(
-//						mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-//								.getUserId(), "N");
-//				new AsyncPostReviewHelpfulRating().execute(_url);
-//				// mRatingThankYouMessage.setVisibility(View.VISIBLE);
-//
-//				Log.i(TAG, "onActivityResult:");
-//			}
+		// if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_Y)
+		// {
+		// if (resultCode == RESULT_OK) {
+		// String _url = Util.getSetReviewHelpfulUrl(
+		// mCommunityBeer.userId, mCommunityBeer.beerId, mUser
+		// .getUserId(), "Y");
+		// new AsyncPostReviewHelpfulRating().execute(_url);
+		// // mRatingThankYouMessage.setVisibility(View.VISIBLE);
+		//
+		// Log.i(TAG, "onActivityResult:");
+		// }
+		// } else if (requestCode ==
+		// LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N) {
+		// if (resultCode == RESULT_OK) {
+		// String _url = Util.getSetReviewHelpfulUrl(
+		// mCommunityBeer.userId, mCommunityBeer.beerId, mUser
+		// .getUserId(), "N");
+		// new AsyncPostReviewHelpfulRating().execute(_url);
+		// // mRatingThankYouMessage.setVisibility(View.VISIBLE);
+		//
+		// Log.i(TAG, "onActivityResult:");
+		// }
 		if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_FOLLOW) {
 			if (resultCode == RESULT_OK) {
 				String _setFollowUrl = Util.getSetFollowUrl(mUser.getUserId(),
@@ -1062,14 +1064,14 @@ public class CommunityBeerView extends Activity {
 
 	}
 
-	
-	public void handleUserNotLoggedInFacebook(){
+	public void handleUserNotLoggedInFacebook() {
 		Log.i(TAG, "handleUserNotLoggedInFacebook");
 		Intent intent = new Intent(mMainActivity, LoginIntercept.class);
-		intent.putExtra("FACEBOOK_PERMISSIONS",
-				AppConfig.FACEBOOK_PERMISSIONS);
-		mMainActivity.startActivityForResult(intent, LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON);
-		
+		intent.putExtra("FACEBOOK_PERMISSIONS", AppConfig.FACEBOOK_PERMISSIONS);
+		intent.putExtra("FACEBOOK_ONLY", "Y");
+		mMainActivity.startActivityForResult(intent,
+				LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON);
+
 	}
 
 	/************************************************************************************/
@@ -1636,7 +1638,6 @@ public class CommunityBeerView extends Activity {
 			mTranslateCharacteristics.setText(R.string.translated_label);
 			Log.i(TAG, "onPostExecute finished");
 		}
-		
 
 	}
 
@@ -1682,7 +1683,6 @@ public class CommunityBeerView extends Activity {
 		}
 
 	}
-
 
 	// ----------------------------------------------------------------------//
 	private class FacebookLikeButtonWebViewClient extends WebViewClient {
@@ -1733,6 +1733,5 @@ public class CommunityBeerView extends Activity {
 			super.onLoadResource(view, url);
 		}
 	}
-	
 
 }
