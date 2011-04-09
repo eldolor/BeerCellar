@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.webkit.WebView;
 
+import com.cm.beer.activity.CommunityBeerView;
 import com.cm.beer.activity.LoginIntercept;
 import com.cm.beer.activity.R;
 import com.cm.beer.config.AppConfig;
@@ -14,7 +15,7 @@ import com.facebook.android.Facebook;
 
 // ----------------------------------------------------------------------//
 public class FacebookLikeButtonWebView extends WebView {
-	private Context mContext;
+	private CommunityBeerView mContext;
 	String TAG;
 	protected static final int LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON = 4;
 
@@ -34,7 +35,7 @@ public class FacebookLikeButtonWebView extends WebView {
 	}
 	
 	private void init(Context context){
-		mContext = context;
+		mContext = (CommunityBeerView)context;
 		// setup TAG
 		TAG = mContext.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
@@ -49,10 +50,7 @@ public class FacebookLikeButtonWebView extends WebView {
 			if (!new Facebook().isSessionValid()) {
 				Log.i(TAG, "onTouchEvent: Invalid Facebook Session!");
 				/** Handle User Not Logged In **/
-				Intent intent = new Intent(mContext, LoginIntercept.class);
-				intent.putExtra("FACEBOOK_PERMISSIONS",
-						AppConfig.FACEBOOK_PERMISSIONS);
-				mContext.startActivity(intent);
+				mContext.handleUserNotLoggedInFacebook();
 
 			} else {
 				Log.i(TAG, "onTouchEvent: Valid Facebook Session");

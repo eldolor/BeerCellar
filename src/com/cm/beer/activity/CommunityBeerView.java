@@ -28,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -215,27 +216,27 @@ public class CommunityBeerView extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_Y) {
-			if (resultCode == RESULT_OK) {
-				String _url = Util.getSetReviewHelpfulUrl(
-						mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-								.getUserId(), "Y");
-				new AsyncPostReviewHelpfulRating().execute(_url);
-				// mRatingThankYouMessage.setVisibility(View.VISIBLE);
-
-				Log.i(TAG, "onActivityResult:");
-			}
-		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N) {
-			if (resultCode == RESULT_OK) {
-				String _url = Util.getSetReviewHelpfulUrl(
-						mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-								.getUserId(), "N");
-				new AsyncPostReviewHelpfulRating().execute(_url);
-				// mRatingThankYouMessage.setVisibility(View.VISIBLE);
-
-				Log.i(TAG, "onActivityResult:");
-			}
-		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_FOLLOW) {
+//		if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_Y) {
+//			if (resultCode == RESULT_OK) {
+//				String _url = Util.getSetReviewHelpfulUrl(
+//						mCommunityBeer.userId, mCommunityBeer.beerId, mUser
+//								.getUserId(), "Y");
+//				new AsyncPostReviewHelpfulRating().execute(_url);
+//				// mRatingThankYouMessage.setVisibility(View.VISIBLE);
+//
+//				Log.i(TAG, "onActivityResult:");
+//			}
+//		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N) {
+//			if (resultCode == RESULT_OK) {
+//				String _url = Util.getSetReviewHelpfulUrl(
+//						mCommunityBeer.userId, mCommunityBeer.beerId, mUser
+//								.getUserId(), "N");
+//				new AsyncPostReviewHelpfulRating().execute(_url);
+//				// mRatingThankYouMessage.setVisibility(View.VISIBLE);
+//
+//				Log.i(TAG, "onActivityResult:");
+//			}
+		if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_FOLLOW) {
 			if (resultCode == RESULT_OK) {
 				String _setFollowUrl = Util.getSetFollowUrl(mUser.getUserId(),
 						mUser.getUserName(), mUser.getUserLink(),
@@ -251,6 +252,9 @@ public class CommunityBeerView extends Activity {
 				// Get follow
 				String _followUrl = Util.getFollowUrl(mUser.getUserId());
 				mContentManager.fetchContentOnThread(_followUrl);
+
+				setupFacebookLikeButton();
+
 				Log.i(TAG, "onActivityResult:");
 			}
 		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_ADD_TO_FAVORITES) {
@@ -276,7 +280,7 @@ public class CommunityBeerView extends Activity {
 			}
 		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON) {
 			if (resultCode == RESULT_OK) {
-
+				setupFacebookLikeButton();
 				Log
 						.i(TAG,
 								"onActivityResult:LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON");
@@ -1061,6 +1065,16 @@ public class CommunityBeerView extends Activity {
 
 	}
 
+	
+	public void handleUserNotLoggedInFacebook(){
+		Log.i(TAG, "handleUserNotLoggedInFacebook");
+		Intent intent = new Intent(mMainActivity, LoginIntercept.class);
+		intent.putExtra("FACEBOOK_PERMISSIONS",
+				AppConfig.FACEBOOK_PERMISSIONS);
+		mMainActivity.startActivityForResult(intent, LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON);
+		
+	}
+
 	/************************************************************************************/
 	private class AsyncPostReviewHelpfulRating extends
 			AsyncTask<Object, Void, Object> {
@@ -1625,6 +1639,7 @@ public class CommunityBeerView extends Activity {
 			mTranslateCharacteristics.setText(R.string.translated_label);
 			Log.i(TAG, "onPostExecute finished");
 		}
+		
 
 	}
 
@@ -1721,5 +1736,6 @@ public class CommunityBeerView extends Activity {
 			super.onLoadResource(view, url);
 		}
 	}
+	
 
 }
