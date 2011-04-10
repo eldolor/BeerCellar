@@ -468,10 +468,15 @@ public class CommunityBeerView extends Activity {
 		mPrice.setText(mCommunityBeer.currency + mCommunityBeer.price);
 		mStyle.setText(mCommunityBeer.style);
 
-		final String link = mCommunityBeer.breweryLink;
 		mBrewery.setText(mCommunityBeer.brewery);
 
-		if ((link != null) && (!link.equals("")) && (!link.equals("null"))) {
+		if ((mCommunityBeer.breweryLink != null)
+				&& (!mCommunityBeer.breweryLink.equals(""))
+				&& (!mCommunityBeer.breweryLink.equals("null"))) {
+			// if link does not start with http:// then add to it
+			final String _link = (!mCommunityBeer.breweryLink
+					.startsWith("http://")) ? ("http://" + mCommunityBeer.breweryLink)
+					: mCommunityBeer.breweryLink;
 			mBrewery.setTextColor(android.graphics.Color.BLUE);
 			mBrewery.setPaintFlags(mBrewery.getPaintFlags()
 					| Paint.UNDERLINE_TEXT_FLAG);
@@ -481,7 +486,7 @@ public class CommunityBeerView extends Activity {
 					mBrewery.setText(R.string.progress_loading_message);
 					Intent intent = new Intent(mMainActivity.getApplication(),
 							BeerWebView.class);
-					intent.putExtra("URL", link);
+					intent.putExtra("URL", _link);
 					startActivity(intent);
 
 				}

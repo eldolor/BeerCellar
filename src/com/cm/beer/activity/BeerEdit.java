@@ -270,7 +270,10 @@ public class BeerEdit extends Activity implements
 		note.price = mPrice.getText().toString();
 		note.style = mStyle.getText().toString();
 		note.brewery = mBrewery.getText().toString();
-		note.breweryLink = mBreweryLink.getText().toString();
+		String _link = (!mBreweryLink.getText().toString()
+				.startsWith("http://")) ? ("http://" + mBreweryLink.getText()
+				.toString()) : mBreweryLink.getText().toString();
+		note.breweryLink = _link;
 		note.state = mState.getText().toString();
 		note.country = mCountry.getText().toString();
 		note.rating = String.valueOf(mRating.getRating());
@@ -302,7 +305,10 @@ public class BeerEdit extends Activity implements
 		note.price = mPrice.getText().toString();
 		note.style = mStyle.getText().toString();
 		note.brewery = mBrewery.getText().toString();
-		note.breweryLink = mBreweryLink.getText().toString();
+		String _link = (!mBreweryLink.getText().toString()
+				.startsWith("http://")) ? ("http://" + mBreweryLink.getText()
+				.toString()) : mBreweryLink.getText().toString();
+		note.breweryLink = _link;
 		note.state = mState.getText().toString();
 		note.country = mCountry.getText().toString();
 		note.rating = String.valueOf(mRating.getRating());
@@ -634,9 +640,9 @@ public class BeerEdit extends Activity implements
 	protected void display() {
 
 		Log.i(TAG, "display");
-//		//preemptively send out the notification
-//		sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri
-//				.parse("file://" + Environment.getExternalStorageDirectory())));
+		// //preemptively send out the notification
+		// sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri
+		// .parse("file://" + Environment.getExternalStorageDirectory())));
 
 		/****************************************/
 		mCamera = (ImageView) findViewById(R.id.camera);
@@ -674,12 +680,12 @@ public class BeerEdit extends Activity implements
 								"BeerEdit: The user wants to upload a photo!");
 
 						Intent intent = new Intent(mMainActivity
-								.getApplication(),
-								SDCardExplorer.class);
+								.getApplication(), SDCardExplorer.class);
 						intent.putExtra("ROWID", String.valueOf(mRowId
 								.longValue()));
 						intent.putExtra("STORAGE", "EXTERNAL");
-						intent.putExtra("REQUESTCODE", AppConfig.SELECT_IMAGE_REQUEST_CODE);
+						intent.putExtra("REQUESTCODE",
+								AppConfig.SELECT_IMAGE_REQUEST_CODE);
 						startActivityForResult(intent,
 								AppConfig.SELECT_IMAGE_REQUEST_CODE);
 
