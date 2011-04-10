@@ -3,15 +3,16 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 	<RelativeLayout android:id="@+id/header"
 		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:layout_marginTop="10dp">
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<Button android:id="@+id/favorites" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:textSize="12sp"
-			android:gravity="center_vertical" android:layout_alignParentLeft="true" />
+			android:gravity="center_vertical" android:layout_alignParentLeft="true"
+			android:layout_marginTop="10dp" />
 		<com.cm.beer.util.FacebookLikeButtonWebView
 			android:id="@+id/facebook_like_webview" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_marginLeft="20dp"
-			android:layout_toRightOf="@+id/favorites" android:gravity="center_vertical"/>
+			android:layout_toRightOf="@+id/favorites" android:gravity="center_vertical"
+			android:layout_marginTop="12dp" />
 	</RelativeLayout>
 	<ScrollView android:id="@+id/ScrollView01"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"

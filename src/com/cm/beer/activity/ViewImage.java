@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class ViewImage extends Activity {
@@ -116,6 +117,7 @@ public class ViewImage extends Activity {
 				finish();
 			}
 		});
+		Util.setGoogleAdSense(this);
 
 	}
 

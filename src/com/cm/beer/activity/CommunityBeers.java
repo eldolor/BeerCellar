@@ -113,6 +113,7 @@ public class CommunityBeers extends ListActivity {
 		mDrawableManager = DrawableManager.getInstance();
 		mContentManager = ContentManager.getInstance();
 
+
 	}
 
 	/*
@@ -337,6 +338,8 @@ public class CommunityBeers extends ListActivity {
 		getListView().setTextFilterEnabled(true);
 		mTracker.trackPageView("CommunityBeers");
 		mTracker.dispatch();
+
+		Util.setGoogleAdSense(this);
 
 		mCommunityIcon = (ImageView) findViewById(R.id.community_icon);
 		mCommunityIcon.setOnClickListener(new OnClickListener() {

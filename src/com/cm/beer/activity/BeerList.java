@@ -44,6 +44,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class BeerList extends ListActivity {
@@ -138,6 +139,8 @@ public class BeerList extends ListActivity {
 		// initialize Footer View for the list
 		initFooterView();
 		fillData(null);
+
+		Util.setGoogleAdSense(this);
 
 	}
 

@@ -52,6 +52,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
+import android.view.View;
 
 import com.cm.beer.activity.NotificationService;
 import com.cm.beer.activity.R;
@@ -69,9 +70,11 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 public class Util {
 	private static String TAG = Util.class.getName();
 
-	public static void setGoogleAdSense(final Activity activity,
-			String channelId, GoogleAdView adView) {
+	public static void setGoogleAdSense(final Activity activity) {
 		if (AppConfig.IS_BEER_LITE) {
+			GoogleAdView adView = (GoogleAdView) activity
+			.findViewById(R.id.google_adview);
+			adView.setVisibility(View.VISIBLE);
 			// Set up GoogleAdView.
 			AdSenseSpec adSenseSpec = new AdSenseSpec(AppConfig.CLIENT_ID) // Specify
 					// client
@@ -82,7 +85,7 @@ public class Util {
 					.setAppName(AppConfig.APP_NAME) // Set application name.
 					// (Required)
 					.setKeywords(AppConfig.KEYWORDS) // Specify keywords.
-					.setChannel(channelId) // Set channel
+					.setChannel(AppConfig.BEER_CELLAR_LITE_CHANNEL_ID) // Set channel
 					// ID.
 					.setAdType(AdType.TEXT_IMAGE) // Set ad type .
 					.setAdTestEnabled(AppConfig.AD_TEST_ENABLED) // Keep true
