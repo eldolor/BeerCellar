@@ -189,10 +189,9 @@ public class AppConfig {
 
 	public static final String[] COMMUNITY_OPTIONS = new String[] {
 			"My Profile", "Beers From Around the World", "Top Rated Beers",
-			"Most Helpful Beer Reviews", "Worst Beers", "Search Beers",
-			"Beers by Country", "Beers by State/Province/Region",
-			"Favorite Beer Reviews", "My Beer Reviews", "Following",
-			"Followers" };
+			"Worst Beers", "Search Beers", "Beers by Country",
+			"Beers by State/Province/Region", "Favorite Beer Reviews",
+			"My Beer Reviews", "Following", "Followers" };
 
 	public static final String SHARE_WITH_COMMUNITY_INTERCEPT = "INTERCEPT";
 	public static final String SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT = "DO_NOT_INTERCEPT";

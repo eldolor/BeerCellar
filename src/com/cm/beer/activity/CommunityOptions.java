@@ -144,16 +144,6 @@ public class CommunityOptions extends ListActivity {
 			startActivity(intent);
 			return;
 		case 3:
-			mTracker.trackEvent("CommunityOptions",
-					"BeersWithMostHelpfulReviews", "Clicked", 0);
-			mTracker.dispatch();
-			intent = new Intent(mMainActivity.getApplication(),
-					CommunityBeers.class);
-			intent.putExtra("OPTION",
-					AppConfig.COMMUNITY_MOST_HELPFUL_BEER_REVIEWS);
-			startActivity(intent);
-			return;
-		case 4:
 			mTracker.trackEvent("CommunityOptions", "WorstBeers", "Clicked", 0);
 			mTracker.dispatch();
 			intent = new Intent(mMainActivity.getApplication(),
@@ -161,7 +151,7 @@ public class CommunityOptions extends ListActivity {
 			intent.putExtra("OPTION", AppConfig.COMMUNITY_WORST_BEERS);
 			startActivity(intent);
 			return;
-		case 5:
+		case 4:
 			mTracker
 					.trackEvent("CommunityOptions", "SearchBeers", "Clicked", 0);
 			mTracker.dispatch();
@@ -170,7 +160,7 @@ public class CommunityOptions extends ListActivity {
 			intent.putExtra("OPTION", AppConfig.COMMUNITY_SEARCH_BEERS);
 			startActivity(intent);
 			return;
-		case 6:
+		case 5:
 			mTracker.trackEvent("CommunityOptions", "BeersByCountry",
 					"Clicked", 0);
 			mTracker.dispatch();
@@ -179,7 +169,7 @@ public class CommunityOptions extends ListActivity {
 			intent.putExtra("OPTION", AppConfig.COMMUNITY_BEERS_BY_COUNTRY);
 			startActivity(intent);
 			return;
-		case 7:
+		case 6:
 			mTracker.trackEvent("CommunityOptions", "BeersByState", "Clicked",
 					0);
 			mTracker.dispatch();
@@ -188,7 +178,7 @@ public class CommunityOptions extends ListActivity {
 			intent.putExtra("OPTION", AppConfig.COMMUNITY_BEERS_BY_STATE);
 			startActivity(intent);
 			return;
-		case 8:
+		case 7:
 			mTracker.trackEvent("CommunityOptions", "FavoriteBeerReviews",
 					"Clicked", 0);
 			mTracker.dispatch();
@@ -204,7 +194,7 @@ public class CommunityOptions extends ListActivity {
 						LOGIN_INTERCEPT_FOR_FAVORITE_BEERS_REQUEST_CODE);
 			}
 			return;
-		case 9:
+		case 8:
 			mTracker.trackEvent("CommunityOptions", "MyBeerReviews", "Clicked",
 					0);
 			mTracker.dispatch();
@@ -220,7 +210,7 @@ public class CommunityOptions extends ListActivity {
 						LOGIN_INTERCEPT_FOR_MY_BEERS_REQUEST_CODE);
 			}
 			return;
-		case 10:
+		case 9:
 			mTracker.trackEvent("CommunityOptions", "Following", "Clicked", 0);
 			mTracker.dispatch();
 			// If user id does not exist
@@ -238,7 +228,7 @@ public class CommunityOptions extends ListActivity {
 						LOGIN_INTERCEPT_FOR_FOLLOWING_REQUEST_CODE);
 			}
 			return;
-		case 11:
+		case 10:
 			mTracker.trackEvent("CommunityOptions", "Followers", "Clicked", 0);
 			mTracker.dispatch();
 			// If user id does not exist

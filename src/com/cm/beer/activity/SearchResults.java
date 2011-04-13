@@ -37,23 +37,29 @@ import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class SearchResults extends ListActivity {
 	String TAG;
 
-	static final int ACTIVITY_SHARE = 1;
+	static final int ACTIVITY_SHARE_ON_FACEBOOK = 1;
 	static final int ACTIVITY_ABOUT_THIS_BEER = 2;
 	static final int ACTIVITY_VIEW = 3;
+	static final int ACTIVITY_SHARE_WITH_COMMUNITY = 4;
 
 	static final Handler handler = new Handler();
 
 	static final int MENU_GROUP = 0;
-	static final int SHARE_ID = Menu.FIRST + 1;
+	static final int SHARE_ON_FACEBOOK_ID = Menu.FIRST + 1;
 	static final int ABOUT_THIS_BEER_ID = Menu.FIRST + 2;
 	static final int SEND_ERROR_REPORT_ID = Menu.FIRST + 3;
 	static final int SHOW_LOCATION_ID = Menu.FIRST + 4;
+	static final int SHARE_WITH_COMMUNITY_ID = Menu.FIRST + 5;
+
+	static final int FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST = 99;
+	protected static final int SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE = 98;
 
 	NotesDbAdapter mDbHelper;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy");
@@ -295,10 +301,18 @@ public class SearchResults extends ListActivity {
 							R.string.menu_show_location);
 				}
 			}
+			String _beerStyle = cursor.getString(cursor
+					.getColumnIndex(NotesDbAdapter.KEY_STYLE));
+			if ((_beerStyle != null) && (!_beerStyle.equals(""))) {
+				menu.add(MENU_GROUP, ABOUT_THIS_BEER_ID, menuPosition++,
+						R.string.menu_about_this_beer);
+			}
+
 		}
-		menu.add(MENU_GROUP, SHARE_ID, menuPosition++, R.string.menu_share);
-		menu.add(MENU_GROUP, ABOUT_THIS_BEER_ID, menuPosition++,
-				R.string.menu_about_this_beer);
+		menu.add(MENU_GROUP, SHARE_ON_FACEBOOK_ID, menuPosition++,
+				R.string.menu_share_on_facebook);
+		menu.add(MENU_GROUP, SHARE_WITH_COMMUNITY_ID, menuPosition++,
+				R.string.menu_share_with_community);
 
 		super.onCreateContextMenu(menu, v, menuInfo);
 
@@ -317,7 +331,7 @@ public class SearchResults extends ListActivity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 		switch (item.getItemId()) {
-		case SHARE_ID:
+		case SHARE_ON_FACEBOOK_ID:
 			mTracker.trackEvent("BeerList", "ShareOnFacebook", "Clicked", 0);
 			mTracker.dispatch();
 			shareOnFacebook(info.id);
@@ -329,6 +343,11 @@ public class SearchResults extends ListActivity {
 			mTracker.trackEvent("BeerList", "ShowLocation", "Clicked", 0);
 			mTracker.dispatch();
 			viewMap(info.id);
+			return true;
+		case SHARE_WITH_COMMUNITY_ID:
+			mTracker.trackEvent("BeerList", "ShareWithCommunity", "Clicked", 0);
+			mTracker.dispatch();
+			shareWithCommunity(info.id);
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -360,13 +379,29 @@ public class SearchResults extends ListActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onActivityResult");
-		}
-		fillData();
-		if (resultCode == AppConfig.FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE) {
-			Toast.makeText(SearchResults.this, R.string.on_facebook_wall_post,
+		Log.i(TAG, "onActivityResult");
+		Bundle extras = (intent != null) ? intent.getExtras() : null;
+		if (requestCode == FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST) {
+			if (resultCode == RESULT_OK) {
+				// pass the rowId along to ShareOnFacebook
+				long rowId = (extras != null) ? extras
+						.getLong(NotesDbAdapter.KEY_ROWID) : 0L;
+				Log.i(TAG, "onActivityResult:Row Id=" + rowId);
+				Intent newIntent = new Intent(this, ShareOnFacebook.class);
+				newIntent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
+				startActivityForResult(newIntent, ACTIVITY_SHARE_ON_FACEBOOK);
+			}
+		} else if (requestCode == SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE) {
+			// Toast thanks for sharing
+			Toast.makeText(mMainActivity, R.string.on_sharing_with_community,
 					Toast.LENGTH_LONG).show();
+			fillData();
+		} else {
+			fillData();
+			if (resultCode == AppConfig.FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE) {
+				Toast.makeText(mMainActivity, R.string.on_facebook_wall_post,
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 
 	}
@@ -480,9 +515,45 @@ public class SearchResults extends ListActivity {
 			Log.i(TAG, "shareOnFacebook");
 		}
 		showDialog(AppConfig.DIALOG_LOADING_ID);
-		Intent intent = new Intent(this, ShareOnFacebook.class);
+		Intent intent = new Intent(mMainActivity.getApplication(),
+				LoginIntercept.class);
+		intent.putExtra("FACEBOOK_PERMISSIONS", AppConfig.FACEBOOK_PERMISSIONS);
 		intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
-		startActivityForResult(intent, ACTIVITY_SHARE);
+		Log.i(TAG, "shareOnFacebook:Row Id=" + rowId);
+		startActivityForResult(intent,
+				FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST);
+
+	}
+
+	/**
+	 * 
+	 * @param rowId
+	 */
+	private void shareWithCommunity(long rowId) {
+		if (AppConfig.LOGGING_ENABLED) {
+			Log.i(TAG, "shareOnFacebook");
+		}
+		showDialog(AppConfig.DIALOG_LOADING_ID);
+		{
+			// update note
+			Note note = new Note();
+			note.id = rowId;
+			note.share = "Y";
+			mDbHelper.updateNote(note);
+		}
+		Intent intent = new Intent(mMainActivity.getApplication(),
+				ShareWithCommunity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
+		intent.putExtra("UPLOAD_PHOTO", true);
+		intent.putExtra("INTERCEPT",
+				AppConfig.SHARE_WITH_COMMUNITY_INTERCEPT_IF_NOT_LOGGED_IN);
+		intent.putExtra("ACTION", AppConfig.ACTION_UPDATE);
+		startActivityForResult(intent,
+				SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
+
+		Log.i(TAG, "Intent Share With Community Started");
+
 	}
 
 	private void aboutThisBeer(long rowId) {

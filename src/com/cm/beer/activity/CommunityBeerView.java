@@ -469,10 +469,12 @@ public class CommunityBeerView extends Activity {
 		mStyle.setText(mCommunityBeer.style);
 
 		mBrewery.setText(mCommunityBeer.brewery);
-
+		Log.i(TAG, "populateFields::brewery: " + mCommunityBeer.brewery
+				+ " brewery link: " + mCommunityBeer.breweryLink);
 		if ((mCommunityBeer.breweryLink != null)
-				&& (!mCommunityBeer.breweryLink.equals(""))
-				&& (!mCommunityBeer.breweryLink.equals("null"))) {
+				&& (!mCommunityBeer.breweryLink.trim().equals(""))
+				&& (!mCommunityBeer.breweryLink.trim().equals("null"))
+				&& (!mCommunityBeer.breweryLink.trim().equalsIgnoreCase("http://"))) {
 			// if link does not start with http:// then add to it
 			final String _link = (!mCommunityBeer.breweryLink
 					.startsWith("http://")) ? ("http://" + mCommunityBeer.breweryLink)
@@ -1037,37 +1039,37 @@ public class CommunityBeerView extends Activity {
 
 	}
 
-//	private void setupReviewHelpfulCount() {
-//		mReviewHelpfulCountHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message message) {
-//				String jsonStr = (String) message.obj;
-//				Log.i(TAG, jsonStr);
-//				if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
-//					JSONObject json;
-//					try {
-//						json = new JSONObject(jsonStr);
-//						int yes = json.getInt("yes");
-//						int no = json.getInt("no");
-//						String _reviewHelpfulMessage = yes + " out of "
-//								+ (yes + no) + " found this review helpful:";
-//						Log.d(TAG, _reviewHelpfulMessage);
-//						// mReviewHelpfulMessage.setText(_reviewHelpfulMessage);
-//					} catch (JSONException e) {
-//						Log.e(TAG, "error: "
-//								+ ((e.getMessage() != null) ? e.getMessage()
-//										.replace(" ", "_") : ""), e);
-//					}
-//				} else {
-//					// mReviewHelpfulMessage.setVisibility(View.GONE);
-//				}
-//			}
-//		};
-//		mContentManager.fetchContentOnThread(Util
-//				.getReviewHelpfulCountUrl(mCommunityBeer.beerId),
-//				mReviewHelpfulCountHandler);
-//
-//	}
+	// private void setupReviewHelpfulCount() {
+	// mReviewHelpfulCountHandler = new Handler() {
+	// @Override
+	// public void handleMessage(Message message) {
+	// String jsonStr = (String) message.obj;
+	// Log.i(TAG, jsonStr);
+	// if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
+	// JSONObject json;
+	// try {
+	// json = new JSONObject(jsonStr);
+	// int yes = json.getInt("yes");
+	// int no = json.getInt("no");
+	// String _reviewHelpfulMessage = yes + " out of "
+	// + (yes + no) + " found this review helpful:";
+	// Log.d(TAG, _reviewHelpfulMessage);
+	// // mReviewHelpfulMessage.setText(_reviewHelpfulMessage);
+	// } catch (JSONException e) {
+	// Log.e(TAG, "error: "
+	// + ((e.getMessage() != null) ? e.getMessage()
+	// .replace(" ", "_") : ""), e);
+	// }
+	// } else {
+	// // mReviewHelpfulMessage.setVisibility(View.GONE);
+	// }
+	// }
+	// };
+	// mContentManager.fetchContentOnThread(Util
+	// .getReviewHelpfulCountUrl(mCommunityBeer.beerId),
+	// mReviewHelpfulCountHandler);
+	//
+	// }
 
 	public void handleUserNotLoggedInFacebook() {
 		Log.i(TAG, "handleUserNotLoggedInFacebook");

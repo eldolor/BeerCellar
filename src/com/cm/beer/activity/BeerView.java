@@ -432,7 +432,8 @@ public class BeerView extends Activity {
 					.getColumnIndexOrThrow(NotesDbAdapter.KEY_BREWERY_LINK));
 			mBrewery.setText(cursor.getString(cursor
 					.getColumnIndexOrThrow(NotesDbAdapter.KEY_BREWERY)));
-			if ((link != null) && (!link.equals(""))) {
+			if ((link != null) && (!link.equals(""))
+					&& (!link.equalsIgnoreCase("http://"))) {
 				mBrewery.setTextColor(android.graphics.Color.BLUE);
 				mBrewery.setPaintFlags(mBrewery.getPaintFlags()
 						| Paint.UNDERLINE_TEXT_FLAG);

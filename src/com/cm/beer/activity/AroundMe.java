@@ -168,7 +168,7 @@ public class AroundMe extends ListActivity {
 				+ business.city + " " + business.state).replace(" ", "_");
 		mTracker.trackEvent("AroundMe", "Call", _selection, 0);
 		mTracker.dispatch();
-		Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel: "
+		Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: "
 				+ business.phone));
 		startActivity(i);
 	}

@@ -270,9 +270,13 @@ public class BeerEdit extends Activity implements
 		note.price = mPrice.getText().toString();
 		note.style = mStyle.getText().toString();
 		note.brewery = mBrewery.getText().toString();
-		String _link = (!mBreweryLink.getText().toString()
-				.startsWith("http://")) ? ("http://" + mBreweryLink.getText()
-				.toString()) : mBreweryLink.getText().toString();
+		String _link = ((!mBreweryLink.getText().toString().equals("")) && (!mBreweryLink
+				.getText().toString().startsWith("http://"))) ? ("http://" + mBreweryLink
+				.getText().toString())
+				: mBreweryLink.getText().toString();
+		// Bug Fix: revert to empty if the link contains only http://
+		_link = (mBreweryLink.getText().toString().equalsIgnoreCase("http://")) ? ""
+				: mBreweryLink.getText().toString();
 		note.breweryLink = _link;
 		note.state = mState.getText().toString();
 		note.country = mCountry.getText().toString();
@@ -305,9 +309,13 @@ public class BeerEdit extends Activity implements
 		note.price = mPrice.getText().toString();
 		note.style = mStyle.getText().toString();
 		note.brewery = mBrewery.getText().toString();
-		String _link = (!mBreweryLink.getText().toString()
-				.startsWith("http://")) ? ("http://" + mBreweryLink.getText()
-				.toString()) : mBreweryLink.getText().toString();
+		String _link = ((!mBreweryLink.getText().toString().equals("")) && (!mBreweryLink
+				.getText().toString().startsWith("http://"))) ? ("http://" + mBreweryLink
+				.getText().toString())
+				: mBreweryLink.getText().toString();
+		// Bug Fix: revert to empty if the link contains only http://
+		_link = (mBreweryLink.getText().toString().equals("http://")) ? ""
+				: mBreweryLink.getText().toString();
 		note.breweryLink = _link;
 		note.state = mState.getText().toString();
 		note.country = mCountry.getText().toString();
