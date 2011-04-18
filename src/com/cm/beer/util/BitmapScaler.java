@@ -11,7 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
-class BitmapScaler {
+public class BitmapScaler {
 	private static class Size {
 		int sample;
 		float scale;
@@ -23,6 +23,12 @@ class BitmapScaler {
 			throws IOException {
 		Size size = getRoughSize(resources, resId, newWidth);
 		roughScaleImage(resources, resId, size);
+		scaleImage(newWidth);
+	}
+
+	public BitmapScaler(byte[][] jpeg, int newWidth) throws IOException {
+		Size size = getRoughSize(jpeg, newWidth);
+		roughScaleImage(jpeg, size);
 		scaleImage(newWidth);
 	}
 
@@ -89,6 +95,17 @@ class BitmapScaler {
 		scaled = BitmapFactory.decodeStream(is, null, scaledOpts);
 	}
 
+	private void roughScaleImage(byte[][] jpeg, Size size) {
+		Matrix matrix = new Matrix();
+		matrix.postScale(size.scale, size.scale);
+
+		BitmapFactory.Options scaledOpts = new BitmapFactory.Options();
+		scaledOpts.inSampleSize = size.sample;
+		scaled = BitmapFactory.decodeByteArray(jpeg[0], 0, jpeg[0].length,
+				scaledOpts);
+
+	}
+
 	private void roughScaleImage(Resources resources, int resId, Size size) {
 		Matrix matrix = new Matrix();
 		matrix.postScale(size.scale, size.scale);
@@ -96,6 +113,14 @@ class BitmapScaler {
 		BitmapFactory.Options scaledOpts = new BitmapFactory.Options();
 		scaledOpts.inSampleSize = size.sample;
 		scaled = BitmapFactory.decodeResource(resources, resId, scaledOpts);
+	}
+
+	private Size getRoughSize(byte[][] jpeg, int newWidth) {
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inJustDecodeBounds = true;
+		BitmapFactory.decodeByteArray(jpeg[0], 0, jpeg[0].length, o);
+		Size size = getRoughSize(o.outWidth, o.outHeight, newWidth);
+		return size;
 	}
 
 	private Size getRoughSize(InputStream is, int newWidth) {

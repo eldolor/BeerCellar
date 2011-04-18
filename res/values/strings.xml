@@ -264,6 +264,7 @@
 
 	<!-- Begin Sort By -->
 	<string name="sort_by_dialog_title">Sort By:</string>
+	<string name="sort_by_updated">Date Updated</string>
 	<string name="sort_by_beer">Beer</string>
 	<string name="sort_by_style">Style</string>
 	<string name="sort_by_country">Country</string>

@@ -1,5 +1,6 @@
 package com.cm.beer.activity;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.util.HashMap;
 
@@ -10,7 +11,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.BitmapScaler;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -106,10 +107,14 @@ public class UploadUserPhoto extends Activity {
 		/****************************************/
 		mUserPhotoView = (ImageView) findViewById(R.id.user_photo);
 		if (mFileName != null) {
-			BitmapFactory.Options bfo = new BitmapFactory.Options();
-			bfo.inSampleSize = 2;
-			Bitmap bm = BitmapFactory.decodeFile(mFileName, bfo);
-			mUserPhotoView.setImageBitmap(bm);
+			try {
+				BitmapScaler bitmapScaler = new BitmapScaler(
+						new File(mFileName), AppConfig.THUMBNAIL_WIDTH);
+				Bitmap thumbnailBitmap = bitmapScaler.getScaled();
+				mUserPhotoView.setImageBitmap(thumbnailBitmap);
+			} catch (Throwable e) {
+				Log.e(TAG, e.getMessage(), e);
+			}
 
 		}
 		/****************************************/
@@ -144,9 +149,6 @@ public class UploadUserPhoto extends Activity {
 					if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
 						JSONObject uploadUrlJson = new JSONObject(jsonStr);
 						String _url = uploadUrlJson.getString("uploadUrl");
-						// _url =
-						// AppConfig.COMMUNITY_UPLOAD_USER_PHOTO_SECURE_URL
-						// + _url;
 						Log.i(TAG, "Upload Url: " + _url);
 
 						HashMap<String, String> parameters = new HashMap<String, String>();

@@ -134,7 +134,7 @@ public class AppConfig {
 	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_NOTIFICATION_Q = "q=getnewbeerreviewsnotification";
 	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_FROM_FOLLOWING_NOTIFICATION_Q = "q=getnewbeerreviewsfromfollowingnotification";
 	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_Q = "q=getnewbeerreviews";
-	public static final String COMMUNITY_UPDATE_CHECK_Q = "q=updatecheck&currentversion=";
+	public static final String COMMUNITY_UPDATE_CHECK_Q = "q=updatecheck&market="+DEFAULT_APPSTORE+"&currentversion=";
 	public static final String COMMUNITY_ADD_TO_FAVORITES_Q = "q=addtofavorites";
 	public static final String COMMUNITY_REMOVE_FROM_FAVORITES_Q = "q=removefromfavorites";
 	public static final String COMMUNITY_GET_FAVORITES_Q = "q=getfavorites";
@@ -300,11 +300,10 @@ public class AppConfig {
 
 	/** BEGIN: Pictures **/
 	public static final int PICTURE_WIDTH = 1024;
-	public static final int PICTURE_HEIGHT = 768;
+	public static final int THUMBNAIL_WIDTH = 400;
+	public static final int LIST_THUMBNAIL_WIDTH = 100;
 	public static final int PORTRAIT_ORIENTATION_INTENT_BEGIN = 325;
 	public static final int PORTRAIT_ORIENTATION_INTENT_END = 45;
-	public static final int THUMBNAIL_WIDTH = 200;
-	public static final int THUMBNAIL_HEIGHT = 200;
 	public static final String PATH_SEPARATOR = Environment
 			.getExternalStorageDirectory().separator;
 	public static final int EXTERNAL_STORAGE_NOT_AVAILABLE = 1;

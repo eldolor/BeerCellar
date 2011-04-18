@@ -1,8 +1,6 @@
 package com.cm.beer.activity;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -23,7 +21,6 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,6 +40,7 @@ import android.widget.Toast;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.BitmapScaler;
 import com.cm.beer.util.GpsLocation;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -648,9 +646,6 @@ public class BeerEdit extends Activity implements
 	protected void display() {
 
 		Log.i(TAG, "display");
-		// //preemptively send out the notification
-		// sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri
-		// .parse("file://" + Environment.getExternalStorageDirectory())));
 
 		/****************************************/
 		mCamera = (ImageView) findViewById(R.id.camera);
@@ -1165,18 +1160,14 @@ public class BeerEdit extends Activity implements
 					+ AppConfig.PICTURES_THUMBNAILS_EXTENSION);
 			if (thumbnail != null && thumbnail.exists()) {
 				if (thumbnail != null) {
-					Bitmap image;
 					try {
-						image = BitmapFactory.decodeStream(thumbnail.toURL()
-								.openStream());
-						mThumbnailView.setImageBitmap(image);
+						BitmapScaler bitmapScaler = new BitmapScaler(thumbnail,
+								AppConfig.THUMBNAIL_WIDTH);
+						Bitmap thumbnailBitmap = bitmapScaler.getScaled();
+						mThumbnailView.setImageBitmap(thumbnailBitmap);
 						success = true;
-					} catch (MalformedURLException e) {
-						Log.e(TAG, (e.getMessage() != null) ? e.getMessage()
-								.replace(" ", "_") : "", e);
-					} catch (IOException e) {
-						Log.e(TAG, (e.getMessage() != null) ? e.getMessage()
-								.replace(" ", "_") : "", e);
+					} catch (Throwable e) {
+						Log.e(TAG, e.getMessage(), e);
 					}
 				}
 			}

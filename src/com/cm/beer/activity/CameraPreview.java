@@ -15,7 +15,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.Bitmap.CompressFormat;
@@ -38,6 +37,7 @@ import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.BitmapScaler;
 import com.cm.beer.util.Reflect;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -60,7 +60,6 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	Long mRowId;
 
 	boolean isCameraLocked;
-	int mInSampleSize;
 
 	GoogleAnalyticsTracker mTracker;
 
@@ -490,9 +489,6 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		Log.i(TAG, "surfaceChanged:Original Picture width:" + origSize.width
 				+ " height:" + origSize.height);
 
-		mInSampleSize = (int) (origSize.width / AppConfig.PICTURE_WIDTH);
-		Log.i(TAG, "surfaceChanged: mInSampleSize is " + mInSampleSize);
-
 		mMainActivity.setCameraAdvancedParameters(p);
 
 		mCamera.startPreview();
@@ -758,12 +754,8 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 				}
 
 				pictureFos = new FileOutputStream(photo.getPath());
-				BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
-				bitmapFactoryOptions.inSampleSize = mInSampleSize;
-				Log.i(TAG, "doInBackground::setting inSampleSize of "
-						+ bitmapFactoryOptions.inSampleSize);
-				image = BitmapFactory.decodeByteArray(jpeg[0], 0,
-						jpeg[0].length, bitmapFactoryOptions);
+				BitmapScaler bitmapScaler = new BitmapScaler(jpeg, AppConfig.PICTURE_WIDTH);
+				image = bitmapScaler.getScaled();
 				// Rotate Picture if needed
 				image = this.rotatePhoto(image);
 
@@ -784,11 +776,9 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 				}
 
 				// Create Thumbnail
-				int newWidth = (image.getWidth() / 4);// AppConfig.THUMBNAIL_WIDTH;
-				int newHeight = (image.getHeight() / 4);// AppConfig.THUMBNAIL_HEIGHT;
-
-				Bitmap thumbnailBitmap = Bitmap.createScaledBitmap(image,
-						newWidth, newHeight, true);
+				BitmapScaler thumbnailBitmapScaler = new BitmapScaler(photo,
+						AppConfig.THUMBNAIL_WIDTH);
+				Bitmap thumbnailBitmap = thumbnailBitmapScaler.getScaled();
 
 				File thumbnail = new File(thumbnailsDir, mRowId
 						+ AppConfig.PICTURES_THUMBNAILS_EXTENSION);

@@ -1,15 +1,12 @@
 package com.cm.beer.activity;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +15,7 @@ import android.widget.ImageView;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.BitmapScaler;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -79,34 +77,17 @@ public class ViewImage extends Activity {
 					Log.i(TAG, "VVWListAdapter->bindView():Binding file "
 							+ photo.getPath());
 				}
-				Bitmap image;
-				BufferedInputStream phInStream = null;
 				try {
-					phInStream = new BufferedInputStream(photo.toURL()
-							.openStream());
-					BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
-					bitmapFactoryOptions.inSampleSize = 2;
-					image = BitmapFactory.decodeStream(phInStream, null,
-							bitmapFactoryOptions);
-					photoView.setImageBitmap(image);
+					BitmapScaler bitmapScaler = new BitmapScaler(photo,
+							AppConfig.THUMBNAIL_WIDTH);
+					Bitmap thumbnailBitmap = bitmapScaler.getScaled();
+					photoView.setImageBitmap(thumbnailBitmap);
 				} catch (Throwable e) {
 					Log.e(TAG, e.getMessage(), e);
 					mTracker.trackEvent("ViewImage", "ViewImageError", (e
 							.getMessage() != null) ? e.getMessage().replace(
 							" ", "_") : "", 0);
 					mTracker.dispatch();
-				} finally {
-					try {
-						if (phInStream != null) {
-							phInStream.close();
-						}
-					} catch (IOException e) {
-						Log.e(TAG, e.getMessage(), e);
-						mTracker.trackEvent("ViewImage", "ViewImageError", (e
-								.getMessage() != null) ? e.getMessage()
-								.replace(" ", "_") : "", 0);
-						mTracker.dispatch();
-					}
 				}
 			}
 

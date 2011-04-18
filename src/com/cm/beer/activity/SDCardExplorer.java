@@ -1,8 +1,6 @@
 package com.cm.beer.activity;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -26,6 +23,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.BitmapScaler;
 
 public class SDCardExplorer extends ListActivity {
 
@@ -218,35 +216,18 @@ public class SDCardExplorer extends ListActivity {
 			if ((mPath != null) && (!mPath.equals(""))) {
 				File imageFile = new File(_filename);
 				if ((imageFile != null) && (imageFile.exists())) {
-					FileInputStream is = null;
-					BufferedInputStream bis = null;
 					try {
-						is = new FileInputStream(new File(_filename));
-						bis = new BufferedInputStream(is);
-						BitmapFactory.Options bfo = new BitmapFactory.Options();
-						bfo.inSampleSize = 8;
-						Bitmap bitmap = BitmapFactory.decodeStream(bis, null,
-								bfo);
-						thumbnailView.setImageBitmap(bitmap);
+						BitmapScaler bitmapScaler = new BitmapScaler(imageFile,
+								AppConfig.THUMBNAIL_WIDTH);
+						Bitmap thumbnailBitmap = bitmapScaler.getScaled();
+						thumbnailView.setImageBitmap(thumbnailBitmap);
 						if (AppConfig.LOGGING_ENABLED) {
 							Log.i(TAG,
 									"MyAdapter.getView():->setThumbnailView():Setting "
 											+ _filename);
 						}
-					} catch (Exception e) {
-						Log.e(TAG, (e.getMessage() != null) ? e.getMessage()
-								.replace(" ", "_") : "", e);
-					} finally {
-						try {
-							if (bis != null) {
-								bis.close();
-							}
-							if (is != null) {
-								is.close();
-							}
-						} catch (Exception e) {
-						}
-
+					} catch (Throwable e) {
+						Log.e(TAG, e.getMessage(), e);
 					}
 
 				} else {

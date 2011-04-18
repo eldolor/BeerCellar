@@ -5,7 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 
 import android.app.Activity;
@@ -18,7 +17,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +43,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.BitmapScaler;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -142,7 +141,7 @@ public class BeerList extends ListActivity {
 
 		// initialize Footer View for the list
 		initFooterView();
-		fillData(null);
+		fillData();
 
 		Util.setGoogleAdSense(this);
 
@@ -165,7 +164,7 @@ public class BeerList extends ListActivity {
 				// increment the page number
 				++mPageNumber;
 				mLoadMoreBeersAction = true;
-				fillData(null);
+				fillData();
 			}
 		});
 		// Call this before calling setAdapter
@@ -633,9 +632,9 @@ public class BeerList extends ListActivity {
 			// Toast thanks for sharing
 			Toast.makeText(mMainActivity, R.string.on_sharing_with_community,
 					Toast.LENGTH_LONG).show();
-			fillData(null);
+			fillData();
 		} else {
-			fillData(null);
+			fillData();
 			if (resultCode == AppConfig.FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE) {
 				Toast.makeText(BeerList.this, R.string.on_facebook_wall_post,
 						Toast.LENGTH_SHORT).show();
@@ -668,14 +667,18 @@ public class BeerList extends ListActivity {
 	/**
 	 * 
 	 */
-	private void fillData(String sortBy) {
+	private void fillData() {
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "fillData");
 		}
 		// default to key_updated
-		String _sortBy = ((sortBy != null) && (!sortBy.equals("")) ? sortBy
-				: NotesDbAdapter.KEY_UPDATED + " DESC");
-
+		String _sortBy = mPreferences.getString("SORT_BY", null);
+		if (_sortBy == null) {
+			mPreferences.edit().putString("SORT_BY",
+					NotesDbAdapter.KEY_UPDATED + " DESC").commit();
+			_sortBy = NotesDbAdapter.KEY_UPDATED + " DESC";
+		}
+		Log.i(TAG, "fillData::sort by:: " + _sortBy);
 		Cursor notesCursor = mDbHelper.fetchAllNotes(mPageNumber,
 				AppConfig.BEER_LIST_ROWS_PER_PAGE, _sortBy);
 		startManagingCursor(notesCursor);
@@ -739,6 +742,8 @@ public class BeerList extends ListActivity {
 		dialog.setContentView(R.layout.sort_list);
 		dialog.setTitle(R.string.sort_by_dialog_title);
 
+		final RadioButton byUpdated = (RadioButton) dialog
+				.findViewById(R.id.sort_by_updated);
 		final RadioButton byBeer = (RadioButton) dialog
 				.findViewById(R.id.sort_by_beer);
 		final RadioButton byStyle = (RadioButton) dialog
@@ -751,18 +756,35 @@ public class BeerList extends ListActivity {
 			@Override
 			public void onClick(View v) {
 				String _sortBy = null;
-				if (byBeer.isChecked() == true) {
+				if (byUpdated.isChecked() == true) {
+					_sortBy = NotesDbAdapter.KEY_UPDATED + " DESC";
+				} else if (byBeer.isChecked() == true) {
 					_sortBy = NotesDbAdapter.KEY_BEER;
 				} else if (byStyle.isChecked() == true) {
 					_sortBy = NotesDbAdapter.KEY_STYLE;
 				} else if (byCountry.isChecked() == true) {
 					_sortBy = NotesDbAdapter.KEY_COUNTRY;
 				}
-				fillData(_sortBy);
+
+				mPreferences.edit().putString("SORT_BY", _sortBy).commit();
+				fillData();
 				dialog.cancel();
 			}
 		});
 
+		String _sortByPreference = mPreferences.getString("SORT_BY",
+				NotesDbAdapter.KEY_UPDATED + " DESC");
+		Log.i(TAG, "sort::sort by preference:: " + _sortByPreference);
+
+		if (_sortByPreference.equals(NotesDbAdapter.KEY_UPDATED + " DESC")) {
+			byUpdated.setChecked(true);
+		} else if (_sortByPreference.equals(NotesDbAdapter.KEY_BEER)) {
+			byBeer.setChecked(true);
+		} else if (_sortByPreference.equals(NotesDbAdapter.KEY_STYLE)) {
+			byStyle.setChecked(true);
+		} else if (_sortByPreference.equals(NotesDbAdapter.KEY_COUNTRY)) {
+			byCountry.setChecked(true);
+		}
 		dialog.show();
 
 	}
@@ -975,12 +997,10 @@ public class BeerList extends ListActivity {
 					if (thumbnail != null) {
 						Bitmap image;
 						try {
-							BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
-							bitmapFactoryOptions.inSampleSize = 2;
-							image = BitmapFactory.decodeStream(thumbnail
-									.toURL().openStream(), null,
-									bitmapFactoryOptions);
-							thumbnailView.setImageBitmap(image);
+							BitmapScaler bitmapScaler = new BitmapScaler(
+									thumbnail, AppConfig.LIST_THUMBNAIL_WIDTH);
+							Bitmap thumbnailBitmap = bitmapScaler.getScaled();
+							thumbnailView.setImageBitmap(thumbnailBitmap);
 							if (AppConfig.LOGGING_ENABLED) {
 								Log.i(TAG,
 										"BeerListResourceCursorAdapter->setThumbnailView():Setting "
@@ -990,12 +1010,8 @@ public class BeerList extends ListActivity {
 							ViewImageOnClickListener _onClickListener = new ViewImageOnClickListener();
 							_onClickListener.id = mRowId;
 							thumbnailView.setOnClickListener(_onClickListener);
-						} catch (MalformedURLException e) {
-							Log.e(TAG, (e.getMessage() != null) ? e
-									.getMessage().replace(" ", "_") : "", e);
-						} catch (IOException e) {
-							Log.e(TAG, (e.getMessage() != null) ? e
-									.getMessage().replace(" ", "_") : "", e);
+						} catch (Throwable e) {
+							Log.e(TAG, e.getMessage(), e);
 						}
 					}
 				} else {

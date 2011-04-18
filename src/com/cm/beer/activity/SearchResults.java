@@ -1,8 +1,6 @@
 package com.cm.beer.activity;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 
 import android.app.Activity;
@@ -14,7 +12,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +36,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.BitmapScaler;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class SearchResults extends ListActivity {
@@ -688,11 +686,11 @@ public class SearchResults extends ListActivity {
 						+ AppConfig.PICTURES_THUMBNAILS_EXTENSION);
 				if (thumbnail != null && thumbnail.exists()) {
 					if (thumbnail != null) {
-						Bitmap image;
 						try {
-							image = BitmapFactory.decodeStream(thumbnail
-									.toURL().openStream());
-							thumbnailView.setImageBitmap(image);
+							BitmapScaler bitmapScaler = new BitmapScaler(
+									thumbnail, AppConfig.LIST_THUMBNAIL_WIDTH);
+							Bitmap thumbnailBitmap = bitmapScaler.getScaled();
+							thumbnailView.setImageBitmap(thumbnailBitmap);
 							if (AppConfig.LOGGING_ENABLED) {
 								Log.i(TAG,
 										"BeerListResourceCursorAdapter->setThumbnailView():Setting "
@@ -702,12 +700,8 @@ public class SearchResults extends ListActivity {
 							ViewImageOnClickListener _onClickListener = new ViewImageOnClickListener();
 							_onClickListener.id = mRowId;
 							thumbnailView.setOnClickListener(_onClickListener);
-						} catch (MalformedURLException e) {
-							Log.e(TAG, (e.getMessage() != null) ? e
-									.getMessage().replace(" ", "_") : "", e);
-						} catch (IOException e) {
-							Log.e(TAG, (e.getMessage() != null) ? e
-									.getMessage().replace(" ", "_") : "", e);
+						} catch (Throwable e) {
+							Log.e(TAG, e.getMessage(), e);
 						}
 					}
 				} else {

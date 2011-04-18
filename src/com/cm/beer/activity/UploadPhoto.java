@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.BitmapScaler;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class UploadPhoto extends Activity {
@@ -235,33 +236,9 @@ public class UploadPhoto extends Activity {
 					Log.i(_TAG, "doInBackground::created file "
 							+ photo.getPath());
 				}
-				BitmapFactory.Options o = new BitmapFactory.Options();
-				o.inJustDecodeBounds = true;
-
-				FileInputStream fis = null;
-				try {
-					fis = new FileInputStream(photo.getPath());
-					BitmapFactory.decodeStream(fis, null, o);
-				} finally {
-					if (fis != null) {
-						fis.close();
-					}
-				}
-				BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
-				int _mInSampleSize = (int) (o.outWidth / AppConfig.PICTURE_WIDTH);
-				bitmapFactoryOptions.inSampleSize = _mInSampleSize;
-				Log.i(TAG, "Setting inSampleSize of "
-						+ _mInSampleSize);
-				image = BitmapFactory.decodeFile(photo.getPath(),
-						bitmapFactoryOptions);
-
-				// Create Thumbnail
-				int newWidth = (image.getWidth() / 4);// AppConfig.THUMBNAIL_WIDTH;
-				int newHeight = (image.getHeight() / 4);// AppConfig.THUMBNAIL_HEIGHT;
-
-				Bitmap thumbnailBitmap = Bitmap.createScaledBitmap(image,
-						newWidth, newHeight, true);
-
+				BitmapScaler bitmapScaler = new BitmapScaler(photo,
+						AppConfig.THUMBNAIL_WIDTH);
+				Bitmap thumbnailBitmap = bitmapScaler.getScaled();
 				File thumbnail = new File(thumbnailsDir, mRowId
 						+ AppConfig.PICTURES_THUMBNAILS_EXTENSION);
 
