@@ -29,6 +29,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
@@ -126,6 +128,10 @@ public class CommunityBeerView extends Activity {
 	protected static final int LOGIN_INTERCEPT_REQUEST_CODE_FOR_ADD_TO_FAVORITES = 3;
 	protected static final int LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON = 4;
 
+	static final int MENU_GROUP = 0;
+	static final int SEND_TEST_DAILY_CAMPAIGN = 1;
+	static final int SEND_DAILY_CAMPAIGN = 2;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -203,6 +209,78 @@ public class CommunityBeerView extends Activity {
 		}
 		mBrewery.setText(mCommunityBeer.brewery);
 		super.onResume();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (AppConfig.LOGGING_ENABLED) {
+			Log.i(TAG, "onCreateOptionsMenu: userid " + mUser.getUserId());
+		}
+		super.onCreateOptionsMenu(menu);
+		int menuPosition = 0;
+		if (mUser.getUserId().equalsIgnoreCase(AppConfig.ADMIN_USER_EMAIL_ADDRESS)) {
+			menu.add(MENU_GROUP, SEND_TEST_DAILY_CAMPAIGN, menuPosition++,
+					R.string.send_test_daily_campaign);
+			menu.add(MENU_GROUP, SEND_DAILY_CAMPAIGN, menuPosition++,
+					R.string.send_daily_campaign);
+		}
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onMenuItemSelected(int, android.view.MenuItem)
+	 */
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		if (AppConfig.LOGGING_ENABLED) {
+			Log.i(TAG, "onMenuItemSelected");
+		}
+		switch (item.getItemId()) {
+		case SEND_TEST_DAILY_CAMPAIGN:
+			sendTestDailyCampaign();
+			return true;
+		case SEND_DAILY_CAMPAIGN:
+			sendDailyCampaign();
+			return true;
+		}
+
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	private void sendTestDailyCampaign() {
+		try {
+			String url = Util
+					.getSendTestDailyCampaignUrl(mCommunityBeer.beerId);
+			Log.i(TAG, "sendTestDailyCampaign():" + url);
+			String response[] = Util.getResult(url);
+			Log.i(TAG, response[0]);
+		} catch (Throwable e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
+		}
+
+	}
+
+	private void sendDailyCampaign() {
+		try {
+			String url = Util.getSendDailyCampaignUrl(mCommunityBeer.beerId);
+			Log.i(TAG, "getSendDailyCampaignUrl():" + url);
+			String response[] = Util.getResult(url);
+			Log.i(TAG, response[0]);
+		} catch (Throwable e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
+		}
+
 	}
 
 	/*
@@ -474,7 +552,8 @@ public class CommunityBeerView extends Activity {
 		if ((mCommunityBeer.breweryLink != null)
 				&& (!mCommunityBeer.breweryLink.trim().equals(""))
 				&& (!mCommunityBeer.breweryLink.trim().equals("null"))
-				&& (!mCommunityBeer.breweryLink.trim().equalsIgnoreCase("http://"))) {
+				&& (!mCommunityBeer.breweryLink.trim().equalsIgnoreCase(
+						"http://"))) {
 			// if link does not start with http:// then add to it
 			final String _link = (!mCommunityBeer.breweryLink
 					.startsWith("http://")) ? ("http://" + mCommunityBeer.breweryLink)

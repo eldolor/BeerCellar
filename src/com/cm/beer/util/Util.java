@@ -1486,5 +1486,35 @@ public class Util {
 		}
 		return false;
 	}
+	public static String getSendTestDailyCampaignUrl(String beerId) {
+		String url = null;
+		try {
+			url = AppConfig.COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL
+					+ AppConfig.COMMUNITY_SEND_TEST_DAILY_CAMPAIGN_Q
+					+ ((beerId != null) ? URLEncoder.encode(
+							beerId, "UTF-8") : "");
+		} catch (UnsupportedEncodingException e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
+		}
+		return url;
+
+	}
+	public static String getSendDailyCampaignUrl(String beerId) {
+		String url = null;
+		try {
+			url = AppConfig.COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL
+					+ AppConfig.COMMUNITY_SEND_DAILY_CAMPAIGN_Q
+					+ ((beerId != null) ? URLEncoder.encode(
+							beerId, "UTF-8") : "");
+		} catch (UnsupportedEncodingException e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
+		}
+		return url;
+
+	}
 
 }

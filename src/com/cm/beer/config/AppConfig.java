@@ -12,6 +12,7 @@ public class AppConfig {
 			"El Dolor", "User A", "User B", "Coco Martini" };
 	public static final String EMULATED_USER_LINK = "http://google.com";
 	public static final String EMULATED_USER_TYPE = "COMMUNITY";
+	public static final String ADMIN_USER_EMAIL_ADDRESS = "anshu.gaind@gmail.com";
 	public static final String EMULATED_USER_EMAIL = "el_dolor@hotmail.com";
 	/** END: SET TO FALSE FOR PRODUCTION **/
 
@@ -106,6 +107,8 @@ public class AppConfig {
 			+ "/beers?";
 	public static final String COMMUNITY_GET_USER_SERVICE_URL = AppConfig.COMMUNITY_BASE_SECURE_URL
 			+ "/users?";
+	public static final String COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL = AppConfig.COMMUNITY_BASE_SECURE_URL
+	+ "/dailycampaign?";
 
 	public static final String COMMUNITY_GET_IMAGE_Q = "q=getimage&beerid=";
 	public static final String COMMUNITY_GET_BEER_Q = "q=getbeer&beerid=";
@@ -200,6 +203,8 @@ public class AppConfig {
 	public static final int COMMUNITY_LOGIN_RETRY_COUNT = 5;
 	public static final int COMMUNITY_SIGNUP_RETRY_COUNT = 5;
 	public static final int COMMUNITY_UPLOAD_USER_PHOTO_RETRY_COUNT = 5;
+	public static final String COMMUNITY_SEND_TEST_DAILY_CAMPAIGN_Q = "q=sendtestemailcampaign&beerid=";
+	public static final String COMMUNITY_SEND_DAILY_CAMPAIGN_Q = "q=sendemailcampaign&beerid=";
 	/** END: Beer Community **/
 
 	/** BEGIN: YELP **/
@@ -301,7 +306,7 @@ public class AppConfig {
 	/** BEGIN: Pictures **/
 	public static final int PICTURE_WIDTH = 1024;
 	public static final int THUMBNAIL_WIDTH = 400;
-	public static final int LIST_THUMBNAIL_WIDTH = 100;
+	public static final int LIST_THUMBNAIL_WIDTH = 50;
 	public static final int PORTRAIT_ORIENTATION_INTENT_BEGIN = 325;
 	public static final int PORTRAIT_ORIENTATION_INTENT_END = 45;
 	public static final String PATH_SEPARATOR = Environment

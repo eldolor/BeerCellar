@@ -23,6 +23,11 @@
 
 	<!--  End Application Specific Settings -->
 	
+	<!-- Begin Daily Campaign -->
+	<string name="send_test_daily_campaign">Send Test Daily Campaign</string>
+	<string name="send_daily_campaign">Send Daily Campaign</string>
+	<!-- End Daily Campaign -->
+
 	<!-- Begin Storage -->
 	<string name="internal_storage_label">Internal Storage</string>
 	<string name="external_storage_label">SD Card</string>
