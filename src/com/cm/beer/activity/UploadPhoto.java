@@ -1,6 +1,5 @@
 package com.cm.beer.activity;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,7 +10,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.AsyncTask;
@@ -108,35 +106,13 @@ public class UploadPhoto extends Activity {
 		/****************************************/
 		mUserPhotoView = (ImageView) findViewById(R.id.user_photo);
 		if (mFileName != null) {
-			/*
-			 * BitmapFactory.Options bfo = new BitmapFactory.Options();
-			 * bfo.inSampleSize = 2; Bitmap bm =
-			 * BitmapFactory.decodeFile(mFileName, bfo);
-			 * mUserPhotoView.setImageBitmap(bm);
-			 */
-			FileInputStream is = null;
-			BufferedInputStream bis = null;
 			try {
-				is = new FileInputStream(new File(mFileName));
-				bis = new BufferedInputStream(is);
-				BitmapFactory.Options bfo = new BitmapFactory.Options();
-				bfo.inSampleSize = 2;
-				Bitmap bitmap = BitmapFactory.decodeStream(bis, null, bfo);
-				mUserPhotoView.setImageBitmap(bitmap);
-				// Display bitmap (useThisBitmap)
+				BitmapScaler bitmapScaler = new BitmapScaler(
+						new File(mFileName), AppConfig.THUMBNAIL_WIDTH);
+				Bitmap thumbnailBitmap = bitmapScaler.getScaled();
+				mUserPhotoView.setImageBitmap(thumbnailBitmap);
 			} catch (Exception e) {
-				// Try to recover
-			} finally {
-				try {
-					if (bis != null) {
-						bis.close();
-					}
-					if (is != null) {
-						is.close();
-					}
-				} catch (Exception e) {
-				}
-
+				Log.e(TAG, e.getMessage(), e);
 			}
 
 		}

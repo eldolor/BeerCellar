@@ -218,7 +218,7 @@ public class SDCardExplorer extends ListActivity {
 				if ((imageFile != null) && (imageFile.exists())) {
 					try {
 						BitmapScaler bitmapScaler = new BitmapScaler(imageFile,
-								AppConfig.THUMBNAIL_WIDTH);
+								AppConfig.LIST_THUMBNAIL_WIDTH);
 						Bitmap thumbnailBitmap = bitmapScaler.getScaled();
 						thumbnailView.setImageBitmap(thumbnailBitmap);
 						if (AppConfig.LOGGING_ENABLED) {
