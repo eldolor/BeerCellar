@@ -75,7 +75,7 @@ public class AppConfig {
 	/** BEGIN: PREFERENCES **/
 	public static final String RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS = "RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS";
 	public static final String RECEIVE_NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATIONS = "RECEIVE_NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATIONS";
-	public static final String RECEIVE_BEER_OF_THE_DAY_NOTIFICATION = "RECEIVE_BEER_OF_THE_DAY_NOTIFICATIONS";
+	public static final String RECEIVE_BEER_OF_THE_DAY_NOTIFICATION = "RECEIVE_BEER_OF_THE_DAY_NOTIFICATION";
 	public static final String PREFERENCE_DO_NOT_SHOW_DID_YOU_KNOW = "DO_NOT_SHOW_DID_YOU_KNOW";
 
 	public static final String PREFERENCE_DONE_RATE_AND_REVIEW = "DONE_RATE_AND_REVIEW";
@@ -86,6 +86,7 @@ public class AppConfig {
 	public static final String PREFERENCE_APPLICATION_USAGE_COUNT = "APPLICATION_USAGE_COUNT";
 	public static final long APPLICATION_USAGE_COUNT_THRESHOLD_TO_DISPLAY_RATE_AND_REVIEW = 2;
 	public static final String PREFERENCE_DO_NOT_SHOW_RATE_AND_REVIEW = "DO_NOT_SHOW_RATE_AND_REVIEW";
+	public static final String PREFERENCE_BEER_LIST_ROWS_PER_PAGE = "BEER_LIST_ROWS_PER_PAGE";
 	/** END: PREFERENCES **/
 
 	/** BEGIN: BEER Community **/
@@ -108,7 +109,7 @@ public class AppConfig {
 	public static final String COMMUNITY_GET_USER_SERVICE_URL = AppConfig.COMMUNITY_BASE_SECURE_URL
 			+ "/users?";
 	public static final String COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL = AppConfig.COMMUNITY_BASE_SECURE_URL
-	+ "/dailycampaign?";
+			+ "/dailycampaign?";
 
 	public static final String COMMUNITY_GET_IMAGE_Q = "q=getimage&beerid=";
 	public static final String COMMUNITY_GET_BEER_Q = "q=getbeer&beerid=";
@@ -137,7 +138,8 @@ public class AppConfig {
 	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_NOTIFICATION_Q = "q=getnewbeerreviewsnotification";
 	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_FROM_FOLLOWING_NOTIFICATION_Q = "q=getnewbeerreviewsfromfollowingnotification";
 	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_Q = "q=getnewbeerreviews";
-	public static final String COMMUNITY_UPDATE_CHECK_Q = "q=updatecheck&market="+DEFAULT_APPSTORE+"&currentversion=";
+	public static final String COMMUNITY_UPDATE_CHECK_Q = "q=updatecheck&market="
+			+ DEFAULT_APPSTORE + "&currentversion=";
 	public static final String COMMUNITY_ADD_TO_FAVORITES_Q = "q=addtofavorites";
 	public static final String COMMUNITY_REMOVE_FROM_FAVORITES_Q = "q=removefromfavorites";
 	public static final String COMMUNITY_GET_FAVORITES_Q = "q=getfavorites";
@@ -298,7 +300,7 @@ public class AppConfig {
 	/** END: EULA **/
 
 	/** BEGIN: Preferences **/
-	public static final String PREFERENCES_BEER = "PREFERENCES_BEER";
+	//public static final String PREFERENCES_BEER = "PREFERENCES_BEER";
 	public static final String PREFERENCES_BEER_SEED_DATA_PICTURE_INITIALIZED = "PREFERENCES_BEER_SEED_DATA_PICTURE_INITIALIZED";
 	public static final String PREFERENCES_BEER_SORT_BY = "PREFERENCES_BEER_SORT_BY";
 	/** END: Preferences **/
@@ -367,53 +369,95 @@ public class AppConfig {
 	/** END: BUTTON COLOR **/
 
 	public static final String[] BEERS = new String[] {};
-	public static final String[] STYLES = new String[] { "Banana beer",
-			"Abbey Dubbel", "Mild Ale", "Sato", "Saké-Daiginjo", "Amber ale",
-			"Dubbel", "Baltic porter", "Pale ale", "Sahti", "Imperial Porter",
-			"Saké-Ginjo", "Belgian White", "Mbege", "Pilsener", "Dunkel",
-			"American Strong Ale", "Brem", "Golden ale", "High gravity beer",
-			"Lambic-Unblended", "Helles", "Malt Liquor", "Black IPA",
-			"Draught beer", "Kolsch", "Sour beer", "Shandy", " Abbey Tripel",
-			"German Hefeweizen", "Smoked", "Scotch ale", "Bappir", "Kriek",
-			"Steinbier", "Imperial Stout", "Light ale", "Belgian Strong Ale",
-			"Sake-Honjozo", "Old Ale", "Vegetable", "Abt", "Brown ale",
-			"Malt beverage", "Malt beer", "Brown Ale", "Saké-Honjozo",
-			"Roggenbier", "Choujiu", "American pale ale", "Chuak",
-			"Scotch Ale", "Ice Cider", "Sake-Daiginjo", "Ibwatu",
-			"Baltic Porter", "Cuirm", "Huangjiu", "Dortmunder",
-			"English Strong Ale", "Pilsner", "Lambic", "Saké-Infused",
-			"Millet beer", "Amber Ale", "Sake-Tokubetsu", "Tongba",
-			"Imperial Pils", "Weissbier", "Imperial IPA", "Specialty Grain",
-			"Gluten-free beer", "Biere de Garde", "California Common",
-			"Vienna", "Porter", "Pito", "Saké-Taru", "Smoked beer", "Old ale",
-			"Happoshu", "Heller Bock", "Sweet Stout",
-			"Classic German Pilsener", "Abbey Tripel", "Kölsch", "Wheat beer",
-			"Marzen", "Strong Pale Lager", "Tiswin", "English Pale Ale",
-			"Mead", "Herb", "American Strong Ale ", "Lambic-Faro", "Dry Stout",
-			"Cream ale", "Altbier", "Fruit Beer", "Bitter", "Cider",
-			"Sake-Genshu", "Strong Porter", "Traditional Ale", "Tella",
-			"Märzen", "Doppelbock", "Dunkler Bock", "German Kristallweizen",
-			"Low-alcohol beer", "Saké-Namasaké", "Eisbock", "Sake-Namasake",
-			"Premium Bitter", "Irish red ale", "Lambic-Gueuze", "Malzbier",
-			"American Dark Lager", "Sour Ale", "Ice beer", "Barley Wine",
-			"American wild ale", "India Pale Ale", "Abbey", "Perry", "Radler",
-			"Kentucky Common Beer", "Bohemian Pilsener", "Cream Ale", "Saison",
-			"Vienna lager", "American-style lager", "Schwarzbier", "Irish Ale",
-			"Keller", "Stout", "Sake", "Sake-Ginjo", "Saké-Nigori",
-			"Blonde ale", "Framboise", "Spice", "Barley wine", "Wheat Ale",
-			"Dortmunder Export", "Pale lager", "Quadrupel", "Golden Ale",
-			"Cauim", "Lambic-Fruit", "Landbier", "Sake-Infused", "Sake-Taru",
-			"Pale Lager", "Saké-Futsu-shu", "Oshikundu", "Kellerbier",
-			"Oud bruin", "Zozu", "Sake-Futsu-shu", "Zutho", "Tripel", "Ale",
-			"Witbier", "American lager", "Steam beer", "Oktoberfest", "ESB",
-			"Sake-Junmai", "Lager", "Dunkelweizen", "American Pale Ale",
-			"Rye beer", "Chhaang", "Mild ale", "Weizen Bock", "Belgian Dubbel",
-			"Foreign Stout", "Gueuze", "Double IPA", "Chicha",
-			"Belgian Trippel", "Berliner Weisse", "Gruit", "Flanders red ale",
-			"Wild Ale", "Brunswick Mum", "Boza", "Gose", "Scottish Ale",
-			"Malt liquor", "Saké-Genshu", "Bière de Garde", "Premium Lager",
-			"Bock", "Sake-Koshu", "Saké-Tokubetsu", "Belgian Ale",
-			"Sake-Nigori", "Saké-Junmai", "Saké-Koshu", "Blond Ale", "Zwickel" };
+	public static final String[] STYLES = new String[] { "Aged Beer",
+			"American Belgo Style Ale", "American Belgo Style Dark Ale",
+			"American Belgo Style Pale Ale", "American Rye Ale",
+			"American Style Amber Lager", "American Style Amber/Red Ale",
+			"American Style Barley Wine Ale", "American Style Brown Ale",
+			"American Style Cream Ale or Lager", "American Style Dark Lager",
+			"American Style Ice Lager", "American Style Imperial Stout",
+			"American Style India Pale Ale", "American Style Lager",
+			"American Style Light Low Calorie Lager",
+			"American Style Low Carbohydrate Light Lager",
+			"American Style Malt Liquor", "American Style Märzen/Oktoberfest",
+			"American Style Pale Ale", "American Style Pilsener",
+			"American Style Premium Lager", "American Style Sour Ale",
+			"American Style Specialty Lager", "American Style Stout",
+			"American Style Strong Pale Ale", "American Style Wheat Beer",
+			"American Style Wheat Wine Ale", "Australasian Pale Ale",
+			"Baltic Style Porter", "Bamberg Style Rauchbier", "Banana beer",
+			"Bappir", "Barley Wine Style Ale", "Belgian Style Abbey Ale",
+			"Belgian Style Blonde Ale", "Belgian Style Dark Strong Ale",
+			"Belgian Style Dubbel",
+			"Belgian Style Flanders/Oud Bruin or Oud Red Ale",
+			"Belgian Style Fruit Lambic", "Belgian Style Gueuze Lambic",
+			"Belgian Style Lambic", "Belgian Style Pale Ale",
+			"Belgian Style Pale Strong Ale", "Belgian Style Sour Ale",
+			"Belgian Style Strong Specialty Ale", "Belgian Style Table Beer",
+			"Belgian Style Tripel", "Belgian Style Witbier",
+			"Berliner Style Weisse", "Berliner Weisse",
+			"Bohemian Style Pilsener", "Boza", "Brem",
+			"British Style Imperial Stout", "Brown Porter", "Brunswick Mum",
+			"California Common Beer", "Cauim", "Chhaang", "Chicha",
+			"Chocolate/Cocoa Flavored Beer", "Choujiu", "Chuak", "Cider",
+			"Classic Irish Style Dry Stout", "Coffee Flavored Beer", "Cuirm",
+			"Dark American Wheat Ale", "Dark American Wheat Ale",
+			"Dortmunder/European Style Export", "Draught Beer", "Dry Lager",
+			"English Style Barley Wine Ale", "English Style Brown Ale",
+			"English Style Dark Mild Ale", "English Style India Pale Ale",
+			"English Style Mild Ale", "English Style Pale Ale",
+			"English Style Pale Mild Ale", "English Style Summer Ale",
+			"European Style Dark/Münchner Dunkel",
+			"European Style Low Alcohol Lager/German Style Leicht Bier",
+			"Experimental Beer", "Extra Special Bitter or Strong Bitter",
+			"Field Beer", "Foreign Style Stout",
+			"French & Belgian Style Saison", "French Style Bière de Garde",
+			"Fresh Hop Ale", "Fruit Beer", "Fruit Wheat Beer",
+			"Fruited American Style Sour Ale",
+			"Fruited Wood and Barrel Aged Sour Beer",
+			"German Style Brown Ale/Düsseldorf Style Altbier",
+			"German Style Dark Wheat Ale", "German Style Doppelbock",
+			"German Style Eisbock", "German Style Heller Bock/Maibock",
+			"German Style Kölsch/Köln Style Kölsch",
+			"German Style Leichtes Weizen/Weissbier", "German Style Märzen",
+			"German Style Oktoberfest/Wiesen Meadow",
+			"German Style Pale Wheat Ale", "German Style Pilsener",
+			"German Style Rye Ale", "German Style Schwarzbier",
+			"German Style Sour Ale", "Gluten Free Beer",
+			"Golden or Blonde Ale", "Gose", "Gruit", "Gueuze", "Happoshu",
+			"Heller Bock", "Herb and Spice Beer", "High Gravity Beer",
+			"Huangjiu", "Ibwatu", "Ice Beer", "Ice Cider",
+			"Imperial India Pale Ale", "Imperial Red Ale",
+			"International India Pale Ale", "International Pale Ale",
+			"International Strong Pale Ale", "International Style Lager",
+			"International Style Pilsener", "Irish Style Red Ale",
+			"Kellerbier", "Kentucky Common Beer", "Leipzig Style Gose",
+			"Light American Wheat Ale", "Low Alcohol beer", "Malt beer",
+			"Malzbier", "Mbege", "Millet Beer", "Münchner Style Helles",
+			"Oatmeal Stout", "Old Ale", "Ordinary Bitter", "Oshikundu",
+			"Peated Scotch Ale", "Perry", "Pito", "Pumpkin Beer", "Radler",
+			"Robust Porter", "Roggenbier", "Sahti", "Sake", "Sake Daiginjo",
+			"Sake Futsu shu", "Sake Genshu", "Sake Ginjo", "Sake Honjozo",
+			"Sake Infused", "Sake Junmai", "Sake Koshu", "Sake Namasake",
+			"Sake Nigori", "Sake Taru", "Sake Tokubetsu", "Sato",
+			"Scottish Style Ale", "Scottish Style Export Ale",
+			"Scottish Style Heavy Ale", "Scottish Style Light Ale",
+			"Session Beer", "Shandy", "Smoked Beer", "Smoked Porter",
+			"South German Style Bernsteinfarbenes Weizen/Weissbier",
+			"South German Style Dunkel Weizen/Dunkel Weissbier",
+			"South German Style Hefeweizen/Hefeweissbier",
+			"South German Style Kristal Weizen/Kristal Weissbier",
+			"South German Style Weizenbock/Weissbock",
+			"Special Bitter or Best Bitter", "Specialty Beer",
+			"Specialty Honey Beer", "Steam Beer", "Steinbier", "Strong Ale",
+			"Strong Ale or Lager", "Strong Scotch Ale", "Sweet Stout", "Tella",
+			"Tiswin", "Tongba", "Traditional German Style Bock",
+			"Traditionally Brewed Beer", "Unfiltered German Style Ale",
+			"Unfiltered German Style Lager", "Vienna Style Lager",
+			"Wood and Barrel Aged Beer", "Wood and Barrel Aged Dark Beer",
+			"Wood and Barrel Aged Pale to Amber Beer",
+			"Wood and Barrel Aged Sour Beer",
+			"Wood and Barrel Aged Strong Beer", "Zozu", "Zutho", "Zwickelbier" };
 	public static final String[] COUNTRIES = new String[] { "Afghanistan",
 			"Albania", "Algeria", "American Samoa", "Andorra", "Angola",
 			"Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina",
@@ -473,4 +517,99 @@ public class AppConfig {
 			"Zambia", "Zimbabwe" };
 	public static final String[] STATES = new String[] {};
 
+	public static final String[] CURRENCY_COUNTRY = {
+			"United States of America, Dollars", "Albania, Leke",
+			"Afghanistan, Afghanis", "Argentina, Pesos", "Aruba, Guilders",
+			"Australia, Dollars", "Azerbaijan, New Manats", "Bahamas, Dollars",
+			"Barbados, Dollars", "Belarus, Rubles", "Belgium, Euro",
+			"Belize, Dollars", "Bermuda, Dollars", "Bolivia, Bolivianos",
+			"Bosnia and Herzegovina, Convertible Marka", "Botswana, Pulas",
+			"Bulgaria, Leva", "Brazil, Reais",
+			"Britain (United Kingdom), Pounds", "Brunei Darussalam, Dollars",
+			"Cambodia, Riels", "Canada, Dollars", "Cayman Islands, Dollars",
+			"Chile, Pesos", "China, Yuan Renminbi", "Colombia, Pesos",
+			"Costa Rica, Colón", "Croatia, Kuna", "Cuba, Pesos",
+			"Cyprus, Euro", "Czech Republic, Koruny", "Denmark, Kroner",
+			"Dominican Republic, Pesos", "East Caribbean, Dollars",
+			"Egypt, Pounds", "El Salvador, Colones",
+			"England (United Kingdom), Pounds", "Euro",
+			"Falkland Islands, Pounds", "Fiji, Dollars", "France, Euro",
+			"Ghana, Cedis", "Gibraltar, Pounds", "Greece, Euro",
+			"Guatemala, Quetzales", "Guernsey, Pounds", "Guyana, Dollars",
+			"Holland (Netherlands), Euro", "Honduras, Lempiras",
+			"Hong Kong, Dollars", "Hungary, Forint", "Iceland, Kronur",
+			"India, Rupees", "Indonesia, Rupiahs", "Iran, Rials",
+			"Ireland, Euro", "Isle of Man, Pounds", "Israel, New Shekels",
+			"Italy, Euro", "Jamaica, Dollars", "Japan, Yen", "Jersey, Pounds",
+			"Kazakhstan, Tenge", "Korea (North), Won", "Korea (South), Won",
+			"Kyrgyzstan, Soms", "Laos, Kips", "Latvia, Lati",
+			"Lebanon, Pounds", "Liberia, Dollars",
+			"Liechtenstein, Switzerland Francs", "Lithuania, Litai",
+			"Luxembourg, Euro", "Macedonia, Denars", "Malaysia, Ringgits",
+			"Malta, Euro", "Mauritius, Rupees", "Mexico, Pesos",
+			"Mongolia, Tugriks", "Mozambique, Meticais", "Namibia, Dollars",
+			"Nepal, Rupees",
+			"Netherlands Antilles, Guilders (also called Florins)",
+			"Netherlands, Euro", "New Zealand, Dollars", "Nicaragua, Cordobas",
+			"Nigeria, Nairas", "North Korea, Won", "Norway, Krone",
+			"Oman, Rials", "Pakistan, Rupees", "Panama, Balboa",
+			"Paraguay, Guarani", "Peru, Nuevos Soles", "Philippines, Pesos",
+			"Poland, Zlotych", "Qatar, Rials", "Romania, New Lei",
+			"Russia, Rubles", "Saint Helena, Pounds", "Saudi Arabia, Riyals",
+			"Serbia, Dinars", "Seychelles, Rupees", "Singapore, Dollars",
+			"Slovenia, Euro", "Solomon Islands, Dollars", "Somalia, Shillings",
+			"South Africa, Rand", "South Korea, Won", "Spain, Euro",
+			"Sri Lanka, Rupees", "Sweden, Kronor", "Switzerland, Francs",
+			"Suriname, Dollars", "Syria, Pounds", "Taiwan, New Dollars",
+			"Thailand, Baht", "Trinidad and Tobago, Dollars", "Turkey, Lira",
+			"Turkey, Liras", "Tuvalu, Dollars", "Ukraine, Hryvnia",
+			"United Kingdom, Pounds", "United States of America, Dollars",
+			"Uruguay, Pesos", "Uzbekistan, Sums", "Vatican City, Euro",
+			"Venezuela, Bolivares Fuertes", "Vietnam, Dong", "Yemen, Rials",
+			"Zimbabwe, Zimbabwe Dollars" };
+	public static final String[] CURRENCY_SYMBOL = { "\u0024",
+			"\u004c\u0065\u006b", "\u060b", "\u0024", "\u0192", "\u0024",
+			"\u043c\u0430\u043d", "\u0024", "\u0024", "\u0070\u002e", "\u20ac",
+			"\u0042\u005a\u0024", "\u0024", "\u0024\u0062", "\u004b\u004d",
+			"\u0050", "\u043b\u0432", "\u0052\u0024", "\u00a3", "\u0024",
+			"\u17db", "\u0024", "\u0024", "\u0024", "\u00a5", "\u0024",
+			"\u20a1", "\u006b\u006e", "\u20b1", "\u20ac", "\u004b\u010d",
+			"\u006b\u0072", "\u0052\u0044\u0024", "\u0024", "\u00a3", "\u0024",
+			"\u00a3", "\u20ac", "\u00a3", "\u0024", "\u20ac", "\u00a2",
+			"\u00a3", "\u20ac", "\u0051", "\u00a3", "\u0024", "\u20ac",
+			"\u004c", "\u0024", "\u0046\u0074", "\u006b\u0072", "\u20b9",
+			"\u0052\u0070", "\ufdfc", "\u20ac", "\u00a3", "\u20aa", "\u20ac",
+			"\u004a\u0024", "\u00a5", "\u00a3", "\u043b\u0432", "\u20a9",
+			"\u20a9", "\u043b\u0432", "\u20ad", "\u004c\u0073", "\u00a3",
+			"\u0024", "\u0043\u0048\u0046", "\u004c\u0074", "\u20ac",
+			"\u0434\u0435\u043d", "\u0052\u004d", "\u20ac", "\u20a8", "\u0024",
+			"\u20ae", "\u004d\u0054", "\u0024", "\u20a8", "\u0192", "\u20ac",
+			"\u0024", "\u0043\u0024", "\u20a6", "\u20a9", "\u006b\u0072",
+			"\ufdfc", "\u20a8", "\u0042\u002f\u002e", "\u0047\u0073",
+			"\u0053\u002f\u002e", "\u0050\u0068\u0070", "\u007a\u0142",
+			"\ufdfc", "\u006c\u0065\u0069", "440\u0443\u0431", "\u00a3",
+			"\ufdfc", "\u0414\u0438\u043d\u002e", "\u20a8", "\u0024", "\u20ac",
+			"\u0024", "\u0053", "\u0052", "\u20a9", "\u20ac", "\u20a8",
+			"\u006b\u0072", "\u0043\u0048\u0046", "\u0024", "\u00a3",
+			"\u004e\u0054\u0024", "\u0e3f", "\u0054\u0054\u0024",
+			"\u0054\u004c", "\u20a4", "\u0024", "\u20b4", "\u00a3", "\u0024",
+			"\u0024\u0055", "\u043b\u0432", "\u20ac", "\u0042\u0073", "\u20ab",
+			"\ufdfc", "\u005a\u0024" };
+
+	public static final String[] CURRENCY_CODE = { "USD", "ALL", "AFN", "ARS",
+			"AWG", "AUD", "AZN", "BSD", "BBD", "BYR", "EUR", "BZD", "BMD",
+			"BOB", "BAM", "BWP", "BGN", "BRL", "GBP", "BND", "KHR", "CAD",
+			"KYD", "CLP", "CNY", "COP", "CRC", "HRK", "CUP", "EUR", "CZK",
+			"DKK", "DOP", "XCD", "EGP", "SVC", "GBP", "EUR", "FKP", "FJD",
+			"EUR", "GHC", "GIP", "EUR", "GTQ", "GGP", "GYD", "EUR", "HNL",
+			"HKD", "HUF", "ISK", "INR", "IDR", "IRR", "EUR", "IMP", "ILS",
+			"EUR", "JMD", "JPY", "JEP", "KZT", "KPW", "KRW", "KGS", "LAK",
+			"LVL", "LBP", "LRD", "CHF", "LTL", "EUR", "MKD", "MYR", "EUR",
+			"MUR", "MXN", "MNT", "MZN", "NAD", "NPR", "ANG", "EUR", "NZD",
+			"NIO", "NGN", "KPW", "NOK", "OMR", "PKR", "PAB", "PYG", "PEN",
+			"PHP", "PLN", "QAR", "RON", "RUB", "SHP", "SAR", "RSD", "SCR",
+			"SGD", "EUR", "SBD", "SOS", "ZAR", "KRW", "EUR", "LKR", "SEK",
+			"CHF", "SRD", "SYP", "TWD", "THB", "TTD", "TRY", "TRL", "TVD",
+			"UAH", "GBP", "USD", "UYU", "UZS", "EUR", "VEF", "VND", "YER",
+			"ZWD" };
 }

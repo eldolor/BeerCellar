@@ -29,4 +29,6 @@ public class Note implements Serializable {
 	public String userName = "";
 	public String userLink = "";
 	public String characteristics = "";
+	public String currencySymbol = "";
+	public String currencyCode = "";
 }

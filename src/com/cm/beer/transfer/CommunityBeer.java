@@ -8,6 +8,7 @@ public class CommunityBeer implements java.io.Serializable {
 			brewery = "", state = "", country = "", notes = "", rating = "",
 			picture = "", beerCreated = "", beerUpdated = "", created = "",
 			updated = "", share = "", timeZone = "", latitude = "",
-			longitude = "", characteristics = "", breweryLink = "";
+			longitude = "", characteristics = "", breweryLink = "",
+			currencySymbol = "", currencyCode = "";
 
 }

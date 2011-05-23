@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
-import java.util.Currency;
-import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -420,9 +418,14 @@ public class BeerView extends Activity {
 
 			mAlcohol.setText(cursor.getString(cursor
 					.getColumnIndexOrThrow(NotesDbAdapter.KEY_ALCOHOL)));
-			String _currencySymbol = Currency.getInstance(Locale.getDefault())
-					.getSymbol();
-			mPrice.setText(_currencySymbol
+
+			String _currencySymbol = cursor.getString(cursor
+					.getColumnIndexOrThrow(NotesDbAdapter.KEY_CURRENCY_SYMBOL));
+			String _currencyCode = cursor.getString(cursor
+					.getColumnIndexOrThrow(NotesDbAdapter.KEY_CURRENCY_CODE));
+
+			mPrice.setText(_currencyCode + " "
+					+ _currencySymbol
 					+ cursor.getString(cursor
 							.getColumnIndexOrThrow(NotesDbAdapter.KEY_PRICE)));
 			mStyle.setText(cursor.getString(cursor

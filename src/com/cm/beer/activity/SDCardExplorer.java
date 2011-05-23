@@ -69,12 +69,6 @@ public class SDCardExplorer extends ListActivity {
 
 		if (!dirPath.equals(mRoot)) {
 			HashMap<String, String> entitiesHashMap = new HashMap<String, String>();
-
-			// item.add(root);
-			// path.add(root);
-			// entitiesHashMap.put("thumbnail", "/");
-			// entitiesHashMap.put("text1", "BACK");
-
 			mItem.add("../");
 			mPath.add(f.getParent());
 			entitiesHashMap.put("thumbnail", "");
@@ -95,7 +89,9 @@ public class SDCardExplorer extends ListActivity {
 					entitiesHashMap.put("text1", file.getName() + "/");
 					hashMapListForListView.add(entitiesHashMap);
 				} else if ((file.getName().endsWith(".jpg"))
-						|| (file.getName().endsWith(".jpeg"))) {
+						|| (file.getName().endsWith(".jpeg"))
+						|| (file.getName().endsWith(".JPG"))
+						|| (file.getName().endsWith(".JPEG"))) {
 					mPath.add(file.getPath());
 					mItem.add(file.getName());
 					entitiesHashMap.put("thumbnail", file.getPath());
@@ -105,10 +101,6 @@ public class SDCardExplorer extends ListActivity {
 			}
 		}
 
-		// SimpleAdapter adapterForList = new SimpleAdapter(this,
-		// hashMapListForListView, R.layout.sdcard_explorer_row,
-		// new String[] { "thumbnail", "text1" }, new int[] {
-		// R.id.thumbnail, R.id.text1 });
 		MyAdapter adapterForList = new MyAdapter(this, hashMapListForListView,
 				R.layout.sdcard_explorer_row, new String[] { "thumbnail",
 						"text1" }, new int[] { R.id.thumbnail, R.id.text1 });

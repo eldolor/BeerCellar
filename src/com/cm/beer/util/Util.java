@@ -73,7 +73,7 @@ public class Util {
 	public static void setGoogleAdSense(final Activity activity) {
 		if (AppConfig.IS_BEER_LITE) {
 			GoogleAdView adView = (GoogleAdView) activity
-			.findViewById(R.id.google_adview);
+					.findViewById(R.id.google_adview);
 			adView.setVisibility(View.VISIBLE);
 			// Set up GoogleAdView.
 			AdSenseSpec adSenseSpec = new AdSenseSpec(AppConfig.CLIENT_ID) // Specify
@@ -85,7 +85,8 @@ public class Util {
 					.setAppName(AppConfig.APP_NAME) // Set application name.
 					// (Required)
 					.setKeywords(AppConfig.KEYWORDS) // Specify keywords.
-					.setChannel(AppConfig.BEER_CELLAR_LITE_CHANNEL_ID) // Set channel
+					.setChannel(AppConfig.BEER_CELLAR_LITE_CHANNEL_ID) // Set
+					// channel
 					// ID.
 					.setAdType(AdType.TEXT_IMAGE) // Set ad type .
 					.setAdTestEnabled(AppConfig.AD_TEST_ENABLED) // Keep true
@@ -136,8 +137,6 @@ public class Util {
 		Beer beer = null;
 		ArrayList<Beer> beerList = new ArrayList<Beer>();
 		try {
-			String _currencySymbol = Currency.getInstance(Locale.getDefault())
-					.getSymbol();
 
 			cursor = mDbHelper.fetchAllNotesData();
 			cursor.moveToFirst();
@@ -150,7 +149,10 @@ public class Util {
 						.getColumnIndex(NotesDbAdapter.KEY_BEER)));
 				beer.setAlcohol(cursor.getString(cursor
 						.getColumnIndex(NotesDbAdapter.KEY_ALCOHOL)));
-				beer.setCurrency(_currencySymbol);
+				beer.setCurrencyCode(cursor.getString(cursor
+						.getColumnIndex(NotesDbAdapter.KEY_CURRENCY_CODE)));
+				beer.setCurrencySymbol(cursor.getString(cursor
+						.getColumnIndex(NotesDbAdapter.KEY_CURRENCY_SYMBOL)));
 				beer.setPrice(cursor.getString(cursor
 						.getColumnIndex(NotesDbAdapter.KEY_PRICE)));
 				beer.setStyle(cursor.getString(cursor
@@ -191,9 +193,11 @@ public class Util {
 	public static JSONObject toBeerJson(Note note) throws JSONException {
 		JSONObject json = null;
 		// These fields can be null
-		String beer, alcohol, price, style, brewery, state, country, rating, notes, picture, shared, latitude, longitude, userId, userName, userLink, characteristics, breweryLink;
-		String _currencySymbol = Currency.getInstance(Locale.getDefault())
-				.getSymbol();
+		String beer, alcohol, price, style, brewery, state, country, rating, notes, picture, shared, latitude, longitude, userId, userName, userLink, characteristics, breweryLink, currencySymbol, currencyCode;
+		String _defaultCurrencyCode = Currency.getInstance(Locale.getDefault())
+				.getCurrencyCode();
+		String _defaultCurrencySymbol = Currency.getInstance(
+				Locale.getDefault()).getSymbol();
 		String _timeZone = String.valueOf(TimeZone.getDefault().getRawOffset());
 
 		json = new JSONObject();
@@ -209,7 +213,15 @@ public class Util {
 					: "";
 			json.put("alcohol", alcohol);
 
-			json.put("currency", _currencySymbol);
+			currencySymbol = ((note.currencySymbol != null) && (!note.currencySymbol
+					.equals(""))) ? note.currencySymbol.trim()
+					: _defaultCurrencySymbol;
+			json.put("currencySymbol", currencySymbol);
+
+			currencyCode = ((note.currencyCode != null) && (!note.currencyCode
+					.equals(""))) ? note.currencyCode.trim()
+					: _defaultCurrencyCode;
+			json.put("currencyCode", currencyCode);
 
 			price = ((note.price != null) && (!note.price.equals(""))) ? note.price
 					.trim()
@@ -378,6 +390,10 @@ public class Util {
 					.getColumnIndex(NotesDbAdapter.KEY_CHARACTERISTICS));
 			note.breweryLink = cursor.getString(cursor
 					.getColumnIndex(NotesDbAdapter.KEY_BREWERY_LINK));
+			note.currencyCode = cursor.getString(cursor
+					.getColumnIndex(NotesDbAdapter.KEY_CURRENCY_CODE));
+			note.currencySymbol = cursor.getString(cursor
+					.getColumnIndex(NotesDbAdapter.KEY_CURRENCY_SYMBOL));
 
 		}
 
@@ -614,7 +630,7 @@ public class Util {
 	 * 
 	 * @param db
 	 */
-	public static void onUpgradeToV3FromV1(SQLiteDatabase db) {
+	public static void onUpgradeToV4FromV1(SQLiteDatabase db) {
 		Cursor cursor = null;
 		ContentValues initialValues = null;
 		int records = 0;
@@ -676,6 +692,14 @@ public class Util {
 				initialValues.put(NotesDbAdapter.KEY_UPDATED, cursor
 						.getLong(cursor
 								.getColumnIndex(NotesDbAdapter.KEY_UPDATED)));
+				String _currencyCode = Currency
+						.getInstance(Locale.getDefault()).getCurrencyCode();
+				initialValues.put(NotesDbAdapter.KEY_CURRENCY_CODE,
+						_currencyCode);
+				String _currencySymbol = Currency.getInstance(
+						Locale.getDefault()).getSymbol();
+				initialValues.put(NotesDbAdapter.KEY_CURRENCY_SYMBOL,
+						_currencySymbol);
 
 				db.insert(NotesDbAdapter.DATABASE_TABLE, null, initialValues);
 				Log.i(TAG, "Inserted "
@@ -696,7 +720,7 @@ public class Util {
 	 * 
 	 * @param db
 	 */
-	public static void onUpgradeToV3FromV2(SQLiteDatabase db) {
+	public static void onUpgradeToV4FromV2(SQLiteDatabase db) {
 		Cursor cursor = null;
 		ContentValues initialValues = null;
 		int records = 0;
@@ -786,11 +810,145 @@ public class Util {
 				initialValues.put(NotesDbAdapter.KEY_UPDATED, cursor
 						.getLong(cursor
 								.getColumnIndex(NotesDbAdapter.KEY_UPDATED)));
+				String _currencyCode = Currency
+						.getInstance(Locale.getDefault()).getCurrencyCode();
+				initialValues.put(NotesDbAdapter.KEY_CURRENCY_CODE,
+						_currencyCode);
+				String _currencySymbol = Currency.getInstance(
+						Locale.getDefault()).getSymbol();
+				initialValues.put(NotesDbAdapter.KEY_CURRENCY_SYMBOL,
+						_currencySymbol);
 
 				db.insert(NotesDbAdapter.DATABASE_TABLE, null, initialValues);
 				Log.i(TAG, "Inserted "
 						+ initialValues.getAsString(NotesDbAdapter.KEY_BEER)
 						+ " from " + NotesDbAdapter.DATABASE_TABLE_V2 + " to "
+						+ NotesDbAdapter.DATABASE_TABLE);
+			}
+			Log.i(TAG, "Records Inserted: " + records);
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param db
+	 */
+	public static void onUpgradeToV4FromV3(SQLiteDatabase db) {
+		Cursor cursor = null;
+		ContentValues initialValues = null;
+		int records = 0;
+		try {
+			// extract data from old table
+			cursor = db.query(NotesDbAdapter.DATABASE_TABLE_V3, new String[] {
+					NotesDbAdapter.KEY_ROWID, NotesDbAdapter.KEY_BEER,
+					NotesDbAdapter.KEY_ALCOHOL, NotesDbAdapter.KEY_PRICE,
+					NotesDbAdapter.KEY_STYLE, NotesDbAdapter.KEY_BREWERY,
+					NotesDbAdapter.KEY_STATE, NotesDbAdapter.KEY_COUNTRY,
+					NotesDbAdapter.KEY_RATING, NotesDbAdapter.KEY_NOTES,
+					NotesDbAdapter.KEY_PICTURE, NotesDbAdapter.KEY_SHARE,
+					NotesDbAdapter.KEY_LATITUDE, NotesDbAdapter.KEY_LONGITUDE,
+					NotesDbAdapter.KEY_USER_ID, NotesDbAdapter.KEY_USER_NAME,
+					NotesDbAdapter.KEY_USER_LINK,
+					NotesDbAdapter.KEY_CHARACTERISTICS,
+					NotesDbAdapter.KEY_BREWERY_LINK,
+					NotesDbAdapter.KEY_CREATED, NotesDbAdapter.KEY_UPDATED },
+					null, null, null, null, NotesDbAdapter.KEY_UPDATED
+							+ " DESC");
+
+			if (cursor != null) {
+				cursor.moveToFirst();
+			}
+
+			// insert data into the new table
+			for (; (cursor != null) && (cursor.isAfterLast() == false); cursor
+					.moveToNext(), records++) {
+				initialValues = new ContentValues();
+				initialValues.put(NotesDbAdapter.KEY_ROWID, cursor
+						.getLong(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_ROWID)));
+				initialValues.put(NotesDbAdapter.KEY_BEER, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_BEER)));
+				initialValues.put(NotesDbAdapter.KEY_ALCOHOL, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_ALCOHOL)));
+				initialValues.put(NotesDbAdapter.KEY_PRICE, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_PRICE)));
+				initialValues.put(NotesDbAdapter.KEY_STYLE, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_STYLE)));
+				initialValues.put(NotesDbAdapter.KEY_BREWERY, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_BREWERY)));
+				initialValues.put(NotesDbAdapter.KEY_STATE, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_STATE)));
+				initialValues.put(NotesDbAdapter.KEY_COUNTRY, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_COUNTRY)));
+				initialValues.put(NotesDbAdapter.KEY_RATING, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_RATING)));
+				initialValues.put(NotesDbAdapter.KEY_NOTES, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_NOTES)));
+				initialValues.put(NotesDbAdapter.KEY_PICTURE, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_PICTURE)));
+				initialValues.put(NotesDbAdapter.KEY_SHARE, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_SHARE)));
+				initialValues.put(NotesDbAdapter.KEY_LATITUDE, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_LATITUDE)));
+				initialValues.put(NotesDbAdapter.KEY_LONGITUDE, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_LONGITUDE)));
+				initialValues.put(NotesDbAdapter.KEY_USER_ID, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_USER_ID)));
+				initialValues.put(NotesDbAdapter.KEY_USER_LINK, cursor
+						.getString(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_USER_LINK)));
+				initialValues
+						.put(
+								NotesDbAdapter.KEY_CHARACTERISTICS,
+								cursor
+										.getString(cursor
+												.getColumnIndex(NotesDbAdapter.KEY_CHARACTERISTICS)));
+
+				initialValues
+						.put(
+								NotesDbAdapter.KEY_BREWERY_LINK,
+								cursor
+										.getString(cursor
+												.getColumnIndex(NotesDbAdapter.KEY_BREWERY_LINK)));
+
+				initialValues.put(NotesDbAdapter.KEY_CREATED, cursor
+						.getLong(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_CREATED)));
+				initialValues.put(NotesDbAdapter.KEY_UPDATED, cursor
+						.getLong(cursor
+								.getColumnIndex(NotesDbAdapter.KEY_UPDATED)));
+				String _currencyCode = Currency
+						.getInstance(Locale.getDefault()).getCurrencyCode();
+				initialValues.put(NotesDbAdapter.KEY_CURRENCY_CODE,
+						_currencyCode);
+				String _currencySymbol = Currency.getInstance(
+						Locale.getDefault()).getSymbol();
+				initialValues.put(NotesDbAdapter.KEY_CURRENCY_SYMBOL,
+						_currencySymbol);
+
+				db.insert(NotesDbAdapter.DATABASE_TABLE, null, initialValues);
+				Log.i(TAG, "Inserted "
+						+ initialValues.getAsString(NotesDbAdapter.KEY_BEER)
+						+ " from " + NotesDbAdapter.DATABASE_TABLE_V3 + " to "
 						+ NotesDbAdapter.DATABASE_TABLE);
 			}
 			Log.i(TAG, "Records Inserted: " + records);
@@ -1486,13 +1644,14 @@ public class Util {
 		}
 		return false;
 	}
+
 	public static String getSendTestDailyCampaignUrl(String beerId) {
 		String url = null;
 		try {
 			url = AppConfig.COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL
 					+ AppConfig.COMMUNITY_SEND_TEST_DAILY_CAMPAIGN_Q
-					+ ((beerId != null) ? URLEncoder.encode(
-							beerId, "UTF-8") : "");
+					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
+							: "");
 		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, "error: "
 					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
@@ -1501,13 +1660,14 @@ public class Util {
 		return url;
 
 	}
+
 	public static String getSendDailyCampaignUrl(String beerId) {
 		String url = null;
 		try {
 			url = AppConfig.COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL
 					+ AppConfig.COMMUNITY_SEND_DAILY_CAMPAIGN_Q
-					+ ((beerId != null) ? URLEncoder.encode(
-							beerId, "UTF-8") : "");
+					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
+							: "");
 		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, "error: "
 					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",

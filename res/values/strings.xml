@@ -120,6 +120,14 @@
 	<string name="receive_new_beer_reviews_notification_label">Receive new beer review notifications</string>
 	<string name="receive_beer_of_the_day_notification_label">Receive beer of the day notification</string>
 	<string name="email_subscription_label">Receive emails from Beer Cellar Community</string>
+	<string name="beer_list_rows_per_page_label">Number of Beer Reviews to display</string>
+	<string-array name="beer_list_rows_per_page_options">
+		<item>10</item>
+		<item>20</item>
+		<item>30</item>
+		<item>50</item>
+		<item>100</item>
+	</string-array>	
 	<!-- End Preferences -->
 
 
@@ -506,6 +514,8 @@
 	<string name="upload_or_capture_photo_dialog_title">Please select:</string>
 	<string name="upload_or_capture_photo_capture_label">Take a Picture</string>
 	<string name="upload_or_capture_photo_upload_label">Select a Picture</string>
+	<string name="select_currency_label">Select Currency</string>
+	
 	<!--  End Beer Edit -->
 
 	<string name="back_to_beer_list_label">Back To Beer List</string>

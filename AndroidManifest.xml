@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.cm.beer.activity" android:versionCode="23"
-	android:versionName="Quadrupel">
+	package="com.cm.beer.activity" android:versionCode="25"
+	android:versionName="Saison">
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-feature android:name="android.hardware.camera" />
 	<uses-feature android:name="android.hardware.camera.autofocus" />

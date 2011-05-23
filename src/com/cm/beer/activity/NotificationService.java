@@ -36,7 +36,7 @@ public class NotificationService extends Service {
 	Service mService;
 	GoogleAnalyticsTracker mTracker;
 	private SharedPreferences mPreferences;
-	private Timer mTimer = new Timer();
+	private static Timer mTimer = new Timer();
 	long mAWeekAgoMillis;
 	String mDeviceId;
 

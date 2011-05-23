@@ -123,7 +123,8 @@ public class BeerList extends ListActivity {
 
 		showDialog(AppConfig.DIALOG_LOADING_ID);
 		setContentView(R.layout.beer_list);
-		mPreferences = this.getSharedPreferences(AppConfig.PREFERENCES_BEER,
+		mPreferences = this.getSharedPreferences(this
+				.getString(R.string.app_name),
 				Activity.MODE_PRIVATE);
 		if (!mPreferences
 				.getBoolean(
@@ -679,15 +680,18 @@ public class BeerList extends ListActivity {
 			_sortBy = NotesDbAdapter.KEY_UPDATED + " DESC";
 		}
 		Log.i(TAG, "fillData::sort by:: " + _sortBy);
-		Cursor notesCursor = mDbHelper.fetchAllNotes(mPageNumber,
-				AppConfig.BEER_LIST_ROWS_PER_PAGE, _sortBy);
+		int rowsPerPage = mPreferences.getInt(
+				AppConfig.PREFERENCE_BEER_LIST_ROWS_PER_PAGE,
+				AppConfig.BEER_LIST_ROWS_PER_PAGE);
+
+		Cursor notesCursor = mDbHelper.fetchAllNotes(mPageNumber, rowsPerPage, _sortBy);
 		startManagingCursor(notesCursor);
 		Log.i(TAG, "fillData::mPreviousCursorCount=" + mPreviousCursorCount);
 		Log.i(TAG, "fillData::mCurrentCursorCount=" + notesCursor.getCount());
 		// current row count returned is less than what it should have returned
 		if ((mLoadMoreBeersAction)
 				&& (notesCursor != null)
-				&& (notesCursor.getCount() < (mPreviousCursorCount + AppConfig.BEER_LIST_ROWS_PER_PAGE))) {
+				&& (notesCursor.getCount() < (mPreviousCursorCount + rowsPerPage))) {
 			Log.i(TAG, "fillData::Removing Footer View");
 			mBeerListView.removeFooterView(mFooterView);
 		} else {

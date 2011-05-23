@@ -52,11 +52,16 @@ public class NotesDbAdapter {
 	/** NEW Columns for version 3 **/
 	public static final String KEY_BREWERY_LINK = "brewerylink";
 
+	/** NEW Columns for version 4 **/
+	public static final String KEY_CURRENCY_SYMBOL = "currencysymbol";
+	public static final String KEY_CURRENCY_CODE = "currencycode";
+
 	public static final String DATABASE_NAME = "beercellar_db.sqlite";
-	public static final int DATABASE_VERSION = 3;
+	public static final int DATABASE_VERSION = 4;
 	public static final String DATABASE_TABLE = "beer_list_" + DATABASE_VERSION;
 	public static final String DATABASE_TABLE_V1 = "beer_list_1";
 	public static final String DATABASE_TABLE_V2 = "beer_list_2";
+	public static final String DATABASE_TABLE_V3 = "beer_list_3";
 
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
@@ -77,8 +82,9 @@ public class NotesDbAdapter {
 			+ " text default null," + KEY_USER_NAME + " text default null,"
 			+ KEY_USER_LINK + " text default null," + KEY_CHARACTERISTICS
 			+ " text default null," + KEY_BREWERY_LINK + " text default null,"
-			+ KEY_CREATED + " text default null," + KEY_UPDATED
-			+ " text default null);";
+			+ KEY_CURRENCY_SYMBOL + " text default null," + KEY_CURRENCY_CODE
+			+ " text default null," + KEY_CREATED + " text default null,"
+			+ KEY_UPDATED + " text default null);";
 
 	private static final String INSERT_SEED_DATA_SQL = "Insert into "
 			+ DATABASE_TABLE + "(" + KEY_ROWID + "," + KEY_BEER + ","
@@ -116,9 +122,11 @@ public class NotesDbAdapter {
 			Log.i(TAG, "DatabaseHelper::onUpgrade: Database " + DATABASE_TABLE
 					+ " created");
 			if (oldVersion == 1) {
-				Util.onUpgradeToV3FromV1(db);
+				Util.onUpgradeToV4FromV1(db);
 			} else if (oldVersion == 2) {
-				Util.onUpgradeToV3FromV2(db);
+				Util.onUpgradeToV4FromV2(db);
+			} else if (oldVersion == 3) {
+				Util.onUpgradeToV4FromV3(db);
 			}
 			Log.i(TAG, "DatabaseHelper::onUpgrade: Data imported");
 		}
@@ -213,6 +221,9 @@ public class NotesDbAdapter {
 		initialValues.put(KEY_CHARACTERISTICS, note.characteristics.trim());
 		initialValues.put(KEY_BREWERY_LINK, note.breweryLink.trim());
 
+		/** New columns for Version 4 **/
+		initialValues.put(KEY_CURRENCY_CODE, note.currencyCode.trim());
+		initialValues.put(KEY_CURRENCY_SYMBOL, note.currencySymbol.trim());
 		return mDb.insert(DATABASE_TABLE, null, initialValues);
 	}
 
@@ -243,8 +254,8 @@ public class NotesDbAdapter {
 				KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
 				KEY_COUNTRY, KEY_PICTURE, KEY_SHARE, KEY_LATITUDE,
 				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
-				KEY_CHARACTERISTICS }, null, null, null, null, KEY_UPDATED
-				+ " DESC");
+				KEY_CHARACTERISTICS, KEY_CURRENCY_CODE, KEY_CURRENCY_SYMBOL },
+				null, null, null, null, KEY_UPDATED + " DESC");
 		return cursor;
 	}
 
@@ -262,8 +273,9 @@ public class NotesDbAdapter {
 				KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
 				KEY_COUNTRY, KEY_PICTURE, KEY_SHARE, KEY_LATITUDE,
 				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
-				KEY_CHARACTERISTICS, KEY_BREWERY_LINK }, null, null, null,
-				null, KEY_UPDATED + " DESC", limit);
+				KEY_CHARACTERISTICS, KEY_BREWERY_LINK, KEY_CURRENCY_CODE,
+				KEY_CURRENCY_SYMBOL }, null, null, null, null, KEY_UPDATED
+				+ " DESC", limit);
 		if (cursor != null) {
 			if (page > 1) {
 				cursor.moveToPosition(((page - 1) * rowsPerPage));
@@ -287,8 +299,8 @@ public class NotesDbAdapter {
 				KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
 				KEY_COUNTRY, KEY_PICTURE, KEY_SHARE, KEY_LATITUDE,
 				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
-				KEY_CHARACTERISTICS, KEY_BREWERY_LINK }, null, null, null,
-				null, sortBy, limit);
+				KEY_CHARACTERISTICS, KEY_BREWERY_LINK, KEY_CURRENCY_CODE,
+				KEY_CURRENCY_SYMBOL }, null, null, null, null, sortBy, limit);
 		if (cursor != null) {
 			if (page > 1) {
 				cursor.moveToPosition(((page - 1) * rowsPerPage));
@@ -312,8 +324,8 @@ public class NotesDbAdapter {
 				KEY_COUNTRY, KEY_RATING, KEY_NOTES, KEY_PICTURE, KEY_CREATED,
 				KEY_UPDATED, KEY_SHARE, KEY_LATITUDE, KEY_LONGITUDE,
 				KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK, KEY_CHARACTERISTICS,
-				KEY_BREWERY_LINK }, null, null, null, null, KEY_UPDATED
-				+ " DESC");
+				KEY_BREWERY_LINK, KEY_CURRENCY_CODE, KEY_CURRENCY_SYMBOL },
+				null, null, null, null, KEY_UPDATED + " DESC");
 
 	}
 
@@ -337,8 +349,8 @@ public class NotesDbAdapter {
 				KEY_COUNTRY, KEY_RATING, KEY_NOTES, KEY_PICTURE, KEY_CREATED,
 				KEY_UPDATED, KEY_SHARE, KEY_LATITUDE, KEY_LONGITUDE,
 				KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK, KEY_CHARACTERISTICS,
-				KEY_BREWERY_LINK }, KEY_ROWID + "=" + rowId, null, null, null,
-				null, null);
+				KEY_BREWERY_LINK, KEY_CURRENCY_CODE, KEY_CURRENCY_SYMBOL },
+				KEY_ROWID + "=" + rowId, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -366,56 +378,56 @@ public class NotesDbAdapter {
 
 		StringBuilder sbSelectionCriteria = new StringBuilder();
 		if (beer != null && (!beer.equals(""))) {
-			sbSelectionCriteria.append(KEY_BEER);
-			sbSelectionCriteria.append("='");
-			sbSelectionCriteria.append(beer);
-			sbSelectionCriteria.append("' and ");
+			sbSelectionCriteria.append("lower("+KEY_BEER+")");
+			sbSelectionCriteria.append(" like '");
+			sbSelectionCriteria.append(beer.toLowerCase());
+			sbSelectionCriteria.append("%' and ");
 		}
 		if (rating != null && (!rating.equals(""))) {
 			sbSelectionCriteria.append(KEY_RATING);
-			sbSelectionCriteria.append("='");
+			sbSelectionCriteria.append(" = '");
 			sbSelectionCriteria.append(rating);
 			sbSelectionCriteria.append("' and ");
 		}
 		if (price != null && (!price.equals(""))) {
 			sbSelectionCriteria.append(KEY_PRICE);
-			sbSelectionCriteria.append("='");
+			sbSelectionCriteria.append(" = '");
 			sbSelectionCriteria.append(price);
 			sbSelectionCriteria.append("' and ");
 		}
 		if (alcohol != null && (!alcohol.equals(""))) {
 			sbSelectionCriteria.append(KEY_ALCOHOL);
-			sbSelectionCriteria.append("='");
+			sbSelectionCriteria.append(" = '");
 			sbSelectionCriteria.append(alcohol);
 			sbSelectionCriteria.append("' and ");
 		}
 		if (style != null && (!style.equals(""))) {
-			sbSelectionCriteria.append(KEY_STYLE);
-			sbSelectionCriteria.append("='");
-			sbSelectionCriteria.append(style);
-			sbSelectionCriteria.append("' and ");
+			sbSelectionCriteria.append("lower("+KEY_STYLE+")");
+			sbSelectionCriteria.append(" like '");
+			sbSelectionCriteria.append(style.toLowerCase());
+			sbSelectionCriteria.append("%' and ");
 		}
 		if (brewery != null && (!brewery.equals(""))) {
-			sbSelectionCriteria.append(KEY_BREWERY);
-			sbSelectionCriteria.append("='");
-			sbSelectionCriteria.append(brewery);
-			sbSelectionCriteria.append("' and ");
+			sbSelectionCriteria.append("lower("+KEY_BREWERY+")");
+			sbSelectionCriteria.append(" like '");
+			sbSelectionCriteria.append(brewery.toLowerCase());
+			sbSelectionCriteria.append("%' and ");
 		}
 		if (state != null && (!state.equals(""))) {
-			sbSelectionCriteria.append(KEY_STATE);
-			sbSelectionCriteria.append("='");
-			sbSelectionCriteria.append(state);
-			sbSelectionCriteria.append("' and ");
+			sbSelectionCriteria.append("lower("+KEY_STATE+")");
+			sbSelectionCriteria.append(" like '");
+			sbSelectionCriteria.append(state.toLowerCase());
+			sbSelectionCriteria.append("%' and ");
 		}
 		if (country != null && (!country.equals(""))) {
-			sbSelectionCriteria.append(KEY_COUNTRY);
-			sbSelectionCriteria.append("='");
-			sbSelectionCriteria.append(country);
-			sbSelectionCriteria.append("' and ");
+			sbSelectionCriteria.append("lower("+KEY_COUNTRY+")");
+			sbSelectionCriteria.append(" like '");
+			sbSelectionCriteria.append(country.toLowerCase());
+			sbSelectionCriteria.append("%' and ");
 		}
 		if (share != null && (!share.equals(""))) {
 			sbSelectionCriteria.append(KEY_SHARE);
-			sbSelectionCriteria.append("='");
+			sbSelectionCriteria.append(" = '");
 			sbSelectionCriteria.append(share);
 			sbSelectionCriteria.append("' and ");
 		}
@@ -429,8 +441,9 @@ public class NotesDbAdapter {
 				KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
 				KEY_COUNTRY, KEY_PICTURE, KEY_SHARE, KEY_LATITUDE,
 				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
-				KEY_CHARACTERISTICS, KEY_BREWERY_LINK }, sSelectionCriteria,
-				null, null, null, KEY_UPDATED + " DESC", limit);
+				KEY_CHARACTERISTICS, KEY_BREWERY_LINK, KEY_CURRENCY_CODE,
+				KEY_CURRENCY_SYMBOL }, sSelectionCriteria, null, null, null,
+				KEY_UPDATED + " DESC", limit);
 
 		return cursor;
 	}
@@ -510,6 +523,12 @@ public class NotesDbAdapter {
 		if ((note.characteristics != null)
 				&& ((!note.characteristics.equals("")))) {
 			args.put(KEY_CHARACTERISTICS, note.characteristics.trim());
+		}
+		if ((note.currencyCode != null) && ((!note.currencyCode.equals("")))) {
+			args.put(KEY_CURRENCY_CODE, note.currencyCode.trim());
+		}
+		if ((note.currencySymbol != null) && ((!note.currencySymbol.equals("")))) {
+			args.put(KEY_CURRENCY_SYMBOL, note.currencySymbol.trim());
 		}
 		args.put(KEY_UPDATED, String.valueOf(System.currentTimeMillis()));
 		return mDb

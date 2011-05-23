@@ -194,10 +194,16 @@
 				android:nextFocusDown="@+id/price" android:textColor="@drawable/black" />
 
 			<TextView android:id="@+id/price_label"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:layout_below="@+id/alcohol" android:layout_marginTop="30dp"
 				android:layout_marginLeft="5dp" android:gravity="left"
 				android:text="@string/community_beer_price_label" android:textStyle="bold" />
+			<TextView android:id="@+id/currency"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_below="@+id/alcohol" android:layout_marginTop="30dp"
+				android:layout_toRightOf="@+id/price_label"
+				android:layout_marginLeft="5dp" android:gravity="left"
+				android:textStyle="bold" android:layout_alignBottom="@+id/price_label" />
 			<View android:id="@+id/divider4" android:background="@drawable/divider"
 				android:layout_width="fill_parent" android:layout_height="1dp"
 				android:layout_below="@+id/price_label" />

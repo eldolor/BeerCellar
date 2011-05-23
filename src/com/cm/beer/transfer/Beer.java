@@ -10,7 +10,6 @@ public class Beer implements java.io.Serializable {
 	private String user;
 	private String beer;
 	private String alcohol;
-	private String currency;
 	private String price;
 	private String style;
 	private String brewery;
@@ -24,6 +23,12 @@ public class Beer implements java.io.Serializable {
 	private String timeZone;
 	private String latitude;
 	private String longitude;
+	private String currencySymbol;
+	private String currencyCode;
+
+	public Beer() {
+
+	}
 
 	public long getId() {
 		return id;
@@ -39,14 +44,6 @@ public class Beer implements java.io.Serializable {
 
 	public void setUser(String user) {
 		this.user = user;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
 	}
 
 	public String getPrice() {
@@ -105,28 +102,6 @@ public class Beer implements java.io.Serializable {
 		this.updated = updated;
 	}
 
-	public Beer(long id, String user, String beer, String alcohol,
-			String currency, String price, String style, String brewery,
-			String state, String country, String notes, String rating,
-			String picture, long created, long updated) {
-		super();
-		this.id = id;
-		this.user = user;
-		this.beer = beer;
-		this.alcohol = alcohol;
-		this.currency = currency;
-		this.price = price;
-		this.style = style;
-		this.brewery = brewery;
-		this.state = state;
-		this.country = country;
-		this.notes = notes;
-		this.rating = rating;
-		this.picture = picture;
-		this.created = created;
-		this.updated = updated;
-	}
-
 	public String getBeer() {
 		return beer;
 	}
@@ -171,10 +146,6 @@ public class Beer implements java.io.Serializable {
 		return serialVersionUID;
 	}
 
-	public Beer() {
-
-	}
-
 	public void setTimeZone(String timeZone) {
 		this.timeZone = timeZone;
 	}
@@ -197,6 +168,22 @@ public class Beer implements java.io.Serializable {
 
 	public String getLongitude() {
 		return longitude;
+	}
+
+	public void setCurrencySymbol(String currencySymbol) {
+		this.currencySymbol = currencySymbol;
+	}
+
+	public String getCurrencySymbol() {
+		return currencySymbol;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
+
+	public String getCurrencyCode() {
+		return currencyCode;
 	}
 
 }

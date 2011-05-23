@@ -14,8 +14,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Spinner;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.util.User;
@@ -34,6 +36,7 @@ public class SetPreferences extends Activity {
 	CheckBox mReceiveNewFromFollowingNotification;
 	CheckBox mReceiveBeerOfTheDayNotification;
 	CheckBox mEmailSubscription;
+	Spinner mBeerListRowsPerPage;
 
 	User mUser;
 	SharedPreferences mPreferences;
@@ -134,6 +137,39 @@ public class SetPreferences extends Activity {
 				new AsyncUpdateEmailSubscriptionStatusTask().execute(mUser
 						.getUserId(), _emailSubscriptionStatus);
 
+				int rowsPerPage = AppConfig.BEER_LIST_ROWS_PER_PAGE;
+				if (!mBeerListRowsPerPage.getSelectedItem().toString().equals(
+						"")) {
+					rowsPerPage = Integer.valueOf(mBeerListRowsPerPage
+							.getSelectedItem().toString());
+				}
+
+				mPreferences.edit().putInt(
+						AppConfig.PREFERENCE_BEER_LIST_ROWS_PER_PAGE,
+						rowsPerPage).commit();
+				// send stats
+				if (mReceiveNewNotification.isChecked()) {
+					mTracker.trackEvent("SetPreferences",
+							"ReceiveNewNotification", "Y", 0);
+				} else {
+					mTracker.trackEvent("SetPreferences",
+							"ReceiveNewNotification", "N", 0);
+				}
+				if (mReceiveNewFromFollowingNotification.isChecked()) {
+					mTracker.trackEvent("SetPreferences",
+							"ReceiveNewFromFollowingNotification", "Y", 0);
+				} else {
+					mTracker.trackEvent("SetPreferences",
+							"ReceiveNewFromFollowingNotification", "N", 0);
+				}
+				if (mReceiveBeerOfTheDayNotification.isChecked()) {
+					mTracker.trackEvent("SetPreferences",
+							"ReceiveBeerOfTheDayNotification", "Y", 0);
+				} else {
+					mTracker.trackEvent("SetPreferences",
+							"ReceiveBeerOfTheDayNotification", "N", 0);
+				}
+
 				setResult(RESULT_OK);
 				finish();
 			}
@@ -178,6 +214,34 @@ public class SetPreferences extends Activity {
 				}
 			}
 		});
+		/****************************************/
+		mBeerListRowsPerPage = (Spinner) findViewById(R.id.beer_list_rows_per_page_options);
+		ArrayAdapter<CharSequence> adapter6 = ArrayAdapter.createFromResource(
+				this, R.array.beer_list_rows_per_page_options,
+				android.R.layout.simple_spinner_item);
+		adapter6
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mBeerListRowsPerPage.setAdapter(adapter6);
+		{
+			final CharSequence[] options = getResources().getStringArray(
+					R.array.beer_list_rows_per_page_options);
+			int position = 0;
+			// cast to string for comparision below
+			String rowsPerPage = String.valueOf(mPreferences.getInt(
+					AppConfig.PREFERENCE_BEER_LIST_ROWS_PER_PAGE,
+					AppConfig.BEER_LIST_ROWS_PER_PAGE));
+
+			// traverse for a match
+			for (int i = 0; i < options.length; i++) {
+				if (options[i].equals(rowsPerPage)) {
+					position = i;
+					break;
+				}
+			}
+
+			mBeerListRowsPerPage.setSelection(position, true);
+		}
+
 		/****************************************/
 	}
 

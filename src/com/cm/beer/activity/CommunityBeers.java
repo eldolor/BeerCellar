@@ -113,7 +113,6 @@ public class CommunityBeers extends ListActivity {
 		mDrawableManager = DrawableManager.getInstance();
 		mContentManager = ContentManager.getInstance();
 
-
 	}
 
 	/*
@@ -236,13 +235,7 @@ public class CommunityBeers extends ListActivity {
 				+ beer.latitude + "," + beer.longitude + "?z="
 				+ AppConfig.GOOGLE_MAPS_ZOOM_LEVEL));
 		startActivity(i);
-		/*
-		 * Intent intent = new Intent(mMainActivity.getApplication(),
-		 * ViewMap.class); intent.putExtra("TITLE", "TITLE");
-		 * intent.putExtra("SNIPPET", "SNIPPET"); intent.putExtra("LATITUDE",
-		 * beer.latitude); intent.putExtra("LONGITUDE", beer.longitude);
-		 * startActivity(intent);
-		 */}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -460,7 +453,6 @@ public class CommunityBeers extends ListActivity {
 						_beer = new CommunityBeer();
 						_beer.country = beerJSONObject.getString("country");
 						_beer.created = beerJSONObject.getString("created");
-						_beer.currency = beerJSONObject.getString("currency");
 						_beer.notes = beerJSONObject.getString("notes");
 						_beer.picture = beerJSONObject.getString("picture");
 						_beer.price = beerJSONObject.getString("price");
@@ -503,6 +495,22 @@ public class CommunityBeers extends ListActivity {
 										.getString("breweryLink");
 							}
 						}
+						/** DEPRECATED in V4 of the database **/
+						if (beerJSONObject.has("currency")) {
+							_beer.currency = beerJSONObject
+									.getString("currency");
+						}
+						/** Added in V4 of the database **/
+						if (beerJSONObject.has("currencyCode")) {
+							_beer.currencyCode = beerJSONObject
+									.getString("currencyCode");
+						}
+						/** Added in V4 of the database **/
+						if (beerJSONObject.has("currencySymbol")) {
+							_beer.currencySymbol = beerJSONObject
+									.getString("currencySymbol");
+						}
+
 						mMainActivity.mBeers.add(_beer);
 						Log.i(TAG, _beer.beerId + "::" + _beer.beer + "::BL::"
 								+ _beer.breweryLink);
@@ -1006,51 +1014,51 @@ public class CommunityBeers extends ListActivity {
 					}
 				}
 				/***********************************************/
-//				{
-//					final TextView textView = ((TextView) v
-//							.findViewById(R.id.text3));
-//					if (textView != null) {
-//						// setup review helpful message
-//						final Handler reviewHelpfulCountHandler = new Handler() {
-//							@Override
-//							public void handleMessage(Message message) {
-//								String jsonStr = (String) message.obj;
-//								if ((jsonStr != null)
-//										&& (jsonStr.startsWith("{"))) {
-//									JSONObject json;
-//									try {
-//										json = new JSONObject(jsonStr);
-//										int yes = json.getInt("yes");
-//										int no = json.getInt("no");
-//										String _reviewHelpfulMessage = yes
-//												+ " out of " + (yes + no)
-//												+ " found this review helpful";
-//										Log.d(TAG, _reviewHelpfulMessage);
-//										textView.setText(_reviewHelpfulMessage);
-//									} catch (JSONException e) {
-//										Log
-//												.e(
-//														TAG,
-//														"error: "
-//																+ ((e
-//																		.getMessage() != null) ? e
-//																		.getMessage()
-//																		.replace(
-//																				" ",
-//																				"_")
-//																		: ""),
-//														e);
-//									}
-//								} else {
-//									textView.setVisibility(View.GONE);
-//								}
-//							}
-//						};
-//						mContentManager.fetchContentOnThread(Util
-//								.getReviewHelpfulCountUrl(beer.beerId),
-//								reviewHelpfulCountHandler);
-//					}
-//				}
+				// {
+				// final TextView textView = ((TextView) v
+				// .findViewById(R.id.text3));
+				// if (textView != null) {
+				// // setup review helpful message
+				// final Handler reviewHelpfulCountHandler = new Handler() {
+				// @Override
+				// public void handleMessage(Message message) {
+				// String jsonStr = (String) message.obj;
+				// if ((jsonStr != null)
+				// && (jsonStr.startsWith("{"))) {
+				// JSONObject json;
+				// try {
+				// json = new JSONObject(jsonStr);
+				// int yes = json.getInt("yes");
+				// int no = json.getInt("no");
+				// String _reviewHelpfulMessage = yes
+				// + " out of " + (yes + no)
+				// + " found this review helpful";
+				// Log.d(TAG, _reviewHelpfulMessage);
+				// textView.setText(_reviewHelpfulMessage);
+				// } catch (JSONException e) {
+				// Log
+				// .e(
+				// TAG,
+				// "error: "
+				// + ((e
+				// .getMessage() != null) ? e
+				// .getMessage()
+				// .replace(
+				// " ",
+				// "_")
+				// : ""),
+				// e);
+				// }
+				// } else {
+				// textView.setVisibility(View.GONE);
+				// }
+				// }
+				// };
+				// mContentManager.fetchContentOnThread(Util
+				// .getReviewHelpfulCountUrl(beer.beerId),
+				// reviewHelpfulCountHandler);
+				// }
+				// }
 				/***********************************************/
 				{
 					String text = (!beer.state.equals("")) ? (beer.state + " " + beer.country)

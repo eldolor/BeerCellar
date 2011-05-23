@@ -21,6 +21,7 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,6 +74,7 @@ public class BeerEdit extends Activity implements
 	RatingBar mRating;
 	EditText mNotes;
 	TextView mPriceLabel;
+	TextView mCurrencyLabel;
 	EditText mPrice;
 	ImageView mThumbnailView;
 	TextView mDateCreated;
@@ -99,6 +101,9 @@ public class BeerEdit extends Activity implements
 
 	String mLatitude;
 	String mLongitude;
+
+	String mCurrencySymbol;
+	String mCurrencyCode;
 
 	Activity mMainActivity;
 
@@ -285,6 +290,8 @@ public class BeerEdit extends Activity implements
 		if (mCharacteristicsJson != null) {
 			note.characteristics = mCharacteristicsJson.toString();
 		}
+		note.currencyCode = mCurrencyCode;
+		note.currencySymbol = mCurrencySymbol;
 		if (mIsNew) {
 			mDbHelper.createNote(note);
 			mIsNew = false;
@@ -324,6 +331,8 @@ public class BeerEdit extends Activity implements
 		if (mCharacteristicsJson != null) {
 			note.characteristics = mCharacteristicsJson.toString();
 		}
+		note.currencyCode = mCurrencyCode;
+		note.currencySymbol = mCurrencySymbol;
 
 		if (mIsNew) {
 			mTracker.trackEvent("BeerEdit", "Beer", "Added", 0);
@@ -350,8 +359,8 @@ public class BeerEdit extends Activity implements
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
 				intent.putExtra("ACTION", AppConfig.ACTION_INSERT);
-				// only upload photo if picture taken
-				intent.putExtra("UPLOAD_PHOTO", this.mPictureTaken);
+				// upload the picture all the time
+				intent.putExtra("UPLOAD_PHOTO", true);
 				intent
 						.putExtra(
 								"INTERCEPT",
@@ -406,6 +415,7 @@ public class BeerEdit extends Activity implements
 						ShareWithCommunity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
+				//do not upload photo as the action is DELETE
 				intent.putExtra("UPLOAD_PHOTO", false);
 				intent.putExtra("INTERCEPT",
 						AppConfig.SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT);
@@ -438,32 +448,33 @@ public class BeerEdit extends Activity implements
 
 				Log.i(TAG, "Intent Share With Community Started");
 
-			} else if ((note.share.equals("Y")) && (this.mPictureTaken)) {
-				Log
-						.i(TAG,
-								"shared and photo taken => upload_photo, do_not_intercept, action_update");
-				Intent intent = new Intent(BeerEdit.this.getApplication(),
-						ShareWithCommunity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
-				intent.putExtra("UPLOAD_PHOTO", true);
-				intent.putExtra("INTERCEPT",
-						AppConfig.SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT);
-				intent.putExtra("ACTION", AppConfig.ACTION_UPDATE);
-				startActivityForResult(intent,
-						SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
-
-				Log.i(TAG, "Intent Share With Community Started");
+//			} else if ((note.share.equals("Y")) && (this.mPictureTaken)) {
+//				Log
+//						.i(TAG,
+//								"shared and photo taken => upload_photo, do_not_intercept, action_update");
+//				Intent intent = new Intent(BeerEdit.this.getApplication(),
+//						ShareWithCommunity.class);
+//				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+//				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
+//				intent.putExtra("UPLOAD_PHOTO", true);
+//				intent.putExtra("INTERCEPT",
+//						AppConfig.SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT);
+//				intent.putExtra("ACTION", AppConfig.ACTION_UPDATE);
+//				startActivityForResult(intent,
+//						SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
+//
+//				Log.i(TAG, "Intent Share With Community Started");
 
 			} else if (note.share.equals("Y")) {
 				Log
 						.i(TAG,
-								"shared => do_not_upload_photo, do_not_intercept, action_update");
+								"shared => upload_photo, intercept_if_not_logged_in, action_update");
 				Intent intent = new Intent(BeerEdit.this.getApplication(),
 						ShareWithCommunity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
-				intent.putExtra("UPLOAD_PHOTO", false);
+				//upload photo all the time
+				intent.putExtra("UPLOAD_PHOTO", true);
 				intent
 						.putExtra(
 								"INTERCEPT",
@@ -720,10 +731,68 @@ public class BeerEdit extends Activity implements
 		mAlcohol = (EditText) findViewById(R.id.alcohol);
 		/****************************************/
 		mPriceLabel = (TextView) findViewById(R.id.price_label);
+		mCurrencyLabel = (TextView) findViewById(R.id.currency);
 		String _currencySymbol = Currency.getInstance(Locale.getDefault())
 				.getSymbol();
-		mPriceLabel.setText(mPriceLabel.getText().toString() + " "
-				+ _currencySymbol);
+		String _currencyCode = Currency.getInstance(Locale.getDefault())
+				.getCurrencyCode();
+		// set default country
+		mCurrencyCode = _currencyCode;
+		mCurrencySymbol = _currencySymbol;
+
+		mCurrencyLabel.setText(_currencyCode + " " + _currencySymbol);
+		mCurrencyLabel.setTextColor(android.graphics.Color.BLUE);
+		mCurrencyLabel.setPaintFlags(mCurrencyLabel.getPaintFlags()
+				| Paint.UNDERLINE_TEXT_FLAG);
+		mCurrencyLabel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				AlertDialog.Builder dialog = new AlertDialog.Builder(
+						new ContextThemeWrapper(BeerEdit.this,
+								android.R.style.Theme_Dialog));
+				dialog.setIcon(android.R.drawable.ic_dialog_info);
+				dialog.setTitle(R.string.select_currency_label);
+
+				final CharSequence[] items = new CharSequence[AppConfig.CURRENCY_COUNTRY.length];
+				for (int i = 0; i < items.length; i++) {
+
+					items[i] = AppConfig.CURRENCY_CODE[i] + " "
+							+ AppConfig.CURRENCY_SYMBOL[i] + " "
+							+ AppConfig.CURRENCY_COUNTRY[i];
+				}
+				dialog.setSingleChoiceItems(items, -1,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// change the select country
+								mCurrencyCode = AppConfig.CURRENCY_SYMBOL[which];
+								mCurrencySymbol = AppConfig.CURRENCY_CODE[which];
+								mCurrencyLabel
+										.setText(AppConfig.CURRENCY_CODE[which]
+												+ " "
+												+ AppConfig.CURRENCY_SYMBOL[which]);
+								mCurrencyLabel
+										.setTextColor(android.graphics.Color.BLUE);
+								mCurrencyLabel.setPaintFlags(mCurrencyLabel
+										.getPaintFlags()
+										| Paint.UNDERLINE_TEXT_FLAG);
+							}
+						});
+
+				dialog.setPositiveButton(R.string.done_label,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+							}
+						});
+				dialog.create();
+				dialog.show();
+			}
+		});
+
 		/****************************************/
 		mPrice = (EditText) findViewById(R.id.price);
 		/****************************************/

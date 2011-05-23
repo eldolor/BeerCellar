@@ -67,11 +67,7 @@ public class CommunityBeerView extends Activity {
 	String mUrl;
 	CommunityBeer mCommunityBeer;
 
-	// Button mYes;
-	// Button mNo;
 	FacebookLikeButtonWebView mFacebookLikeWebView;
-	// TextView mRatingThankYouMessage;
-	// TextView mReviewHelpfulMessage;
 	TextView mReviewedByLabel;
 	TextView mReviewedBy;
 	TextView mReviewedByReviewCount;
@@ -223,7 +219,8 @@ public class CommunityBeerView extends Activity {
 		}
 		super.onCreateOptionsMenu(menu);
 		int menuPosition = 0;
-		if (mUser.getUserId().equalsIgnoreCase(AppConfig.ADMIN_USER_EMAIL_ADDRESS)) {
+		if (mUser.getUserId().equalsIgnoreCase(
+				AppConfig.ADMIN_USER_EMAIL_ADDRESS)) {
 			menu.add(MENU_GROUP, SEND_TEST_DAILY_CAMPAIGN, menuPosition++,
 					R.string.send_test_daily_campaign);
 			menu.add(MENU_GROUP, SEND_DAILY_CAMPAIGN, menuPosition++,
@@ -291,28 +288,6 @@ public class CommunityBeerView extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_Y)
-		// {
-		// if (resultCode == RESULT_OK) {
-		// String _url = Util.getSetReviewHelpfulUrl(
-		// mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-		// .getUserId(), "Y");
-		// new AsyncPostReviewHelpfulRating().execute(_url);
-		// // mRatingThankYouMessage.setVisibility(View.VISIBLE);
-		//
-		// Log.i(TAG, "onActivityResult:");
-		// }
-		// } else if (requestCode ==
-		// LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N) {
-		// if (resultCode == RESULT_OK) {
-		// String _url = Util.getSetReviewHelpfulUrl(
-		// mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-		// .getUserId(), "N");
-		// new AsyncPostReviewHelpfulRating().execute(_url);
-		// // mRatingThankYouMessage.setVisibility(View.VISIBLE);
-		//
-		// Log.i(TAG, "onActivityResult:");
-		// }
 		if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_FOLLOW) {
 			if (resultCode == RESULT_OK) {
 				String _setFollowUrl = Util.getSetFollowUrl(mUser.getUserId(),
@@ -416,22 +391,8 @@ public class CommunityBeerView extends Activity {
 		mFavorites.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
 				PorterDuff.Mode.MULTIPLY);
 		/****************************************/
-		// mYes = (Button) findViewById(R.id.review_helpful_yes);
-		// mYes.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
-		// PorterDuff.Mode.MULTIPLY);
-		/****************************************/
-		// mNo = (Button) findViewById(R.id.review_helpful_no);
-		// mNo.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
-		// PorterDuff.Mode.MULTIPLY);
-		/****************************************/
 		mFacebookLikeWebView = (FacebookLikeButtonWebView) findViewById(R.id.facebook_like_webview);
 		mFacebookLikeWebView.getSettings().setJavaScriptEnabled(true);
-		/****************************************/
-		// mRatingThankYouMessage = (TextView)
-		// findViewById(R.id.rating_thank_you_message);
-		/****************************************/
-		// mReviewHelpfulMessage = (TextView)
-		// findViewById(R.id.review_helpful_message);
 		/****************************************/
 		mThumbnailView = (ImageView) findViewById(R.id.thumbnail);
 		/****************************************/
@@ -498,17 +459,11 @@ public class CommunityBeerView extends Activity {
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "populateFields");
 		}
-		// GET USER ID
-		// setupYes();
-		// setupNo();
 
 		setupFacebookLikeButton();
 
 		// setup view user profile button
 		setupViewUserProfile();
-
-		// setup review helpful count message
-		// setupReviewHelpfulCount();
 
 		mThumbnailView.setImageDrawable(mDrawableManager.fetchDrawable(Util
 				.getImageUrl(mCommunityBeer.beerId)));
@@ -524,7 +479,7 @@ public class CommunityBeerView extends Activity {
 				&& (!mCommunityBeer.userId.equals(""))) {
 			mReviewedBy.setText(mCommunityBeer.userName);
 			// setup review count
-			// setupReviewCount();
+			setupReviewCount();
 			// setup follow reviewer button
 			setupFollowReviewer();
 
@@ -543,7 +498,13 @@ public class CommunityBeerView extends Activity {
 		Log.i(TAG, "populateFields::setting:" + mCommunityBeer.beer);
 		mAlcohol.setText(mCommunityBeer.alcohol);
 		Log.i(TAG, "populateFields::setting:" + mCommunityBeer.alcohol);
-		mPrice.setText(mCommunityBeer.currency + mCommunityBeer.price);
+		if ((!mCommunityBeer.currencyCode.equals(""))
+				&& (!mCommunityBeer.currencySymbol.equals(""))) {
+			mPrice.setText(mCommunityBeer.currencyCode + " "
+					+ mCommunityBeer.currencySymbol + mCommunityBeer.price);
+		} else {
+			mPrice.setText(mCommunityBeer.currency + mCommunityBeer.price);
+		}
 		mStyle.setText(mCommunityBeer.style);
 
 		mBrewery.setText(mCommunityBeer.brewery);
@@ -630,7 +591,6 @@ public class CommunityBeerView extends Activity {
 					+ mCommunityBeer.beerId + AppConfig.FACEBOOK_LIKE_URL_ETC
 					+ AppConfig.FACEBOOK_LIKE_URL_LOCALE + Locale.getDefault()
 					+ AppConfig.FACEBOOK_LIKE_URL_ACCESS_TOKEN + facebookToken;
-			// String encodedUrl = URLEncoder.encode(url, "UTF-8");
 			Log.d(TAG, "FacebookLikeButton URL: " + url);
 			mFacebookLikeWebView
 					.setWebViewClient(new FacebookLikeButtonWebViewClient());
@@ -879,72 +839,6 @@ public class CommunityBeerView extends Activity {
 
 	}
 
-	// private void setupYes() {
-	// mYes.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View arg0) {
-	// // If user id does not exist
-	// if (mUser.isLoggedIn()) {
-	// String _url = Util.getSetReviewHelpfulUrl(
-	// mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-	// .getUserId(), "Y");
-	// new AsyncPostReviewHelpfulRating().execute(_url);
-	// mTracker.trackEvent("CommunityBeerView", "ReviewHelpful",
-	// "Clicked", 0);
-	// mTracker.dispatch();
-	// /** Remove content from cache **/
-	// mContentManager.removeContent(Util
-	// .getReviewHelpfulCountUrl(mCommunityBeer.beerId));
-	// /** Fetch updated Review Helpful Count **/
-	// mContentManager.fetchContentOnThread(Util
-	// .getReviewHelpfulCountUrl(mCommunityBeer.beerId),
-	// mReviewHelpfulCountHandler);
-	// mRatingThankYouMessage.setVisibility(View.VISIBLE);
-	// mReviewHelpfulMessage.setVisibility(View.VISIBLE);
-	// } else {
-	// Intent intent = new Intent(mMainActivity.getApplication(),
-	// LoginIntercept.class);
-	// intent.putExtra("FACEBOOK_PERMISSIONS",
-	// AppConfig.FACEBOOK_PERMISSIONS);
-	// startActivityForResult(intent,
-	// LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_Y);
-	//
-	// }
-	// }
-	// });
-	//
-	// }
-	//
-	// private void setupNo() {
-	// mNo.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View arg0) {
-	// // If user id does not exist
-	// if (mUser.isLoggedIn()) {
-	// String _url = Util.getSetReviewHelpfulUrl(
-	// mCommunityBeer.userId, mCommunityBeer.beerId, mUser
-	// .getUserId(), "N");
-	// new AsyncPostReviewHelpfulRating().execute(_url);
-	// mTracker.trackEvent("CommunityBeerView",
-	// "ReviewNotHelpful", "Clicked", 0);
-	// mTracker.dispatch();
-	// mRatingThankYouMessage.setVisibility(View.VISIBLE);
-	// mReviewHelpfulMessage.setVisibility(View.VISIBLE);
-	// } else {
-	// Intent intent = new Intent(mMainActivity.getApplication(),
-	// LoginIntercept.class);
-	// intent.putExtra("FACEBOOK_PERMISSIONS",
-	// AppConfig.FACEBOOK_PERMISSIONS);
-	// startActivityForResult(intent,
-	// LOGIN_INTERCEPT_REQUEST_CODE_FOR_REVIEW_HELPFUL_N);
-	//
-	// }
-	// }
-	// });
-	// }
-
 	/**
 	 * 
 	 */
@@ -1118,38 +1012,6 @@ public class CommunityBeerView extends Activity {
 
 	}
 
-	// private void setupReviewHelpfulCount() {
-	// mReviewHelpfulCountHandler = new Handler() {
-	// @Override
-	// public void handleMessage(Message message) {
-	// String jsonStr = (String) message.obj;
-	// Log.i(TAG, jsonStr);
-	// if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
-	// JSONObject json;
-	// try {
-	// json = new JSONObject(jsonStr);
-	// int yes = json.getInt("yes");
-	// int no = json.getInt("no");
-	// String _reviewHelpfulMessage = yes + " out of "
-	// + (yes + no) + " found this review helpful:";
-	// Log.d(TAG, _reviewHelpfulMessage);
-	// // mReviewHelpfulMessage.setText(_reviewHelpfulMessage);
-	// } catch (JSONException e) {
-	// Log.e(TAG, "error: "
-	// + ((e.getMessage() != null) ? e.getMessage()
-	// .replace(" ", "_") : ""), e);
-	// }
-	// } else {
-	// // mReviewHelpfulMessage.setVisibility(View.GONE);
-	// }
-	// }
-	// };
-	// mContentManager.fetchContentOnThread(Util
-	// .getReviewHelpfulCountUrl(mCommunityBeer.beerId),
-	// mReviewHelpfulCountHandler);
-	//
-	// }
-
 	public void handleUserNotLoggedInFacebook() {
 		Log.i(TAG, "handleUserNotLoggedInFacebook");
 		Intent intent = new Intent(mMainActivity, LoginIntercept.class);
@@ -1157,50 +1019,6 @@ public class CommunityBeerView extends Activity {
 		intent.putExtra("FACEBOOK_ONLY", "Y");
 		mMainActivity.startActivityForResult(intent,
 				LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON);
-
-	}
-
-	/************************************************************************************/
-	private class AsyncPostReviewHelpfulRating extends
-			AsyncTask<Object, Void, Object> {
-
-		/**
-		 * 
-		 * @param args
-		 * @return null
-		 */
-		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
-			String url = (String) args[0];
-			try {
-				Util.getResult(url);
-				/** Remove content from cache **/
-				mContentManager.removeContent(Util
-						.getReviewHelpfulCountUrl(mCommunityBeer.beerId));
-				/** Fetch updated Review Helpful Count **/
-				mContentManager.fetchContentOnThread(Util
-						.getReviewHelpfulCountUrl(mCommunityBeer.beerId),
-						mReviewHelpfulCountHandler);
-			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("CommunityBeerView",
-						"PostReviewHelpfulRatingError",
-						((e.getMessage() != null) ? e.getMessage().replace(" ",
-								"_") : "").replace(" ", "_"), 0);
-				mTracker.dispatch();
-			}
-
-			Log.i(TAG, "doInBackground finished");
-			return null;
-		}
-
-		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
-
-			Log.i(TAG, "onPostExecute finished");
-		}
 
 	}
 

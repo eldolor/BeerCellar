@@ -9,6 +9,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -76,6 +77,8 @@ public class SearchResults extends ListActivity {
 	GoogleAnalyticsTracker mTracker;
 	Activity mMainActivity;
 	Bundle mExtras;
+	
+	SharedPreferences mPreferences;
 
 	/*
 	 * (non-Javadoc)
@@ -102,6 +105,10 @@ public class SearchResults extends ListActivity {
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		}
+
+		mPreferences = this.getSharedPreferences(this
+				.getString(R.string.app_name),
+				Activity.MODE_PRIVATE);
 
 		showDialog(AppConfig.DIALOG_LOADING_ID);
 		setContentView(R.layout.beer_list);
@@ -450,6 +457,10 @@ public class SearchResults extends ListActivity {
 				.getString(NotesDbAdapter.KEY_COUNTRY) : null;
 		String _share = mExtras != null ? mExtras
 				.getString(NotesDbAdapter.KEY_SHARE) : null;
+		
+		int rowsPerPage = mPreferences.getInt(
+				AppConfig.PREFERENCE_BEER_LIST_ROWS_PER_PAGE,
+				AppConfig.BEER_LIST_ROWS_PER_PAGE);
 
 		Cursor notesCursor = null;
 		if ((_beer == null) && (_rating == null) && (_price == null)
@@ -459,7 +470,7 @@ public class SearchResults extends ListActivity {
 		} else {
 			notesCursor = mDbHelper.fetchNotes(_beer, _rating, _price,
 					_alcohol, _style, _brewery, _state, _country, _share,
-					mPageNumber, AppConfig.BEER_LIST_ROWS_PER_PAGE);
+					mPageNumber, rowsPerPage);
 		}
 		startManagingCursor(notesCursor);
 		Log.i(TAG, "fillData::mPreviousCursorCount=" + mPreviousCursorCount);
@@ -467,7 +478,7 @@ public class SearchResults extends ListActivity {
 		// current row count returned is less than what it should have returned
 		if ((mLoadMoreBeersAction)
 				&& (notesCursor != null)
-				&& (notesCursor.getCount() < (mPreviousCursorCount + AppConfig.BEER_LIST_ROWS_PER_PAGE))) {
+				&& (notesCursor.getCount() < (mPreviousCursorCount + rowsPerPage))) {
 			Log.i(TAG, "fillData::Removing Footer View");
 			mBeerListView.removeFooterView(mFooterView);
 		} else {
