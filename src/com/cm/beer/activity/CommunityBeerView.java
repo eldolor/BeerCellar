@@ -512,7 +512,6 @@ public class CommunityBeerView extends Activity {
 				+ " brewery link: " + mCommunityBeer.breweryLink);
 		if ((mCommunityBeer.breweryLink != null)
 				&& (!mCommunityBeer.breweryLink.trim().equals(""))
-				&& (!mCommunityBeer.breweryLink.trim().equals("null"))
 				&& (!mCommunityBeer.breweryLink.trim().equalsIgnoreCase(
 						"http://"))) {
 			// if link does not start with http:// then add to it
