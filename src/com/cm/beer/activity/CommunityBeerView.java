@@ -498,13 +498,27 @@ public class CommunityBeerView extends Activity {
 		Log.i(TAG, "populateFields::setting:" + mCommunityBeer.beer);
 		mAlcohol.setText(mCommunityBeer.alcohol);
 		Log.i(TAG, "populateFields::setting:" + mCommunityBeer.alcohol);
-		if ((!mCommunityBeer.currencyCode.equals(""))
-				&& (!mCommunityBeer.currencySymbol.equals(""))) {
-			mPrice.setText(mCommunityBeer.currencyCode + " "
-					+ mCommunityBeer.currencySymbol + mCommunityBeer.price);
-		} else {
-			mPrice.setText(mCommunityBeer.currency + mCommunityBeer.price);
+		
+		if ((mCommunityBeer.price != null)
+				&& (!mCommunityBeer.price.trim().equals(""))) {
+
+			if ((mCommunityBeer.currencyCode != null)
+					&& (mCommunityBeer.currencySymbol != null)) {
+				Log.d(TAG, "Currency code and symbol are available");
+				String _priceText = mCommunityBeer.currencyCode + " "
+						+ mCommunityBeer.currencySymbol + " "
+						+ mCommunityBeer.price;
+				Log.d(TAG, "Price Text: " + _priceText);
+				mPrice.setText(_priceText);
+			} else {
+				Log.d(TAG, "Currency code and symbol are NOT available");
+				mPrice
+						.setText(((mCommunityBeer.currency != null) ? mCommunityBeer.currency
+								: "")
+								+ mCommunityBeer.price);
+			}
 		}
+		
 		mStyle.setText(mCommunityBeer.style);
 
 		mBrewery.setText(mCommunityBeer.brewery);
