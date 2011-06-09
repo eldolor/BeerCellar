@@ -219,8 +219,8 @@ public class CommunityBeerView extends Activity {
 		}
 		super.onCreateOptionsMenu(menu);
 		int menuPosition = 0;
-		if (mUser.getUserId().equalsIgnoreCase(
-				AppConfig.ADMIN_USER_EMAIL_ADDRESS)) {
+		if ((mUser !=null) &&(mUser.getUserId().equalsIgnoreCase(
+				AppConfig.ADMIN_USER_EMAIL_ADDRESS))) {
 			menu.add(MENU_GROUP, SEND_TEST_DAILY_CAMPAIGN, menuPosition++,
 					R.string.send_test_daily_campaign);
 			menu.add(MENU_GROUP, SEND_DAILY_CAMPAIGN, menuPosition++,
