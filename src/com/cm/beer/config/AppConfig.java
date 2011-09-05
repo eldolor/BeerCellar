@@ -63,7 +63,8 @@ public class AppConfig {
 	/** END: BEER List **/
 
 	/** BEGIN: Google Translate **/
-	public static final String GOOGLE_TRANSLATE_API_KEY = "ABQIAAAAVWY7GdKmSqNHmSBZbrO3qhRHMeJCkjT_mOiVypJw08F6FpQ0sBSyt4I80v6TGencZZLgCoGhMOZHNQ";
+//	public static final String GOOGLE_TRANSLATE_API_KEY = "ABQIAAAAVWY7GdKmSqNHmSBZbrO3qhRHMeJCkjT_mOiVypJw08F6FpQ0sBSyt4I80v6TGencZZLgCoGhMOZHNQ";
+	public static final String GOOGLE_TRANSLATE_API_KEY = "AIzaSyBs22hxkOqH0Fp_f4pdhbQTt3XwZBWMOhI";
 	public static final String GOOGLE_TRANSLATE_REFERER = "http://beercellarcommunity.appspot.com/";
 	/** END: Google Translate **/
 

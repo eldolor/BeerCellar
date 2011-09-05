@@ -92,7 +92,7 @@ public class CommunityBeers extends ListActivity {
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
-		mTracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		}
@@ -536,26 +536,31 @@ public class CommunityBeers extends ListActivity {
 
 		protected void onPostExecute(Object result) {
 			Log.i(TAG, "onPostExecute starting");
-
-			Log.i(TAG, "onPostExecute Refresh List = "
-					+ ((_mRefreshList) ? "true" : "false")
-					+ " Retrieved More Data = "
-					+ ((_retrievedMoreData) ? "true" : "false"));
-			if (!_mRefreshList) {
-				Log.i(TAG, "onPostExecute Display List");
-				mMainActivity.displayList();
-			} else if (_mRefreshList && _retrievedMoreData) {
-				Log.i(TAG, "onPostExecute Refresh List");
-				mAdapter.notifyDataSetChanged();
-				// make spinner invisible
-				((ProgressBar) mFooterView.findViewById(R.id.spinner))
-						.setVisibility(View.INVISIBLE);
-			} else {
-				Log.i(TAG, "onPostExecute Remove Footer View!");
-				mBeersView.removeFooterView(mFooterView);
-			}
-			if (mMainActivity.mSplashDialog != null) {
-				mMainActivity.mSplashDialog.cancel();
+			try {
+				Log.i(TAG, "onPostExecute Refresh List = "
+						+ ((_mRefreshList) ? "true" : "false")
+						+ " Retrieved More Data = "
+						+ ((_retrievedMoreData) ? "true" : "false"));
+				if (!_mRefreshList) {
+					Log.i(TAG, "onPostExecute Display List");
+					mMainActivity.displayList();
+				} else if (_mRefreshList && _retrievedMoreData) {
+					Log.i(TAG, "onPostExecute Refresh List");
+					mAdapter.notifyDataSetChanged();
+					// make spinner invisible
+					((ProgressBar) mFooterView.findViewById(R.id.spinner))
+							.setVisibility(View.INVISIBLE);
+				} else {
+					Log.i(TAG, "onPostExecute Remove Footer View!");
+					mBeersView.removeFooterView(mFooterView);
+				}
+				if (mMainActivity.mSplashDialog != null) {
+					mMainActivity.mSplashDialog.cancel();
+				}
+			} catch (Throwable e) {
+				Log.e(TAG, "error: "
+						+ ((e.getMessage() != null) ? e.getMessage().replace(
+								" ", "_") : ""), e);
 			}
 			Log.i(TAG, "onPostExecute finished");
 		}

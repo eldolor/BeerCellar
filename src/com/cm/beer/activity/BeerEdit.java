@@ -127,7 +127,7 @@ public class BeerEdit extends Activity implements
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
-		mTracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		}
@@ -415,7 +415,7 @@ public class BeerEdit extends Activity implements
 						ShareWithCommunity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
-				//do not upload photo as the action is DELETE
+				// do not upload photo as the action is DELETE
 				intent.putExtra("UPLOAD_PHOTO", false);
 				intent.putExtra("INTERCEPT",
 						AppConfig.SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT);
@@ -448,22 +448,23 @@ public class BeerEdit extends Activity implements
 
 				Log.i(TAG, "Intent Share With Community Started");
 
-//			} else if ((note.share.equals("Y")) && (this.mPictureTaken)) {
-//				Log
-//						.i(TAG,
-//								"shared and photo taken => upload_photo, do_not_intercept, action_update");
-//				Intent intent = new Intent(BeerEdit.this.getApplication(),
-//						ShareWithCommunity.class);
-//				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-//				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
-//				intent.putExtra("UPLOAD_PHOTO", true);
-//				intent.putExtra("INTERCEPT",
-//						AppConfig.SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT);
-//				intent.putExtra("ACTION", AppConfig.ACTION_UPDATE);
-//				startActivityForResult(intent,
-//						SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
-//
-//				Log.i(TAG, "Intent Share With Community Started");
+				// } else if ((note.share.equals("Y")) && (this.mPictureTaken))
+				// {
+				// Log
+				// .i(TAG,
+				// "shared and photo taken => upload_photo, do_not_intercept, action_update");
+				// Intent intent = new Intent(BeerEdit.this.getApplication(),
+				// ShareWithCommunity.class);
+				// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+				// intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
+				// intent.putExtra("UPLOAD_PHOTO", true);
+				// intent.putExtra("INTERCEPT",
+				// AppConfig.SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT);
+				// intent.putExtra("ACTION", AppConfig.ACTION_UPDATE);
+				// startActivityForResult(intent,
+				// SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
+				//
+				// Log.i(TAG, "Intent Share With Community Started");
 
 			} else if (note.share.equals("Y")) {
 				Log
@@ -473,7 +474,7 @@ public class BeerEdit extends Activity implements
 						ShareWithCommunity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
-				//upload photo all the time
+				// upload photo all the time
 				intent.putExtra("UPLOAD_PHOTO", true);
 				intent
 						.putExtra(
@@ -597,8 +598,9 @@ public class BeerEdit extends Activity implements
 		try {
 			cursor = mDbHelper.fetchNote(mRowId);
 			String _shared = cursor.getString(cursor
-					.getColumnIndexOrThrow(NotesDbAdapter.KEY_SHARE));
-			boolean isShareChecked = ((_shared != null) && (_shared.equals("Y"))) ? true
+					.getColumnIndex(NotesDbAdapter.KEY_SHARE));
+			boolean isShareChecked = ((_shared != null)
+					&& (_shared.equals("Y")) && (!_shared.equals("-1"))) ? true
 					: false;
 			return isShareChecked;
 		} finally {

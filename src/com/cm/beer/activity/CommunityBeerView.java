@@ -87,7 +87,7 @@ public class CommunityBeerView extends Activity {
 	TextView mCountry;
 	RatingBar mRating;
 	TextView mNotes;
-	Button mTranslateNotes;
+	// Button mTranslateNotes;
 	TextView mPrice;
 	ImageView mThumbnailView;
 	TextView mDateCreated;
@@ -100,7 +100,7 @@ public class CommunityBeerView extends Activity {
 	TextView mBodyTE;
 	TextView mMouthfeelTE;
 	TextView mAftertasteTE;
-	Button mTranslateCharacteristics;
+	Button mTranslate;
 
 	DrawableManager mDrawableManager;
 	ContentManager mContentManager;
@@ -145,7 +145,8 @@ public class CommunityBeerView extends Activity {
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
-		mTracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
+				this);
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		}
@@ -214,13 +215,13 @@ public class CommunityBeerView extends Activity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateOptionsMenu: userid " + mUser.getUserId());
-		}
+		Log.i(TAG, "onCreateOptionsMenu: userid "
+				+ ((mUser.getUserId() != null) ? mUser.getUserId() : "NULL"));
 		super.onCreateOptionsMenu(menu);
 		int menuPosition = 0;
-		if ((mUser !=null) &&(mUser.getUserId().equalsIgnoreCase(
-				AppConfig.ADMIN_USER_EMAIL_ADDRESS))) {
+		if ((mUser != null)
+				&& (mUser.getUserId()
+						.equalsIgnoreCase(AppConfig.ADMIN_USER_EMAIL_ADDRESS))) {
 			menu.add(MENU_GROUP, SEND_TEST_DAILY_CAMPAIGN, menuPosition++,
 					R.string.send_test_daily_campaign);
 			menu.add(MENU_GROUP, SEND_DAILY_CAMPAIGN, menuPosition++,
@@ -433,10 +434,6 @@ public class CommunityBeerView extends Activity {
 		/****************************************/
 		mNotes = (TextView) findViewById(R.id.notes);
 		/****************************************/
-		mTranslateNotes = (Button) findViewById(R.id.translate);
-		mTranslateNotes.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
-				PorterDuff.Mode.MULTIPLY);
-		/****************************************/
 		mCommunityIcon = (ImageView) findViewById(R.id.community_icon);
 		/****************************************/
 		mColorTE = (TextView) findViewById(R.id.color);
@@ -447,9 +444,9 @@ public class CommunityBeerView extends Activity {
 		mMouthfeelTE = (TextView) findViewById(R.id.mouthfeel);
 		mAftertasteTE = (TextView) findViewById(R.id.aftertaste);
 		/****************************************/
-		mTranslateCharacteristics = (Button) findViewById(R.id.translate_characteristics);
-		mTranslateCharacteristics.getBackground().setColorFilter(
-				AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
+		mTranslate = (Button) findViewById(R.id.translate);
+		mTranslate.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
+				PorterDuff.Mode.MULTIPLY);
 	}
 
 	/**
@@ -459,139 +456,132 @@ public class CommunityBeerView extends Activity {
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "populateFields");
 		}
+		try {
+			setupFacebookLikeButton();
 
-		setupFacebookLikeButton();
+			// setup view user profile button
+			setupViewUserProfile();
 
-		// setup view user profile button
-		setupViewUserProfile();
+			mThumbnailView.setImageDrawable(mDrawableManager.fetchDrawable(Util
+					.getImageUrl(mCommunityBeer.beerId)));
 
-		mThumbnailView.setImageDrawable(mDrawableManager.fetchDrawable(Util
-				.getImageUrl(mCommunityBeer.beerId)));
+			mDateCreated.setText("Added on "
+					+ mDateFormat.format(new Date(Long
+							.parseLong(mCommunityBeer.created))));
+			mDateUpdated.setText("Last updated on "
+					+ mDateFormat.format(new Date(Long
+							.parseLong(mCommunityBeer.updated))));
 
-		mDateCreated.setText("Added on "
-				+ mDateFormat.format(new Date(Long
-						.parseLong(mCommunityBeer.created))));
-		mDateUpdated.setText("Last updated on "
-				+ mDateFormat.format(new Date(Long
-						.parseLong(mCommunityBeer.updated))));
+			if ((mCommunityBeer.userId != null)
+					&& (!mCommunityBeer.userId.equals(""))) {
+				mReviewedBy.setText(mCommunityBeer.userName);
+				// setup review count
+				setupReviewCount();
+				// setup follow reviewer button
+				setupFollowReviewer();
 
-		if ((mCommunityBeer.userId != null)
-				&& (!mCommunityBeer.userId.equals(""))) {
-			mReviewedBy.setText(mCommunityBeer.userName);
-			// setup review count
-			setupReviewCount();
-			// setup follow reviewer button
-			setupFollowReviewer();
+				// setup follow count
+				setupFollowCount();
 
-			// setup follow count
-			setupFollowCount();
-
-		} else {
-			mReviewedByLabel.setVisibility(View.GONE);
-			mReviewedBy.setVisibility(View.GONE);
-			mReviewedByReviewCount.setVisibility(View.GONE);
-			mFollowCount.setVisibility(View.GONE);
-			mFollowReviewer.setVisibility(View.GONE);
-		}
-
-		mBeer.setText(mCommunityBeer.beer);
-		Log.i(TAG, "populateFields::setting:" + mCommunityBeer.beer);
-		mAlcohol.setText(mCommunityBeer.alcohol);
-		Log.i(TAG, "populateFields::setting:" + mCommunityBeer.alcohol);
-		
-		if ((mCommunityBeer.price != null)
-				&& (!mCommunityBeer.price.trim().equals(""))) {
-
-			if ((mCommunityBeer.currencyCode != null)
-					&& (mCommunityBeer.currencySymbol != null)) {
-				Log.d(TAG, "Currency code and symbol are available");
-				String _priceText = mCommunityBeer.currencyCode + " "
-						+ mCommunityBeer.currencySymbol + " "
-						+ mCommunityBeer.price;
-				Log.d(TAG, "Price Text: " + _priceText);
-				mPrice.setText(_priceText);
 			} else {
-				Log.d(TAG, "Currency code and symbol are NOT available");
-				mPrice
-						.setText(((mCommunityBeer.currency != null) ? mCommunityBeer.currency
-								: "")
-								+ mCommunityBeer.price);
+				mReviewedByLabel.setVisibility(View.GONE);
+				mReviewedBy.setVisibility(View.GONE);
+				mReviewedByReviewCount.setVisibility(View.GONE);
+				mFollowCount.setVisibility(View.GONE);
+				mFollowReviewer.setVisibility(View.GONE);
 			}
-		}
-		
-		mStyle.setText(mCommunityBeer.style);
 
-		mBrewery.setText(mCommunityBeer.brewery);
-		Log.i(TAG, "populateFields::brewery: " + mCommunityBeer.brewery
-				+ " brewery link: " + mCommunityBeer.breweryLink);
-		if ((mCommunityBeer.breweryLink != null)
-				&& (!mCommunityBeer.breweryLink.trim().equals(""))
-				&& (!mCommunityBeer.breweryLink.trim().equalsIgnoreCase(
-						"http://"))) {
-			// if link does not start with http:// then add to it
-			final String _link = (!mCommunityBeer.breweryLink
-					.startsWith("http://")) ? ("http://" + mCommunityBeer.breweryLink)
-					: mCommunityBeer.breweryLink;
-			mBrewery.setTextColor(android.graphics.Color.BLUE);
-			mBrewery.setPaintFlags(mBrewery.getPaintFlags()
-					| Paint.UNDERLINE_TEXT_FLAG);
-			mBrewery.setOnClickListener(new OnClickListener() {
+			mBeer.setText(mCommunityBeer.beer);
+			Log.i(TAG, "populateFields::setting:" + mCommunityBeer.beer);
+			mAlcohol.setText(mCommunityBeer.alcohol);
+			Log.i(TAG, "populateFields::setting:" + mCommunityBeer.alcohol);
+
+			if ((mCommunityBeer.price != null)
+					&& (!mCommunityBeer.price.trim().equals(""))) {
+
+				if ((mCommunityBeer.currencyCode != null)
+						&& (mCommunityBeer.currencySymbol != null)) {
+					Log.d(TAG, "Currency code and symbol are available");
+					String _priceText = mCommunityBeer.currencyCode + " "
+							+ mCommunityBeer.currencySymbol + " "
+							+ mCommunityBeer.price;
+					Log.d(TAG, "Price Text: " + _priceText);
+					mPrice.setText(_priceText);
+				} else {
+					Log.d(TAG, "Currency code and symbol are NOT available");
+					mPrice
+							.setText(((mCommunityBeer.currency != null) ? mCommunityBeer.currency
+									: "")
+									+ mCommunityBeer.price);
+				}
+			}
+
+			mStyle.setText(mCommunityBeer.style);
+
+			mBrewery.setText(mCommunityBeer.brewery);
+			Log.i(TAG, "populateFields::brewery: " + mCommunityBeer.brewery
+					+ " brewery link: " + mCommunityBeer.breweryLink);
+			if ((mCommunityBeer.breweryLink != null)
+					&& (!mCommunityBeer.breweryLink.trim().equals(""))
+					&& (!mCommunityBeer.breweryLink.trim().equalsIgnoreCase(
+							"http://"))) {
+				// if link does not start with http:// then add to it
+				final String _link = (!mCommunityBeer.breweryLink
+						.startsWith("http://")) ? ("http://" + mCommunityBeer.breweryLink)
+						: mCommunityBeer.breweryLink;
+				mBrewery.setTextColor(android.graphics.Color.BLUE);
+				mBrewery.setPaintFlags(mBrewery.getPaintFlags()
+						| Paint.UNDERLINE_TEXT_FLAG);
+				mBrewery.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mBrewery.setText(R.string.progress_loading_message);
+						Intent intent = new Intent(mMainActivity
+								.getApplication(), BeerWebView.class);
+						intent.putExtra("URL", _link);
+						startActivity(intent);
+
+					}
+				});
+			}
+
+			mState.setText(mCommunityBeer.state);
+			mCountry.setText(mCommunityBeer.country);
+			Log.i(TAG, "populateFields::setting:" + mCommunityBeer.country);
+			String ratingStr = mCommunityBeer.rating;
+			if (ratingStr != null) {
+				mRating.setRating(Float.valueOf(ratingStr));
+			}
+			mNotes.setText(mCommunityBeer.notes);
+			try {
+				setCharacteristicsTable();
+			} catch (JSONException e1) {
+				Log.e(TAG, e1.getMessage(), e1);
+			}
+
+			mTranslate.setOnClickListener(new OnClickListener() {
+
 				@Override
 				public void onClick(View v) {
-					mBrewery.setText(R.string.progress_loading_message);
-					Intent intent = new Intent(mMainActivity.getApplication(),
-							BeerWebView.class);
-					intent.putExtra("URL", _link);
-					startActivity(intent);
-
+					mTranslate.setText(R.string.translating_label);
+					mTranslate.getBackground().setColorFilter(
+							AppConfig.BUTTON_COLOR_RED,
+							PorterDuff.Mode.MULTIPLY);
+					new AsyncTranslateAll().execute();
+					mTracker.trackEvent("CommunityBeerView", "Translate",
+							"Clicked", 0);
+					mTracker.dispatch();
 				}
 			});
+
+			setupAddToFavorites();
+
+			setupCommunityIcon();
+		} catch (Throwable e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
 		}
-
-		mState.setText(mCommunityBeer.state);
-		mCountry.setText(mCommunityBeer.country);
-		Log.i(TAG, "populateFields::setting:" + mCommunityBeer.country);
-		String ratingStr = mCommunityBeer.rating;
-		if (ratingStr != null) {
-			mRating.setRating(Float.valueOf(ratingStr));
-		}
-		mNotes.setText(mCommunityBeer.notes);
-		mTranslateNotes.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mTranslateNotes.setText(R.string.translating_label);
-				mTranslateNotes.getBackground().setColorFilter(
-						AppConfig.BUTTON_COLOR_RED, PorterDuff.Mode.MULTIPLY);
-				new AsyncTranslate().execute();
-				mTracker.trackEvent("CommunityBeerView", "TranslateNotes",
-						"Clicked", 0);
-				mTracker.dispatch();
-			}
-		});
-		try {
-			setCharacteristicsTable();
-		} catch (JSONException e1) {
-			Log.e(TAG, e1.getMessage(), e1);
-		}
-
-		mTranslateCharacteristics.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mTranslateCharacteristics.setText(R.string.translating_label);
-				mTranslateCharacteristics.getBackground().setColorFilter(
-						AppConfig.BUTTON_COLOR_RED, PorterDuff.Mode.MULTIPLY);
-				new AsyncTranslateCharacteristics().execute();
-				mTracker.trackEvent("CommunityBeerView",
-						"TranslateCharacteristics", "Clicked", 0);
-				mTracker.dispatch();
-			}
-		});
-
-		setupAddToFavorites();
-
-		setupCommunityIcon();
 	}
 
 	private void setupFacebookLikeButton() {
@@ -867,9 +857,11 @@ public class CommunityBeerView extends Activity {
 						JSONArray followingList = mFollowJson
 								.getJSONArray("followingList");
 						Log.i(TAG, "Following List Size="
-								+ followingList.length());
+								+ ((followingList != null) ? followingList
+										.length() : "NULL"));
 						String _str;
-						for (int i = 0; i < followingList.length(); i++) {
+						for (int i = 0; ((followingList != null) && (i < followingList
+								.length())); i++) {
 							_str = followingList.getString(i);
 							Log.i(TAG, "Following " + _str);
 							if ((_str != null)
@@ -1085,8 +1077,7 @@ public class CommunityBeerView extends Activity {
 	}
 
 	/************************************************************************************/
-	private class AsyncTranslate extends AsyncTask<Object, Void, Object> {
-		String mTranslatedText = (String) mNotes.getText();
+	private class AsyncTranslateAll extends AsyncTask<Object, Void, Object> {
 
 		/**
 		 * 
@@ -1095,155 +1086,7 @@ public class CommunityBeerView extends Activity {
 		 */
 		protected Void doInBackground(Object... args) {
 			Log.i(TAG, "doInBackground starting");
-			String language = "";
 			try {// 
-				/** Detect the language **/
-				{
-					URL url = new URL(
-							"http://ajax.googleapis.com/ajax/services/language/detect?v=1.0&"
-									+ "q="
-									+ URLEncoder.encode(((String) mNotes
-											.getText()), "UTF-8") + "&key="
-									+ AppConfig.GOOGLE_TRANSLATE_API_KEY
-									+ "&hl="
-									+ Locale.getDefault().getLanguage()
-									+ "&userip=" + Util.getLocalIpAddress());
-					Log.i(TAG, url.toString());
-					URLConnection connection = url.openConnection();
-					connection.addRequestProperty("Referer",
-							AppConfig.GOOGLE_TRANSLATE_REFERER);
-
-					String line;
-					StringBuilder builder = new StringBuilder();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(connection.getInputStream()));
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-					}
-
-					JSONObject json = new JSONObject(builder.toString());
-					Log.i(TAG, json.toString());
-					JSONObject responseData = json
-							.getJSONObject("responseData");
-					language = responseData.getString("language");
-
-				}
-				/** Translate **/
-				{
-					URL url = new URL(
-							"http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&"
-									+ "q="
-									+ URLEncoder.encode(((String) mNotes
-											.getText()), "UTF-8") + "&key="
-									+ AppConfig.GOOGLE_TRANSLATE_API_KEY
-									+ "&hl="
-									+ Locale.getDefault().getLanguage()
-									+ "&userip=" + Util.getLocalIpAddress()
-									+ "&langpair=" + language + "%7C"
-									+ Locale.getDefault().getLanguage());
-					Log.i(TAG, url.toString());
-					URLConnection connection = url.openConnection();
-					connection.addRequestProperty("Referer",
-							AppConfig.GOOGLE_TRANSLATE_REFERER);
-
-					String line;
-					StringBuilder builder = new StringBuilder();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(connection.getInputStream()));
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-					}
-
-					JSONObject json = new JSONObject(builder.toString());
-					Log.i(TAG, json.toString());
-					JSONObject responseData = json
-							.getJSONObject("responseData");
-					mTranslatedText = responseData.getString("translatedText");
-
-				}
-
-			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("CommunityBeerView", "TranslateError", ((e
-						.getMessage() != null) ? e.getMessage().replace(" ",
-						"_") : "").replace(" ", "_"), 0);
-				mTracker.dispatch();
-			}
-
-			Log.i(TAG, "doInBackground finished");
-			return null;
-		}
-
-		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
-
-			mNotes.setText(mTranslatedText);
-			mTranslateNotes.setText(R.string.translated_label);
-			Log.i(TAG, "onPostExecute finished");
-		}
-
-	}
-
-	/************************************************************************************/
-	private class AsyncTranslateCharacteristics extends
-			AsyncTask<Object, Void, Object> {
-		String _mTranslatedColor = (String) mColorTE.getText();
-		String _mTranslatedClarity = (String) mClarityTE.getText();
-		String _mTranslatedFoam = (String) mFoamTE.getText();
-		String _mTranslatedAroma = (String) mAromaTE.getText();
-		String _mTranslatedBody = (String) mBodyTE.getText();
-		String _mTranslatedMouthfeel = (String) mMouthfeelTE.getText();
-		String _mTranslatedAftertaste = (String) mAftertasteTE.getText();
-
-		/**
-		 * 
-		 * @param args
-		 * @return null
-		 */
-		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
-			String language = "";
-			try {// 
-				/** Detect the language **/
-				{
-					String languageHint = mColorTE.getText() + " "
-							+ mClarityTE.getText() + " " + mFoamTE.getText()
-							+ " " + mAromaTE.getText() + " "
-							+ mBodyTE.getText() + " " + mMouthfeelTE.getText()
-							+ " " + mAftertasteTE.getText();
-
-					URL url = new URL(
-							"http://ajax.googleapis.com/ajax/services/language/detect?v=1.0&"
-									+ "q="
-									+ URLEncoder.encode(
-											((String) languageHint), "UTF-8")
-									+ "&key="
-									+ AppConfig.GOOGLE_TRANSLATE_API_KEY
-									+ "&hl="
-									+ Locale.getDefault().getLanguage()
-									+ "&userip=" + Util.getLocalIpAddress());
-					Log.i(TAG, url.toString());
-					URLConnection connection = url.openConnection();
-					connection.addRequestProperty("Referer",
-							AppConfig.GOOGLE_TRANSLATE_REFERER);
-
-					String line;
-					StringBuilder builder = new StringBuilder();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(connection.getInputStream()));
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-					}
-
-					JSONObject json = new JSONObject(builder.toString());
-					Log.i(TAG, json.toString());
-					JSONObject responseData = json
-							.getJSONObject("responseData");
-					language = responseData.getString("language");
-
-				}
 				/** Translate **/
 				{
 					String baseUrl = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&"
@@ -1254,29 +1097,110 @@ public class CommunityBeerView extends Activity {
 							+ "&userip="
 							+ Util.getLocalIpAddress()
 							+ "&langpair="
-							+ language
 							+ "%7C"
 							+ Locale.getDefault().getLanguage();
 					if (!mColorTE.getText().equals("")) {
-						translateColor(baseUrl);
+						// String _language = this.languageDetect(mColorTE
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mColorTE);
 					}
 					if (!mClarityTE.getText().equals("")) {
-						translateClarity(baseUrl);
+						// String _language = this.languageDetect(mClarityTE
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mClarityTE);
 					}
 					if (!mFoamTE.getText().equals("")) {
-						translateFoam(baseUrl);
+						// String _language = this.languageDetect(mFoamTE
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mFoamTE);
 					}
 					if (!mAromaTE.getText().equals("")) {
-						translateAroma(baseUrl);
+						// String _language = this.languageDetect(mAromaTE
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mAromaTE);
 					}
 					if (!mBodyTE.getText().equals("")) {
-						translateBody(baseUrl);
+						// String _language = this.languageDetect(mBodyTE
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mBodyTE);
 					}
 					if (!mMouthfeelTE.getText().equals("")) {
-						translateMouthfeel(baseUrl);
+						// String _language = this.languageDetect(mMouthfeelTE
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mMouthfeelTE);
 					}
 					if (!mAftertasteTE.getText().equals("")) {
-						translateAftertaste(baseUrl);
+						// String _language = this.languageDetect(mAftertasteTE
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mAftertasteTE);
+					}
+
+					if (!mBeer.getText().equals("")) {
+						// String _language =
+						// this.languageDetect(mBeer.getText()
+						// .toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mBeer);
+					}
+					if (!mStyle.getText().equals("")) {
+						// String _language =
+						// this.languageDetect(mStyle.getText()
+						// .toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mStyle);
+					}
+					if (!mBrewery.getText().equals("")) {
+						// String _language = this.languageDetect(mBrewery
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mBrewery);
+					}
+					if (!mState.getText().equals("")) {
+						// String _language =
+						// this.languageDetect(mState.getText()
+						// .toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mState);
+					}
+					if (!mCountry.getText().equals("")) {
+						// String _language = this.languageDetect(mCountry
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mCountry);
+					}
+					if (!mNotes.getText().equals("")) {
+						// String _language =
+						// this.languageDetect(mNotes.getText()
+						// .toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mNotes);
+					}
+					if (!mReviewedBy.getText().equals("")) {
+						// String _language = this.languageDetect(mReviewedBy
+						// .getText().toString());
+						// String _url = baseUrl + "&langpair=" + _language
+						// + "%7C" + Locale.getDefault().getLanguage();
+						translate(baseUrl, mReviewedBy);
 					}
 
 				}
@@ -1296,48 +1220,47 @@ public class CommunityBeerView extends Activity {
 			return null;
 		}
 
-		private void translateColor(String baseUrl) {
-			try {
-				URL url = new URL(baseUrl
-						+ "&q="
-						+ URLEncoder.encode(((String) mColorTE.getText()),
-								"UTF-8"));
-				Log.i(TAG, url.toString());
-				URLConnection connection = url.openConnection();
-				connection.addRequestProperty("Referer",
-						AppConfig.GOOGLE_TRANSLATE_REFERER);
-				String line;
-				StringBuilder builder = new StringBuilder();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(connection.getInputStream()));
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
+		private String languageDetect(String languageHint) throws Exception {
+			/** Detect the language **/
+			URL url = new URL(
+					"http://ajax.googleapis.com/ajax/services/language/detect?v=1.0&"
+							+ "q="
+							+ URLEncoder.encode(((String) languageHint),
+									"UTF-8") + "&key="
+							+ AppConfig.GOOGLE_TRANSLATE_API_KEY + "&hl="
+							+ Locale.getDefault().getLanguage() + "&userip="
+							+ Util.getLocalIpAddress());
+			Log.i(TAG, url.toString());
+			URLConnection connection = url.openConnection();
+			connection.addRequestProperty("Referer",
+					AppConfig.GOOGLE_TRANSLATE_REFERER);
 
-				JSONObject json = new JSONObject(builder.toString());
-				Log.i(TAG, json.toString());
-				JSONObject responseData = json.getJSONObject("responseData");
-				_mTranslatedColor = responseData.getString("translatedText");
-			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("CommunityBeerView", "TranslateColorError",
-						((e.getMessage() != null) ? e.getMessage().replace(" ",
-								"_") : "").replace(" ", "_"), 0);
-				mTracker.dispatch();
+			String line;
+			StringBuilder builder = new StringBuilder();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+			while ((line = reader.readLine()) != null) {
+				builder.append(line);
 			}
+
+			JSONObject json = new JSONObject(builder.toString());
+			Log.i(TAG, json.toString());
+			JSONObject responseData = json.getJSONObject("responseData");
+			String language = responseData.getString("language");
+			Log.i(TAG, "Language Detected: " + language);
+
+			return language;
 
 		}
 
-		private void translateClarity(String baseUrl) {
+		private void translate(String url, final TextView textView) {
 			try {
-				URL url = new URL(baseUrl
+				URL _url = new URL(url
 						+ "&q="
-						+ URLEncoder.encode(((String) mClarityTE.getText()),
+						+ URLEncoder.encode(((String) textView.getText()),
 								"UTF-8"));
 				Log.i(TAG, url.toString());
-				URLConnection connection = url.openConnection();
+				URLConnection connection = _url.openConnection();
 				connection.addRequestProperty("Referer",
 						AppConfig.GOOGLE_TRANSLATE_REFERER);
 				String line;
@@ -1351,183 +1274,15 @@ public class CommunityBeerView extends Activity {
 				JSONObject json = new JSONObject(builder.toString());
 				Log.i(TAG, json.toString());
 				JSONObject responseData = json.getJSONObject("responseData");
-				_mTranslatedClarity = responseData.getString("translatedText");
-			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("CommunityBeerView",
-						"TranslateSweetnessError",
-						((e.getMessage() != null) ? e.getMessage().replace(" ",
-								"_") : "").replace(" ", "_"), 0);
-				mTracker.dispatch();
-			}
-
-		}
-
-		private void translateFoam(String baseUrl) {
-			try {
-				URL url = new URL(baseUrl
-						+ "&q="
-						+ URLEncoder.encode(((String) mFoamTE.getText()),
-								"UTF-8"));
-				Log.i(TAG, url.toString());
-				URLConnection connection = url.openConnection();
-				connection.addRequestProperty("Referer",
-						AppConfig.GOOGLE_TRANSLATE_REFERER);
-				String line;
-				StringBuilder builder = new StringBuilder();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(connection.getInputStream()));
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-
-				JSONObject json = new JSONObject(builder.toString());
-				Log.i(TAG, json.toString());
-				JSONObject responseData = json.getJSONObject("responseData");
-				_mTranslatedFoam = responseData.getString("translatedText");
-			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("CommunityBeerView",
-						"TranslateTanninError", ((e.getMessage() != null) ? e
-								.getMessage().replace(" ", "_") : "").replace(
-								" ", "_"), 0);
-				mTracker.dispatch();
-			}
-
-		}
-
-		private void translateAroma(String baseUrl) {
-			try {
-				URL url = new URL(baseUrl
-						+ "&q="
-						+ URLEncoder.encode(((String) mAromaTE.getText()),
-								"UTF-8"));
-				Log.i(TAG, url.toString());
-				URLConnection connection = url.openConnection();
-				connection.addRequestProperty("Referer",
-						AppConfig.GOOGLE_TRANSLATE_REFERER);
-				String line;
-				StringBuilder builder = new StringBuilder();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(connection.getInputStream()));
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-
-				JSONObject json = new JSONObject(builder.toString());
-				Log.i(TAG, json.toString());
-				JSONObject responseData = json.getJSONObject("responseData");
-				_mTranslatedAroma = responseData.getString("translatedText");
-			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("CommunityBeerView",
-						"TranslateBouquetError", ((e.getMessage() != null) ? e
-								.getMessage().replace(" ", "_") : "").replace(
-								" ", "_"), 0);
-				mTracker.dispatch();
-			}
-
-		}
-
-		private void translateBody(String baseUrl) {
-			try {
-				URL url = new URL(baseUrl
-						+ "&q="
-						+ URLEncoder.encode(((String) mBodyTE.getText()),
-								"UTF-8"));
-				Log.i(TAG, url.toString());
-				URLConnection connection = url.openConnection();
-				connection.addRequestProperty("Referer",
-						AppConfig.GOOGLE_TRANSLATE_REFERER);
-				String line;
-				StringBuilder builder = new StringBuilder();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(connection.getInputStream()));
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-
-				JSONObject json = new JSONObject(builder.toString());
-				Log.i(TAG, json.toString());
-				JSONObject responseData = json.getJSONObject("responseData");
-				_mTranslatedBody = responseData.getString("translatedText");
-			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("CommunityBeerView", "TranslateBodyError",
-						((e.getMessage() != null) ? e.getMessage().replace(" ",
-								"_") : "").replace(" ", "_"), 0);
-				mTracker.dispatch();
-			}
-
-		}
-
-		private void translateMouthfeel(String baseUrl) {
-			try {
-				URL url = new URL(baseUrl
-						+ "&q="
-						+ URLEncoder.encode(((String) mMouthfeelTE.getText()),
-								"UTF-8"));
-				Log.i(TAG, url.toString());
-				URLConnection connection = url.openConnection();
-				connection.addRequestProperty("Referer",
-						AppConfig.GOOGLE_TRANSLATE_REFERER);
-				String line;
-				StringBuilder builder = new StringBuilder();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(connection.getInputStream()));
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-
-				JSONObject json = new JSONObject(builder.toString());
-				Log.i(TAG, json.toString());
-				JSONObject responseData = json.getJSONObject("responseData");
-				_mTranslatedMouthfeel = responseData
+				final String _translatedText = responseData
 						.getString("translatedText");
-			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("CommunityBeerView",
-						"TranslateMouthfeelError",
-						((e.getMessage() != null) ? e.getMessage().replace(" ",
-								"_") : "").replace(" ", "_"), 0);
-				mTracker.dispatch();
-			}
 
-		}
+				mMainActivity.runOnUiThread(new Runnable() {
+					public void run() {
+						textView.setText(_translatedText);
+					}
+				});
 
-		private void translateAftertaste(String baseUrl) {
-			try {
-				URL url = new URL(baseUrl
-						+ "&q="
-						+ URLEncoder.encode(((String) mAftertasteTE.getText()),
-								"UTF-8"));
-				Log.i(TAG, url.toString());
-				URLConnection connection = url.openConnection();
-				connection.addRequestProperty("Referer",
-						AppConfig.GOOGLE_TRANSLATE_REFERER);
-				String line;
-				StringBuilder builder = new StringBuilder();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(connection.getInputStream()));
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-
-				JSONObject json = new JSONObject(builder.toString());
-				Log.i(TAG, json.toString());
-				JSONObject responseData = json.getJSONObject("responseData");
-				_mTranslatedAftertaste = responseData
-						.getString("translatedText");
 			} catch (Throwable e) {
 				Log.e(TAG, "error: "
 						+ ((e.getMessage() != null) ? e.getMessage().replace(
@@ -1544,15 +1299,10 @@ public class CommunityBeerView extends Activity {
 		protected void onPostExecute(Object result) {
 			Log.i(TAG, "onPostExecute starting");
 
-			mColorTE.setText(_mTranslatedColor);
-			mClarityTE.setText(_mTranslatedClarity);
-			mFoamTE.setText(_mTranslatedFoam);
-			mAromaTE.setText(_mTranslatedAroma);
-			mBodyTE.setText(_mTranslatedBody);
-			mMouthfeelTE.setText(_mTranslatedMouthfeel);
-			mAftertasteTE.setText(_mTranslatedAftertaste);
+			mTranslate.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
+					PorterDuff.Mode.MULTIPLY);
+			mTranslate.setText(R.string.translated_label);
 
-			mTranslateCharacteristics.setText(R.string.translated_label);
 			Log.i(TAG, "onPostExecute finished");
 		}
 

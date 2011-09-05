@@ -379,7 +379,7 @@ public class NotesDbAdapter {
 		StringBuilder sbSelectionCriteria = new StringBuilder();
 		if (beer != null && (!beer.equals(""))) {
 			sbSelectionCriteria.append("lower("+KEY_BEER+")");
-			sbSelectionCriteria.append(" like %'");
+			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(beer.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
@@ -403,25 +403,25 @@ public class NotesDbAdapter {
 		}
 		if (style != null && (!style.equals(""))) {
 			sbSelectionCriteria.append("lower("+KEY_STYLE+")");
-			sbSelectionCriteria.append(" like %'");
+			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(style.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
 		if (brewery != null && (!brewery.equals(""))) {
 			sbSelectionCriteria.append("lower("+KEY_BREWERY+")");
-			sbSelectionCriteria.append(" like %'");
+			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(brewery.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
 		if (state != null && (!state.equals(""))) {
 			sbSelectionCriteria.append("lower("+KEY_STATE+")");
-			sbSelectionCriteria.append(" like %'");
+			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(state.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
 		if (country != null && (!country.equals(""))) {
 			sbSelectionCriteria.append("lower("+KEY_COUNTRY+")");
-			sbSelectionCriteria.append(" like %'");
+			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(country.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}

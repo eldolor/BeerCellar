@@ -60,7 +60,7 @@ public class Characteristics extends Activity {
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
-		mTracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		mOriginalIntent = getIntent();
 		Bundle extras = mOriginalIntent.getExtras();

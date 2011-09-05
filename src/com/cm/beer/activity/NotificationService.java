@@ -63,7 +63,7 @@ public class NotificationService extends Service {
 		mUser = new User(mService);
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
-		mTracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		mPreferences = getSharedPreferences(getString(R.string.app_name),
 				Activity.MODE_PRIVATE);
 		mPreferences.edit().putLong(AppConfig.NOTIFICATION_CHECK_BACK_LATER_IN,

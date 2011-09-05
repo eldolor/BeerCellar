@@ -101,7 +101,7 @@ public class LoginIntercept extends Activity {
 				.getString("FACEBOOK_ONLY") : "N");
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
-		mTracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.cm.beer.activity" android:versionCode="26"
-	android:versionName="Tripel">
+	package="com.cm.beer.activity" android:versionCode="27"
+	android:versionName="Amber_Lager">
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-feature android:name="android.hardware.camera" />
 	<uses-feature android:name="android.hardware.camera.autofocus" />

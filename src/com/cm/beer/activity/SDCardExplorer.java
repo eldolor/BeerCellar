@@ -78,7 +78,7 @@ public class SDCardExplorer extends ListActivity {
 
 		}
 
-		for (int i = 0; i < files.length; i++) {
+		for (int i = 0; ((files != null) && (i < files.length)); i++) {
 			File file = files[i];
 			HashMap<String, String> entitiesHashMap = new HashMap<String, String>();
 			if (!file.isHidden()) {
