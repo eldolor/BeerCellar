@@ -36,11 +36,15 @@ public class SetPreferences extends Activity {
 	CheckBox mReceiveNewFromFollowingNotification;
 	CheckBox mReceiveBeerOfTheDayNotification;
 	CheckBox mEmailSubscription;
+	CheckBox mCommentPostedEmailSubscription;
 	Spinner mBeerListRowsPerPage;
 
 	User mUser;
 	SharedPreferences mPreferences;
 	Activity mMainActivity;
+
+	static final int EMAIL_SUBSCRIPTION_REQUEST_CODE = 0;
+	static final int COMMENT_POSTED_EMAIL_SUBSCRIPTION_REQUEST_CODE = 1;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -56,19 +60,22 @@ public class SetPreferences extends Activity {
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
-		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
+				this);
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		}
 
 		setContentView(R.layout.set_preferences);
 		mUser = new User(this);
-		mPreferences = this.getSharedPreferences(this
-				.getString(R.string.app_name), Activity.MODE_PRIVATE);
+		mPreferences = this.getSharedPreferences(
+				this.getString(R.string.app_name), Activity.MODE_PRIVATE);
 		display();
 		if (mUser.isLoggedIn()) {
 			new AsyncGetEmailSubscriptionStatusTask()
 					.execute(mUser.getUserId());
+			new AsyncGetCommentPostedEmailSubscriptionStatusTask()
+			.execute(mUser.getUserId());
 		}
 	}
 
@@ -106,10 +113,29 @@ public class SetPreferences extends Activity {
 							LoginIntercept.class);
 					intent.putExtra("FACEBOOK_PERMISSIONS",
 							AppConfig.FACEBOOK_PERMISSIONS);
-					startActivityForResult(intent, 0);
+					startActivityForResult(intent,
+							EMAIL_SUBSCRIPTION_REQUEST_CODE);
 				}
 			}
 		});
+		/****************************************/
+
+		mCommentPostedEmailSubscription = (CheckBox) findViewById(R.id.comment_posted_email_subscription);
+		mCommentPostedEmailSubscription.setChecked(false);
+		// if user not logged in
+		mCommentPostedEmailSubscription
+				.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						if (!mUser.isLoggedIn()) {
+							Intent intent = new Intent(mMainActivity
+									.getApplication(), LoginIntercept.class);
+							intent.putExtra("FACEBOOK_PERMISSIONS",
+									AppConfig.FACEBOOK_PERMISSIONS);
+							startActivityForResult(intent,
+									COMMENT_POSTED_EMAIL_SUBSCRIPTION_REQUEST_CODE);
+						}
+					}
+				});
 
 		/****************************************/
 		mSave = (Button) findViewById(R.id.save);
@@ -118,35 +144,48 @@ public class SetPreferences extends Activity {
 		mSave.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// Perform action on clicks
-				mPreferences.edit().putBoolean(
-						AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS,
-						mReceiveNewNotification.isChecked()).commit();
+				mPreferences
+						.edit()
+						.putBoolean(
+								AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS,
+								mReceiveNewNotification.isChecked()).commit();
 				mPreferences
 						.edit()
 						.putBoolean(
 								AppConfig.RECEIVE_NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATIONS,
 								mReceiveNewFromFollowingNotification
 										.isChecked()).commit();
-				mPreferences.edit().putBoolean(
-						AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION,
-						mReceiveBeerOfTheDayNotification.isChecked()).commit();
+				mPreferences
+						.edit()
+						.putBoolean(
+								AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION,
+								mReceiveBeerOfTheDayNotification.isChecked())
+						.commit();
 				Util.evaluateNotificationService(mMainActivity);
 
-				String _emailSubscriptionStatus = (mEmailSubscription
-						.isChecked()) ? "Y" : "N";
-				new AsyncUpdateEmailSubscriptionStatusTask().execute(mUser
-						.getUserId(), _emailSubscriptionStatus);
+				if (mUser.isLoggedIn()) {
+					String _emailSubscriptionStatus = (mEmailSubscription
+							.isChecked()) ? "Y" : "N";
+					new AsyncUpdateEmailSubscriptionStatusTask().execute(
+							mUser.getUserId(), _emailSubscriptionStatus);
+					String _commentPostedEmailSubscriptionStatus = (mCommentPostedEmailSubscription
+							.isChecked()) ? "Y" : "N";
+					new AsyncUpdateCommentPostedEmailSubscriptionStatusTask()
+							.execute(mUser.getUserId(),
+									_commentPostedEmailSubscriptionStatus);
+				}
 
 				int rowsPerPage = AppConfig.BEER_LIST_ROWS_PER_PAGE;
-				if (!mBeerListRowsPerPage.getSelectedItem().toString().equals(
-						"")) {
+				if (!mBeerListRowsPerPage.getSelectedItem().toString()
+						.equals("")) {
 					rowsPerPage = Integer.valueOf(mBeerListRowsPerPage
 							.getSelectedItem().toString());
 				}
 
-				mPreferences.edit().putInt(
-						AppConfig.PREFERENCE_BEER_LIST_ROWS_PER_PAGE,
-						rowsPerPage).commit();
+				mPreferences
+						.edit()
+						.putInt(AppConfig.PREFERENCE_BEER_LIST_ROWS_PER_PAGE,
+								rowsPerPage).commit();
 				// send stats
 				if (mReceiveNewNotification.isChecked()) {
 					mTracker.trackEvent("SetPreferences",
@@ -219,8 +258,7 @@ public class SetPreferences extends Activity {
 		ArrayAdapter<CharSequence> adapter6 = ArrayAdapter.createFromResource(
 				this, R.array.beer_list_rows_per_page_options,
 				android.R.layout.simple_spinner_item);
-		adapter6
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter6.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mBeerListRowsPerPage.setAdapter(adapter6);
 		{
 			final CharSequence[] options = getResources().getStringArray(
@@ -253,17 +291,29 @@ public class SetPreferences extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 0) {
+		if (requestCode == EMAIL_SUBSCRIPTION_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				display();
 				if (mUser.isLoggedIn()) {
 					String _emailSubscriptionStatus = (mEmailSubscription
 							.isChecked()) ? "Y" : "N";
-					new AsyncUpdateEmailSubscriptionStatusTask().execute(mUser
-							.getUserId(), _emailSubscriptionStatus);
+					new AsyncUpdateEmailSubscriptionStatusTask().execute(
+							mUser.getUserId(), _emailSubscriptionStatus);
+				}
+			}
+		} else if (requestCode == COMMENT_POSTED_EMAIL_SUBSCRIPTION_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				display();
+				if (mUser.isLoggedIn()) {
+					String _emailSubscriptionStatus = (mCommentPostedEmailSubscription
+							.isChecked()) ? "Y" : "N";
+					new AsyncUpdateCommentPostedEmailSubscriptionStatusTask()
+							.execute(mUser.getUserId(),
+									_emailSubscriptionStatus);
 				}
 			}
 		}
+
 	}
 
 	/*
@@ -307,8 +357,8 @@ public class SetPreferences extends Activity {
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreateDialog");
 		}
-		mDialog = ProgressDialog.show(SetPreferences.this, null, this
-				.getString(R.string.progress_loading_message), true, true);
+		mDialog = ProgressDialog.show(SetPreferences.this, null,
+				this.getString(R.string.progress_loading_message), true, true);
 		mDialog.setCanceledOnTouchOutside(true);
 		return mDialog;
 	}
@@ -360,8 +410,9 @@ public class SetPreferences extends Activity {
 
 				}
 			} catch (Throwable e) {
-				Log.e(TAG, (e.getMessage() != null) ? e.getMessage().replace(
-						" ", "_") : "", e);
+				Log.e(TAG,
+						(e.getMessage() != null) ? e.getMessage().replace(" ",
+								"_") : "", e);
 			}
 			return null;
 		}
@@ -374,10 +425,9 @@ public class SetPreferences extends Activity {
 
 			mMainActivity.runOnUiThread(new Runnable() {
 				public void run() {
-					mEmailSubscription
-							.setChecked((_mEmailSubscriptionStatus != null
-									&& (_mEmailSubscriptionStatus.equals("Y")) ? true
-									: false));
+					mEmailSubscription.setChecked((_mEmailSubscriptionStatus != null
+							&& (_mEmailSubscriptionStatus.equals("Y")) ? true
+							: false));
 				}
 			});
 			if (AppConfig.LOGGING_ENABLED) {
@@ -411,8 +461,108 @@ public class SetPreferences extends Activity {
 				String response[] = Util.getResult(url);
 				Log.i(TAG, response[0]);
 			} catch (Throwable e) {
-				Log.e(TAG, (e.getMessage() != null) ? e.getMessage().replace(
-						" ", "_") : "", e);
+				Log.e(TAG,
+						(e.getMessage() != null) ? e.getMessage().replace(" ",
+								"_") : "", e);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Object result) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "onPostExecute starting");
+			}
+
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "onPostExecute finished");
+			}
+		}
+
+	}
+	/*******************************************************************************/
+	private class AsyncGetCommentPostedEmailSubscriptionStatusTask extends
+			AsyncTask<String, Void, Object> {
+		String _mStatus;
+
+		/**
+		 * 
+		 * @param args
+		 * @return null
+		 */
+		protected Void doInBackground(String... args) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "doInBackground starting");
+			}
+			String userId = (String) args[0];
+
+			try {
+				String url = Util.getCommentPostedEmailSubscriptionStatusUrl(userId);
+
+				Log.i(TAG, "doInBackground:" + url);
+				String response[] = Util.getResult(url);
+				if ((response[0] != null) && (response[0].startsWith("{"))) {
+					JSONObject json = new JSONObject(response[0]);
+					_mStatus = json
+							.getString("commentpostedemailsubscriptionstatus");
+
+				}
+			} catch (Throwable e) {
+				Log.e(TAG,
+						(e.getMessage() != null) ? e.getMessage().replace(" ",
+								"_") : "", e);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Object result) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "onPostExecute starting");
+			}
+
+			mMainActivity.runOnUiThread(new Runnable() {
+				public void run() {
+					mCommentPostedEmailSubscription.setChecked((_mStatus != null
+							&& (_mStatus.equals("Y")) ? true
+							: false));
+				}
+			});
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "onPostExecute finished");
+			}
+		}
+
+	}
+
+	/*******************************************************************************/
+	private class AsyncUpdateCommentPostedEmailSubscriptionStatusTask extends
+			AsyncTask<String, Void, Object> {
+
+		/**
+		 * 
+		 * @param args
+		 * @return null
+		 */
+		protected Void doInBackground(String... args) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.i(TAG, "doInBackground starting");
+			}
+			String userId = (String) args[0];
+			String emailSubscription = (String) args[1];
+
+			try {
+				String url = Util
+						.updateCommentPostedEmailSubscriptionStatusUrl(userId,
+								emailSubscription);
+
+				Log.i(TAG, "doInBackground:" + url);
+				String response[] = Util.getResult(url);
+				Log.i(TAG, response[0]);
+			} catch (Throwable e) {
+				Log.e(TAG,
+						(e.getMessage() != null) ? e.getMessage().replace(" ",
+								"_") : "", e);
 			}
 			return null;
 		}

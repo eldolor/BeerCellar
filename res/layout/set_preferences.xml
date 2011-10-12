@@ -74,9 +74,23 @@
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:checked="true" />
 
-			<TextView android:id="@+id/logout_label"
+			<TextView android:id="@+id/comment_posted_email_subscription_label"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:layout_below="@+id/email_subscription"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/comment_posted_email_subscription_label"
+				android:textStyle="bold" />
+			<View android:id="@+id/divider_comment_posted" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/comment_posted_email_subscription_label" />
+			<CheckBox android:id="@+id/comment_posted_email_subscription"
+				android:layout_below="@+id/divider_comment_posted" android:layout_marginLeft="5dp"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:checked="true" />
+
+			<TextView android:id="@+id/logout_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/comment_posted_email_subscription"
 				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
 				android:gravity="left" android:text="@string/logout_label"
 				android:textStyle="bold" />

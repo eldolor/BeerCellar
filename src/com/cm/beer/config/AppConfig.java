@@ -34,22 +34,36 @@ public class AppConfig {
 	/** END: SHARED PREFERENCES **/
 
 	/** BEGIN: FACEBOOK LIKE BUTTON **/
-	public static final String FACEBOOK_LIKE_URL_BASE = "http://www.facebook.com/plugins/like.php?href=http://beercellarcommunity.appspot.com/?beerid=";
+	public static final String FACEBOOK_LIKE_URL_BASE = "http://www.facebook.com/plugins/like.php?href=";
+	public static final String FACEBOOK_LIKE_HREF_URL ="http://beercellarcommunity.appspot.com/index.html?beerid=";
 	public static final String FACEBOOK_LIKE_URL_ETC = "&layout=button_count&show_faces=false&width=90&action=like&font&colorscheme=light&height=20";
 	public static final String FACEBOOK_LIKE_URL_LOCALE = "&locale=";
 	public static final String FACEBOOK_LIKE_URL_ACCESS_TOKEN = "&access_token=";
 	/** END: FACEBOOK LIKE BUTTON **/
 
 	/** BEGIN: Notification Service **/
-	public static final long NOTIFICATION_CHECK_INTERVAL = ((60 * 60) * 1000L);
-	/** 1 hr **/
-	public static final String NOTIFICATION_LAST_CHECKED = "NOTIFICATION_LAST_CHECKED";
-	public static final String NOTIFICATION_CHECK_BACK_LATER_IN = "NOTIFICATION_CHECK_BACK_LATER_IN";
+	/** 4 hr **/
+	public static final long NOTIFICATION_CHECK_INTERVAL = (4) * (60 * 60) * 1000L;
+	public static final long GET_RECOMMENDATIONS_NOTIFICATION_CHECK_INTERVAL = (1) * (60 * 60) * 1000L;
+
+	public static final String NEW_BEER_REVIEW_NOTIFICATION_LAST_CHECKED = "NEW_BEER_REVIEW_NOTIFICATION_LAST_CHECKED";
+	public static final String NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_LAST_CHECKED = "NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_LAST_CHECKED";
+	public static final String BEER_OF_THE_DAY_NOTIFICATION_LAST_CHECKED = "BEER_OF_THE_DAY_NOTIFICATION_LAST_CHECKED";
+	
+	public static final String NEW_BEER_REVIEW_NOTIFICATION_CHECK_BACK_LATER_IN = "NEW_BEER_REVIEW_NOTIFICATION_CHECK_BACK_LATER_IN";
+	public static final String NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_CHECK_BACK_LATER_IN = "NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_CHECK_BACK_LATER_IN";
+	public static final String BEER_OF_THE_DAY_NOTIFICATION_CHECK_BACK_LATER_IN = "BEER_OF_THE_DAY_NOTIFICATION_CHECK_BACK_LATER_IN";
 	/** END: Notification Service **/
 
 	/** BEGIN: Google Analytics **/
 	public static final String GOOGLE_ANALYTICS_WEB_PROPERTY_ID = "UA-10342197-7";
 	/** END: Google Analytics **/
+	
+	public static final String GOOGLE_API_KEY = "AIzaSyBs22hxkOqH0Fp_f4pdhbQTt3XwZBWMOhI";
+
+	/** BEGIN: Google URL Shortener **/
+	public static final String GOOGLE_URL_SHORTENER_URL = "https://www.googleapis.com/urlshortener/v1/url";
+	/** END: Google URL Shortener **/
 
 	public static final int SELECT_IMAGE_REQUEST_CODE = 5;
 	public static final int UPDATE_USER_PHOTO_REQUEST = 2;
@@ -64,7 +78,6 @@ public class AppConfig {
 
 	/** BEGIN: Google Translate **/
 //	public static final String GOOGLE_TRANSLATE_API_KEY = "ABQIAAAAVWY7GdKmSqNHmSBZbrO3qhRHMeJCkjT_mOiVypJw08F6FpQ0sBSyt4I80v6TGencZZLgCoGhMOZHNQ";
-	public static final String GOOGLE_TRANSLATE_API_KEY = "AIzaSyBs22hxkOqH0Fp_f4pdhbQTt3XwZBWMOhI";
 	public static final String GOOGLE_TRANSLATE_REFERER = "http://beercellarcommunity.appspot.com/";
 	/** END: Google Translate **/
 
@@ -88,17 +101,11 @@ public class AppConfig {
 	public static final long APPLICATION_USAGE_COUNT_THRESHOLD_TO_DISPLAY_RATE_AND_REVIEW = 2;
 	public static final String PREFERENCE_DO_NOT_SHOW_RATE_AND_REVIEW = "DO_NOT_SHOW_RATE_AND_REVIEW";
 	public static final String PREFERENCE_BEER_LIST_ROWS_PER_PAGE = "BEER_LIST_ROWS_PER_PAGE";
+	public static final String PREFERENCE_RECOMMENDATIONS_LASTRUNDATE = "RECOMMENDATIONS_LASTRUNDATE";
+	
 	/** END: PREFERENCES **/
 
 	/** BEGIN: BEER Community **/
-
-	// public static final String COMMUNITY_BASE_URL =
-	// "http://10.239.17.24:8888/beercellarcommunity"; public static final
-	// String COMMUNITY_BASE_SECURE_URL =
-	// "http://10.239.17.24:8888/beercellarcommunity"; public static final
-	// String COMMUNITY_UPLOAD_USER_PHOTO_SECURE_URL =
-	// "http://10.239.17.24:8888";
-
 	public static final String COMMUNITY_BASE_URL = "http://beercellarcommunity.appspot.com/beercellarcommunity";
 	public static final String COMMUNITY_BASE_SECURE_URL = "https://beercellarcommunity.appspot.com/beercellarcommunity";
 	public static final String COMMUNITY_UPLOAD_USER_PHOTO_SECURE_URL = "https://beercellarcommunity.appspot.com";
@@ -111,6 +118,8 @@ public class AppConfig {
 			+ "/users?";
 	public static final String COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL = AppConfig.COMMUNITY_BASE_SECURE_URL
 			+ "/dailycampaign?";
+	public static final String COMMUNITY_COMMENTS_URL = AppConfig.COMMUNITY_BASE_URL
+			+ "/comments?";
 
 	public static final String COMMUNITY_GET_IMAGE_Q = "q=getimage&beerid=";
 	public static final String COMMUNITY_GET_BEER_Q = "q=getbeer&beerid=";
@@ -136,8 +145,8 @@ public class AppConfig {
 	public static final String COMMUNITY_GET_FOLLOW_Q = "q=getfollow&userid=";
 	public static final String COMMUNITY_GET_FOLLOWING_Q = "q=getfollowing&userid=";
 	public static final String COMMUNITY_GET_FOLLOWERS_Q = "q=getfollowers&userid=";
-	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_NOTIFICATION_Q = "q=getnewbeerreviewsnotification";
-	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_FROM_FOLLOWING_NOTIFICATION_Q = "q=getnewbeerreviewsfromfollowingnotification";
+	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_NOTIFICATION_Q = "q=getnewbeerreviewsnotification2";
+	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_FROM_FOLLOWING_NOTIFICATION_Q = "q=getnewbeerreviewsfromfollowingnotification2";
 	public static final String COMMUNITY_GET_NEW_BEER_REVIEWS_Q = "q=getnewbeerreviews";
 	public static final String COMMUNITY_UPDATE_CHECK_Q = "q=updatecheck&market="
 			+ DEFAULT_APPSTORE + "&currentversion=";
@@ -157,10 +166,19 @@ public class AppConfig {
 	public static final String COMMUNITY_CHANGE_PASSWORD_Q_VALUE = "changepassword";
 	public static final String COMMUNITY_UPDATE_USER_PROFILE_Q_VALUE = "updateuserprofile";
 
-	public static final String COMMUNITY_GET_BEER_OF_THE_DAY_NOTIFICATION_Q = "q=getbeerofthedaynotification";
+	public static final String COMMUNITY_GET_COMMENTS_Q = "q=getcomments";
+	public static final String COMMUNITY_ADD_COMMENT_Q_VALUE = "addcomment";
+	public static final String COMMUNITY_UPDATE_COMMENT_Q_VALUE = "updatecomment";
+	public static final String COMMUNITY_DELETE_COMMENT_Q_VALUE = "deletecomment";
+
+	public static final String COMMUNITY_GET_BEER_OF_THE_DAY_NOTIFICATION_Q = "q=getbeerofthedaynotification2";
 
 	public static final String COMMUNITY_GET_EMAIL_SUBSCRIPTION_STATUS_Q = "q=getemailsubscriptionstatus&userid=";
 	public static final String COMMUNITY_UPDATE_EMAIL_SUBSCRIPTION_STATUS_Q = "q=updateemailsubscriptionstatus";
+	public static final String COMMUNITY_GET_COMMENT_POSTED_EMAIL_SUBSCRIPTION_STATUS_Q = "q=getcommentpostedemailsubscriptionstatus&userid=";
+	public static final String COMMUNITY_UPDATE_COMMENT_POSTED_EMAIL_SUBSCRIPTION_STATUS_Q = "q=updatecommentpostedemailsubscriptionstatus";
+	public static final String COMMUNITY_GET_COMPARABLES_Q = "q=getcomparables";
+	public static final String COMMUNITY_GET_RECOMMENDATIONS_Q = "q=getrecommendations";
 
 	public static final String COMMUNITY_USERID_PARAM = "&userid=";
 	public static final String COMMUNITY_USER_NAME_PARAM = "&username=";
@@ -174,6 +192,7 @@ public class AppConfig {
 	public static final String COMMUNITY_LAST_CHECKED_PARAM = "&lastchecked=";
 	public static final String COMMUNITY_BEERIDS_PARAM = "&beerids=";
 	public static final String COMMUNITY_EMAIL_SUBSCRIPTION_PARAM = "&emailsubscriptionstatus=";
+	public static final String COMMUNITY_COMMENT_POSTED_EMAIL_SUBSCRIPTION_PARAM = "&commentpostedemailsubscriptionstatus=";
 
 	public static final String COMMUNITY_R_PARAM = "&r=";
 	public static final String COMMUNITY_R_VALUE = "10";
@@ -192,6 +211,8 @@ public class AppConfig {
 	public static final String COMMUNITY_FOLLOWERS = "FOLLOWERS";
 	public static final String COMMUNITY_NEW_BEER_REVIEWS = "NEW_BEER_REVIEWS";
 	public static final String COMMUNITY_BEER_OF_THE_DAY = "BEER_OF_THE_DAY";
+	public static final String COMMUNITY_COMPARABLE_BEER_REVIEWS = "COMPARABLE_BEER_REVIEWS";
+	public static final String COMMUNITY_RECOMMENDED_BEER_REVIEWS = "RECOMMENDED_BEER_REVIEWS";
 
 	public static final String[] COMMUNITY_OPTIONS = new String[] {
 			"My Profile", "Beers From Around the World", "Top Rated Beers",

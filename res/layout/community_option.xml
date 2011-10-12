@@ -13,8 +13,8 @@
 		android:layout_width="wrap_content" android:layout_height="39dip"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true" android:singleLine="true"
-		android:layout_gravity="center_vertical"
-		android:textStyle="bold" android:textSize="20sp"
-		android:layout_marginRight="10dp" android:text=">"/>
+		android:layout_gravity="center_vertical" android:textStyle="bold"
+		android:textSize="22sp" android:layout_marginRight="10dp"
+		android:text=">" android:textColor="#BF9D17" />
 </RelativeLayout>
     

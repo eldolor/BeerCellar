@@ -25,13 +25,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,7 +40,6 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
@@ -773,6 +773,42 @@ public class CommunityBeers extends ListActivity {
 								.setTitle(
 										mMainActivity
 												.getString(R.string.title_beer_of_the_day));
+					}
+				});
+				return AppConfig.COMMUNITY_GET_BEERS_URL
+						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
+						+ AppConfig.COMMUNITY_BEERIDS_PARAM
+						+ URLEncoder.encode(beerIds, "UTF-8")
+						+ AppConfig.COMMUNITY_R
+						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
+			} else if (option.equals(AppConfig.COMMUNITY_COMPARABLE_BEER_REVIEWS)) {
+				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
+				mTracker.dispatch();
+				mMainActivity.runOnUiThread(new Runnable() {
+					public void run() {
+						mMainActivity
+								.getWindow()
+								.setTitle(
+										mMainActivity
+												.getString(R.string.title_comparable_beer_reviews));
+					}
+				});
+				return AppConfig.COMMUNITY_GET_BEERS_URL
+						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
+						+ AppConfig.COMMUNITY_BEERIDS_PARAM
+						+ URLEncoder.encode(beerIds, "UTF-8")
+						+ AppConfig.COMMUNITY_R
+						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
+			} else if (option.equals(AppConfig.COMMUNITY_RECOMMENDED_BEER_REVIEWS)) {
+				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
+				mTracker.dispatch();
+				mMainActivity.runOnUiThread(new Runnable() {
+					public void run() {
+						mMainActivity
+								.getWindow()
+								.setTitle(
+										mMainActivity
+												.getString(R.string.title_recommended_beer_reviews));
 					}
 				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:gravity="center" android:orientation="vertical">
+	<TextView android:id="@+id/message" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+		android:layout_marginTop="10dp" android:gravity="left"
+		android:textStyle="bold" />
+	<ScrollView android:id="@+id/ScrollView01"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_below="@+id/done">
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+			<TextView android:id="@+id/community_beer_add_comments"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp" android:layout_marginTop="30dp"
+				android:gravity="left" android:text="@string/community_beer_add_comments_label"
+				android:textStyle="bold" android:layout_below="@+id/user_name" />
+			<View android:id="@+id/divider6" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/community_beer_add_comments" />
+			<EditText android:id="@+id/comment" android:layout_below="@+id/divider6"
+				android:layout_width="fill_parent" android:layout_height="144sp"
+				android:layout_marginRight="5dp" android:layout_marginLeft="5dp"
+				android:gravity="left" android:focusableInTouchMode="true"
+				android:singleLine="true" android:textColor="@drawable/black" />
+
+
+			<Button android:id="@+id/post_comment" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+				android:layout_marginTop="20dp" android:text="@string/community_beer_add_comments_label"
+				android:padding="10dp" android:gravity="center"
+				android:layout_below="@+id/comment" />
+			<Button android:id="@+id/delete_comment" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+				android:layout_marginTop="20dp" android:text="@string/delete_label"
+				android:padding="10dp" android:gravity="center"
+				android:layout_below="@+id/comment" android:layout_toRightOf="@+id/post_comment"/>
+			<Button android:id="@+id/cancel" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_marginLeft="20dp"
+				android:layout_marginTop="20dp" android:text="@string/cancel_label"
+				android:padding="10dp" android:gravity="center"
+				android:layout_below="@+id/comment" android:layout_toRightOf="@+id/delete_comment" />
+
+		</RelativeLayout>
+	</ScrollView>
+
+</RelativeLayout>

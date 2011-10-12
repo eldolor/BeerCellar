@@ -68,16 +68,7 @@
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:layout_below="@+id/follow_count" android:layout_marginTop="10dp"
 				android:layout_marginLeft="5dp" android:gravity="center_vertical" />
-			<!--
-				<TextView android:id="@+id/following_reviewer_message"
-				android:layout_width="wrap_content"
-				android:layout_height="fill_parent"
-				android:layout_below="@+id/follow_reviewer"
-				android:layout_marginTop="10dp" android:layout_marginLeft="5dp"
-				android:gravity="center_vertical" android:textSize="18sp"
-				android:visibility="gone" />
-			-->
-
+			
 			<TextView android:id="@+id/date_created_label"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:layout_below="@+id/follow_reviewer"
@@ -107,28 +98,15 @@
 				android:textSize="22sp" android:layout_below="@+id/divider2" />
 
 
-			<LinearLayout android:id="@+id/characteristics_header"
-				xmlns:android="http://schemas.android.com/apk/res/android"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:orientation="horizontal" android:layout_marginLeft="5dp"
-				android:gravity="left" android:layout_marginTop="30dp"
-				android:layout_below="@+id/beer">
-				<TextView android:id="@+id/characteristics_label"
-					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:text="@string/characteristics_header_label"
-					android:textStyle="bold" />
-				<!--
-					Button android:id="@+id/translate_characteristics"
-					android:layout_width="wrap_content"
-					android:layout_marginLeft="30dp"
-					android:layout_height="wrap_content"
-					android:text="@string/translate_label"
-					android:gravity="center_vertical" /
-				-->
-			</LinearLayout>
+			<TextView android:id="@+id/characteristics_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/beer" android:layout_marginLeft="5dp"
+				android:layout_marginTop="50dp" android:gravity="left"
+				android:text="@string/characteristics_header_label"
+				android:textStyle="bold" />
 			<View android:id="@+id/divider_characteristics"
 				android:background="@drawable/divider" android:layout_width="fill_parent"
-				android:layout_height="1dp" android:layout_below="@+id/characteristics_header" />
+				android:layout_height="1dp" android:layout_below="@+id/characteristics_label" />
 			<TableLayout android:id="@+id/characteristics_table"
 				xmlns:android="http://schemas.android.com/apk/res/android"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -286,33 +264,37 @@
 				android:layout_marginLeft="5dp" android:gravity="left"
 				android:textSize="22sp" android:layout_below="@+id/divider8" />
 
-			<LinearLayout android:id="@+id/notes_header"
-				xmlns:android="http://schemas.android.com/apk/res/android"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:orientation="horizontal" android:layout_marginLeft="5dp"
-				android:gravity="left" android:layout_marginTop="30dp"
-				android:layout_below="@+id/country">
-				<TextView android:id="@+id/notes_label"
-					android:layout_width="wrap_content" android:layout_height="wrap_content"
-					android:text="@string/community_beer_notes_label"
-					android:textStyle="bold" />
-				<!--
-					Button android:id="@+id/translate"
-					android:layout_width="wrap_content"
-					android:layout_marginLeft="30dp"
-					android:layout_height="wrap_content"
-					android:text="@string/translate_label"
-					android:gravity="center_vertical" /
-				-->
-			</LinearLayout>
-
+			<TextView android:id="@+id/notes_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/country" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_notes_label" android:textStyle="bold" />
 			<View android:id="@+id/divider9" android:background="@drawable/divider"
 				android:layout_width="fill_parent" android:layout_height="1dp"
-				android:layout_below="@+id/notes_header" />
+				android:layout_below="@+id/notes_label" />
 			<TextView android:id="@+id/notes" android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:layout_marginRight="5dp"
 				android:layout_marginLeft="5dp" android:gravity="left"
 				android:textSize="22sp" android:layout_below="@+id/divider9" />
+			<TextView android:id="@+id/comments_label"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_below="@+id/notes" android:layout_marginLeft="5dp"
+				android:layout_marginTop="30dp" android:gravity="left"
+				android:text="@string/community_beer_comments_label"
+				android:textStyle="bold" android:textSize="22sp" />
+			<View android:id="@+id/divider10" android:background="@drawable/divider"
+				android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_below="@+id/comments_label" />
+			<TableLayout android:id="@+id/comments_table"
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:shrinkColumns="0" android:layout_below="@+id/comments_label"
+				android:layout_marginLeft="5dp">
+			</TableLayout>
+			<Button android:id="@+id/add_comments" android:layout_width="wrap_content"
+				android:layout_marginTop="30dp" android:layout_marginLeft="5dp"
+				android:layout_height="wrap_content" android:text="@string/community_beer_add_comments_label"
+				android:gravity="center_vertical" android:layout_below="@+id/comments_table" />
 		</RelativeLayout>
 	</ScrollView>
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

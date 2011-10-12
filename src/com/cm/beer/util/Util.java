@@ -43,9 +43,9 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Criteria;
@@ -62,16 +62,19 @@ import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.transfer.Beer;
 import com.facebook.android.Facebook;
 import com.google.ads.AdSenseSpec;
-import com.google.ads.GoogleAdView;
 import com.google.ads.AdSenseSpec.AdType;
 import com.google.ads.AdSenseSpec.ExpandDirection;
+import com.google.ads.GoogleAdView;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
-public class Util {
+public class Util
+{
 	private static String TAG = Util.class.getName();
 
-	public static void setGoogleAdSense(final Activity activity) {
-		if (AppConfig.IS_BEER_LITE) {
+	public static void setGoogleAdSense(final Activity activity)
+	{
+		if (AppConfig.IS_BEER_LITE)
+		{
 			GoogleAdView adView = (GoogleAdView) activity
 					.findViewById(R.id.google_adview);
 			adView.setVisibility(View.VISIBLE);
@@ -106,14 +109,16 @@ public class Util {
 			// Fetch Google ad.
 			// PLEASE DO NOT CLICK ON THE AD UNLESS YOU ARE IN TEST MODE.
 			// OTHERWISE, YOUR ACCOUNT MAY BE DISABLED.
-			if (adView != null) {
+			if (adView != null)
+			{
 				adView.showAds(adSenseSpec);
 			}
 		}
 
 	}
 
-	public static int getRandomInt(int aStart, int aEnd) {
+	public static int getRandomInt(int aStart, int aEnd)
+	{
 		// if (aStart > aEnd) {
 		// throw new IllegalArgumentException("Start cannot exceed End.");
 		// }
@@ -130,18 +135,21 @@ public class Util {
 	 * 
 	 * @return
 	 */
-	public static JSONArray getBeers(NotesDbAdapter mDbHelper) {
+	public static JSONArray getBeers(NotesDbAdapter mDbHelper)
+	{
 
 		JSONArray jsonArray = null;
 		Cursor cursor = null;
 		Beer beer = null;
 		ArrayList<Beer> beerList = new ArrayList<Beer>();
-		try {
+		try
+		{
 
 			cursor = mDbHelper.fetchAllNotesData();
 			cursor.moveToFirst();
 
-			while (cursor.isAfterLast() == false) {
+			while (cursor.isAfterLast() == false)
+			{
 				beer = new Beer();
 				beer.setId(cursor.getLong(cursor
 						.getColumnIndex(NotesDbAdapter.KEY_ROWID)));
@@ -181,8 +189,10 @@ public class Util {
 
 			jsonArray = new JSONArray(beerList);
 
-		} finally {
-			if (cursor != null) {
+		} finally
+		{
+			if (cursor != null)
+			{
 				cursor.close();
 			}
 		}
@@ -190,7 +200,8 @@ public class Util {
 		return jsonArray;
 	}
 
-	public static JSONObject toBeerJson(Note note) throws JSONException {
+	public static JSONObject toBeerJson(Note note) throws JSONException
+	{
 		JSONObject json = null;
 		// These fields can be null
 		String beer, alcohol, price, style, brewery, state, country, rating, notes, picture, shared, latitude, longitude, userId, userName, userLink, characteristics, breweryLink, currencySymbol, currencyCode;
@@ -202,15 +213,15 @@ public class Util {
 
 		json = new JSONObject();
 
-		if (note != null) {
+		if (note != null)
+		{
 			json.put("id", note.id);
 			beer = ((note.beer != null) && (!note.beer.equals(""))) ? note.beer
 					.trim() : "";
 			json.put("beer", beer);
 
 			alcohol = ((note.alcohol != null) && (!note.alcohol.equals(""))) ? note.alcohol
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("alcohol", alcohol);
 
 			currencySymbol = ((note.currencySymbol != null) && (!note.currencySymbol
@@ -224,43 +235,35 @@ public class Util {
 			json.put("currencyCode", currencyCode);
 
 			price = ((note.price != null) && (!note.price.equals(""))) ? note.price
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("price", price);
 
 			style = ((note.style != null) && (!note.style.equals(""))) ? note.style
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("style", style);
 
 			brewery = ((note.brewery != null) && (!note.brewery.equals(""))) ? note.brewery
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("brewery", brewery);
 
 			state = ((note.state != null) && (!note.state.equals(""))) ? note.state
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("state", state);
 
 			country = ((note.country != null) && (!note.country.equals(""))) ? note.country
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("country", country);
 
 			rating = ((note.rating != null) && (!note.rating.equals(""))) ? note.rating
-					.trim()
-					: "0.0";
+					.trim() : "0.0";
 			json.put("rating", rating);
 
 			notes = ((note.notes != null) && (!note.notes.equals(""))) ? note.notes
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("notes", notes);
 
 			picture = ((note.picture != null) && (!note.picture.equals(""))) ? note.picture
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("picture", picture);
 
 			json.put("created", note.created);
@@ -275,29 +278,24 @@ public class Util {
 
 			latitude = note.latitude;
 			latitude = ((latitude != null) && (!latitude.equals("0.0"))) ? latitude
-					.trim()
-					: "0.0";
+					.trim() : "0.0";
 			json.put("latitude", latitude);
 
 			longitude = note.longitude;
 			longitude = ((longitude != null) && (!longitude.equals("0.0"))) ? longitude
-					.trim()
-					: "0.0";
+					.trim() : "0.0";
 			json.put("longitude", longitude);
 
 			userId = ((note.userId != null) && (!note.userId.equals(""))) ? note.userId
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("userId", userId);
 
 			userName = ((note.userName != null) && (!note.userName.equals(""))) ? note.userName
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("userName", userName);
 
 			userLink = ((note.userLink != null) && (!note.userLink.equals(""))) ? note.userLink
-					.trim()
-					: "";
+					.trim() : "";
 			json.put("userLink", userLink);
 			characteristics = ((note.characteristics != null) && (!note.characteristics
 					.equals(""))) ? note.characteristics.trim() : "";
@@ -318,13 +316,15 @@ public class Util {
 	 * @return
 	 * @throws JSONException
 	 */
-	public static Note toNote(Cursor cursor) {
+	public static Note toNote(Cursor cursor)
+	{
 		// These fields can be null
 		String shared, latitude, longitude;
 
 		Note note = null;
 
-		if (cursor != null && (!cursor.isAfterLast())) {
+		if (cursor != null && (!cursor.isAfterLast()))
+		{
 			note = new Note();
 			note.id = cursor.getLong(cursor
 					.getColumnIndex(NotesDbAdapter.KEY_ROWID));
@@ -411,12 +411,14 @@ public class Util {
 	 */
 	public static String openUrl(String url, String method,
 			Map<String, String> params) throws MalformedURLException,
-			IOException {
+			IOException
+	{
 
 		String charset = "UTF-8";
 		Log.d(TAG, method + " URL: " + url);
 
-		if (method.equals("GET")) {
+		if (method.equals("GET"))
+		{
 			String encodedUrl = encodeUrl(params);
 			Log.d(TAG, "Encoded URL:" + encodedUrl);
 			url = url + "?" + encodedUrl;
@@ -428,11 +430,12 @@ public class Util {
 		HttpURLConnection conn = (HttpURLConnection) new URL(url)
 				.openConnection();
 		conn.setRequestProperty("User-Agent", System.getProperties()
-				.getProperty("http.agent")
-				+ " Android");
+				.getProperty("http.agent") + " Android");
 
-		if (!method.equals("GET")) {
-			if (!params.containsKey("file")) {
+		if (!method.equals("GET"))
+		{
+			if (!params.containsKey("file"))
+			{
 				// use method override
 				String encodedUrl = encodeUrl(params);
 				Log.d(TAG, "Encoded URL:" + encodedUrl);
@@ -440,7 +443,8 @@ public class Util {
 				conn.setRequestMethod("POST");
 				conn.setDoOutput(true);
 				conn.getOutputStream().write(encodedUrl.getBytes(charset));
-			} else {
+			} else
+			{
 				Log.d(TAG, "Posting multipart/form-data");
 
 				Log.d(TAG, method + " URL: " + url);
@@ -463,44 +467,50 @@ public class Util {
 				conn.setChunkedStreamingMode(1024);
 				conn.setRequestProperty("Content-Type",
 						"multipart/form-data; boundary=\"" + BOUNDARY + "\"");
-				try {
+				try
+				{
 					output = conn.getOutputStream();
 					// write other parameters
-					for (String key : params.keySet()) {
+					for (String key : params.keySet())
+					{
 						String value = params.get(key);
 
 						output.write((CRLF + TWO_HYPHENS + BOUNDARY + CRLF)
 								.getBytes(charset));
 
-						if (key.equalsIgnoreCase("file")) {
+						if (key.equalsIgnoreCase("file"))
+						{
 							Log.d(TAG, "POSTING: " + key + "=" + value);
 							File photo = new File(value);
-							output
-									.write(("Content-Disposition: form-data; name=\"file\"; filename=\""
-											+ photo.getName() + "\"" + CRLF)
-											.getBytes(charset));
-							output
-									.write(("Content-Type: image/jpg" + CRLF + CRLF)
-											.getBytes(charset));
+							output.write(("Content-Disposition: form-data; name=\"file\"; filename=\""
+									+ photo.getName() + "\"" + CRLF)
+									.getBytes(charset));
+							output.write(("Content-Type: image/jpg" + CRLF + CRLF)
+									.getBytes(charset));
 
 							FileInputStream input = null;
-							try {
+							try
+							{
 								input = new FileInputStream(photo);
 								int byteCount = 0;
 								byte[] buffer = new byte[1024];
 								for (int length = 0; (length = input
-										.read(buffer)) > 0;) {
+										.read(buffer)) > 0;)
+								{
 									output.write(buffer, 0, length);
 									byteCount += length;
 								}
 								output.flush();
 								Log.d(TAG, byteCount + " bytes flushed for "
 										+ photo.getName());
-							} finally {
+							} finally
+							{
 								if (input != null)
-									try {
+									try
+									{
 										input.close();
-									} catch (IOException e) {
+									} catch (IOException e)
+									{
 										Log.e(TAG, (e.getMessage() != null) ? e
 												.getMessage().replace(" ", "_")
 												: "", e);
@@ -508,15 +518,16 @@ public class Util {
 							}
 							// Important! Indicates end of binary BOUNDARY.
 							output.write(CRLF.getBytes(charset));
-						} else {
+						} else
+						{
 							// Send normal param. Access_Token is included in
 							// the GET String
-							if (!key.equalsIgnoreCase(Facebook.TOKEN)) {
+							if (!key.equalsIgnoreCase(Facebook.TOKEN))
+							{
 								Log.d(TAG, "POSTING: " + key + "=" + value);
-								output
-										.write(("Content-Disposition: form-data; name=\""
-												+ key + "\"" + CRLF + CRLF)
-												.getBytes(charset));
+								output.write(("Content-Disposition: form-data; name=\""
+										+ key + "\"" + CRLF + CRLF)
+										.getBytes(charset));
 								output.write(value.getBytes(charset));
 								// Important! Indicates end of text BOUNDARY.
 								output.write(CRLF.getBytes(charset));
@@ -529,7 +540,8 @@ public class Util {
 					output.write((CRLF + TWO_HYPHENS + BOUNDARY + TWO_HYPHENS)
 							.getBytes(charset));
 
-				} finally {
+				} finally
+				{
 					if (output != null)
 						output.close();
 				}
@@ -538,9 +550,11 @@ public class Util {
 
 		String response = "";
 
-		try {
+		try
+		{
 			response = read(conn.getInputStream());
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e)
+		{
 			// Error Stream contains JSON that we can parse to a FB error
 			response = read(conn.getErrorStream());
 		}
@@ -553,10 +567,12 @@ public class Util {
 	 * @return
 	 * @throws IOException
 	 */
-	private static String read(InputStream in) throws IOException {
+	private static String read(InputStream in) throws IOException
+	{
 		StringBuilder sb = new StringBuilder();
 		BufferedReader r = new BufferedReader(new InputStreamReader(in), 1000);
-		for (String line = r.readLine(); line != null; line = r.readLine()) {
+		for (String line = r.readLine(); line != null; line = r.readLine())
+		{
 			sb.append(line);
 		}
 		in.close();
@@ -568,12 +584,14 @@ public class Util {
 	 * @param parameters
 	 * @return
 	 */
-	public static String encodeUrl(Map<String, String> parameters) {
+	public static String encodeUrl(Map<String, String> parameters)
+	{
 		if (parameters == null)
 			return "";
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
-		for (String key : parameters.keySet()) {
+		for (String key : parameters.keySet())
+		{
 			if (first)
 				first = false;
 			else
@@ -587,7 +605,8 @@ public class Util {
 	 * Location Setup
 	 */
 	public static GpsLocation getLocation(Activity activity,
-			GoogleAnalyticsTracker mTracker) {
+			GoogleAnalyticsTracker mTracker)
+	{
 		String location_context = Context.LOCATION_SERVICE;
 		LocationManager locationManager = (LocationManager) activity
 				.getSystemService(location_context);
@@ -600,13 +619,15 @@ public class Util {
 		criteria.setCostAllowed(true);
 		GpsLocation gpsLocation = new GpsLocation();
 
-		try {
+		try
+		{
 			String bestProvider = locationManager.getBestProvider(criteria,
 					true);
 
 			Location location = locationManager
 					.getLastKnownLocation(bestProvider);
-			if (location != null) {
+			if (location != null)
+			{
 				double latitude = location.getLatitude();
 				double longitude = location.getLongitude();
 				Log.i(TAG, "Setting latitude:" + latitude + " longitude:"
@@ -614,10 +635,12 @@ public class Util {
 				gpsLocation.latitude = latitude;
 				gpsLocation.longitude = longitude;
 			}
-		} catch (Throwable e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (Throwable e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 			mTracker.trackEvent("Util", "GetGpsLocation",
 					(e.getMessage() != null) ? e.getMessage().replace(" ", "_")
 							: "".replace(" ", "_"), 0);
@@ -630,14 +653,16 @@ public class Util {
 	 * 
 	 * @param db
 	 */
-	public static void onUpgradeToV4FromV1(SQLiteDatabase db) {
+	public static void onUpgradeToV4FromV1(SQLiteDatabase db)
+	{
 		Cursor cursor = null;
 		ContentValues initialValues = null;
 		int records = 0;
-		try {
+		try
+		{
 			// extract data from old table
-			cursor = db.query(NotesDbAdapter.DATABASE_TABLE_V1, new String[] {
-					NotesDbAdapter.KEY_ROWID, NotesDbAdapter.KEY_BEER,
+			cursor = db.query(NotesDbAdapter.DATABASE_TABLE_V1, new String[]
+			{ NotesDbAdapter.KEY_ROWID, NotesDbAdapter.KEY_BEER,
 					NotesDbAdapter.KEY_ALCOHOL, NotesDbAdapter.KEY_PRICE,
 					NotesDbAdapter.KEY_STYLE, NotesDbAdapter.KEY_BREWERY,
 					NotesDbAdapter.KEY_STATE, NotesDbAdapter.KEY_COUNTRY,
@@ -645,13 +670,15 @@ public class Util {
 					NotesDbAdapter.KEY_PICTURE, NotesDbAdapter.KEY_CREATED,
 					NotesDbAdapter.KEY_UPDATED }, null, null, null, null,
 					NotesDbAdapter.KEY_UPDATED + " DESC");
-			if (cursor != null) {
+			if (cursor != null)
+			{
 				cursor.moveToFirst();
 			}
 
 			// insert data into the new table
 			for (; (cursor != null) && (cursor.isAfterLast() == false); cursor
-					.moveToNext(), records++) {
+					.moveToNext(), records++)
+			{
 				initialValues = new ContentValues();
 				initialValues.put(NotesDbAdapter.KEY_ROWID, cursor
 						.getLong(cursor
@@ -702,14 +729,18 @@ public class Util {
 						_currencySymbol);
 
 				db.insert(NotesDbAdapter.DATABASE_TABLE, null, initialValues);
-				Log.i(TAG, "Inserted "
-						+ initialValues.getAsString(NotesDbAdapter.KEY_BEER)
-						+ " from " + NotesDbAdapter.DATABASE_TABLE_V1 + " to "
-						+ NotesDbAdapter.DATABASE_TABLE);
+				Log.i(TAG,
+						"Inserted "
+								+ initialValues
+										.getAsString(NotesDbAdapter.KEY_BEER)
+								+ " from " + NotesDbAdapter.DATABASE_TABLE_V1
+								+ " to " + NotesDbAdapter.DATABASE_TABLE);
 			}
 			Log.i(TAG, "Records Inserted: " + records);
-		} finally {
-			if (cursor != null) {
+		} finally
+		{
+			if (cursor != null)
+			{
 				cursor.close();
 			}
 		}
@@ -720,14 +751,16 @@ public class Util {
 	 * 
 	 * @param db
 	 */
-	public static void onUpgradeToV4FromV2(SQLiteDatabase db) {
+	public static void onUpgradeToV4FromV2(SQLiteDatabase db)
+	{
 		Cursor cursor = null;
 		ContentValues initialValues = null;
 		int records = 0;
-		try {
+		try
+		{
 			// extract data from old table
-			cursor = db.query(NotesDbAdapter.DATABASE_TABLE_V2, new String[] {
-					NotesDbAdapter.KEY_ROWID, NotesDbAdapter.KEY_BEER,
+			cursor = db.query(NotesDbAdapter.DATABASE_TABLE_V2, new String[]
+			{ NotesDbAdapter.KEY_ROWID, NotesDbAdapter.KEY_BEER,
 					NotesDbAdapter.KEY_ALCOHOL, NotesDbAdapter.KEY_PRICE,
 					NotesDbAdapter.KEY_STYLE, NotesDbAdapter.KEY_BREWERY,
 					NotesDbAdapter.KEY_STATE, NotesDbAdapter.KEY_COUNTRY,
@@ -741,13 +774,15 @@ public class Util {
 					null, null, null, null, NotesDbAdapter.KEY_UPDATED
 							+ " DESC");
 
-			if (cursor != null) {
+			if (cursor != null)
+			{
 				cursor.moveToFirst();
 			}
 
 			// insert data into the new table
 			for (; (cursor != null) && (cursor.isAfterLast() == false); cursor
-					.moveToNext(), records++) {
+					.moveToNext(), records++)
+			{
 				initialValues = new ContentValues();
 				initialValues.put(NotesDbAdapter.KEY_ROWID, cursor
 						.getLong(cursor
@@ -798,11 +833,9 @@ public class Util {
 						.getString(cursor
 								.getColumnIndex(NotesDbAdapter.KEY_USER_LINK)));
 				initialValues
-						.put(
-								NotesDbAdapter.KEY_CHARACTERISTICS,
-								cursor
-										.getString(cursor
-												.getColumnIndex(NotesDbAdapter.KEY_CHARACTERISTICS)));
+						.put(NotesDbAdapter.KEY_CHARACTERISTICS,
+								cursor.getString(cursor
+										.getColumnIndex(NotesDbAdapter.KEY_CHARACTERISTICS)));
 
 				initialValues.put(NotesDbAdapter.KEY_CREATED, cursor
 						.getLong(cursor
@@ -820,14 +853,18 @@ public class Util {
 						_currencySymbol);
 
 				db.insert(NotesDbAdapter.DATABASE_TABLE, null, initialValues);
-				Log.i(TAG, "Inserted "
-						+ initialValues.getAsString(NotesDbAdapter.KEY_BEER)
-						+ " from " + NotesDbAdapter.DATABASE_TABLE_V2 + " to "
-						+ NotesDbAdapter.DATABASE_TABLE);
+				Log.i(TAG,
+						"Inserted "
+								+ initialValues
+										.getAsString(NotesDbAdapter.KEY_BEER)
+								+ " from " + NotesDbAdapter.DATABASE_TABLE_V2
+								+ " to " + NotesDbAdapter.DATABASE_TABLE);
 			}
 			Log.i(TAG, "Records Inserted: " + records);
-		} finally {
-			if (cursor != null) {
+		} finally
+		{
+			if (cursor != null)
+			{
 				cursor.close();
 			}
 		}
@@ -838,14 +875,16 @@ public class Util {
 	 * 
 	 * @param db
 	 */
-	public static void onUpgradeToV4FromV3(SQLiteDatabase db) {
+	public static void onUpgradeToV4FromV3(SQLiteDatabase db)
+	{
 		Cursor cursor = null;
 		ContentValues initialValues = null;
 		int records = 0;
-		try {
+		try
+		{
 			// extract data from old table
-			cursor = db.query(NotesDbAdapter.DATABASE_TABLE_V3, new String[] {
-					NotesDbAdapter.KEY_ROWID, NotesDbAdapter.KEY_BEER,
+			cursor = db.query(NotesDbAdapter.DATABASE_TABLE_V3, new String[]
+			{ NotesDbAdapter.KEY_ROWID, NotesDbAdapter.KEY_BEER,
 					NotesDbAdapter.KEY_ALCOHOL, NotesDbAdapter.KEY_PRICE,
 					NotesDbAdapter.KEY_STYLE, NotesDbAdapter.KEY_BREWERY,
 					NotesDbAdapter.KEY_STATE, NotesDbAdapter.KEY_COUNTRY,
@@ -860,13 +899,15 @@ public class Util {
 					null, null, null, null, NotesDbAdapter.KEY_UPDATED
 							+ " DESC");
 
-			if (cursor != null) {
+			if (cursor != null)
+			{
 				cursor.moveToFirst();
 			}
 
 			// insert data into the new table
 			for (; (cursor != null) && (cursor.isAfterLast() == false); cursor
-					.moveToNext(), records++) {
+					.moveToNext(), records++)
+			{
 				initialValues = new ContentValues();
 				initialValues.put(NotesDbAdapter.KEY_ROWID, cursor
 						.getLong(cursor
@@ -917,18 +958,14 @@ public class Util {
 						.getString(cursor
 								.getColumnIndex(NotesDbAdapter.KEY_USER_LINK)));
 				initialValues
-						.put(
-								NotesDbAdapter.KEY_CHARACTERISTICS,
-								cursor
-										.getString(cursor
-												.getColumnIndex(NotesDbAdapter.KEY_CHARACTERISTICS)));
+						.put(NotesDbAdapter.KEY_CHARACTERISTICS,
+								cursor.getString(cursor
+										.getColumnIndex(NotesDbAdapter.KEY_CHARACTERISTICS)));
 
 				initialValues
-						.put(
-								NotesDbAdapter.KEY_BREWERY_LINK,
-								cursor
-										.getString(cursor
-												.getColumnIndex(NotesDbAdapter.KEY_BREWERY_LINK)));
+						.put(NotesDbAdapter.KEY_BREWERY_LINK,
+								cursor.getString(cursor
+										.getColumnIndex(NotesDbAdapter.KEY_BREWERY_LINK)));
 
 				initialValues.put(NotesDbAdapter.KEY_CREATED, cursor
 						.getLong(cursor
@@ -946,14 +983,18 @@ public class Util {
 						_currencySymbol);
 
 				db.insert(NotesDbAdapter.DATABASE_TABLE, null, initialValues);
-				Log.i(TAG, "Inserted "
-						+ initialValues.getAsString(NotesDbAdapter.KEY_BEER)
-						+ " from " + NotesDbAdapter.DATABASE_TABLE_V3 + " to "
-						+ NotesDbAdapter.DATABASE_TABLE);
+				Log.i(TAG,
+						"Inserted "
+								+ initialValues
+										.getAsString(NotesDbAdapter.KEY_BEER)
+								+ " from " + NotesDbAdapter.DATABASE_TABLE_V3
+								+ " to " + NotesDbAdapter.DATABASE_TABLE);
 			}
 			Log.i(TAG, "Records Inserted: " + records);
-		} finally {
-			if (cursor != null) {
+		} finally
+		{
+			if (cursor != null)
+			{
 				cursor.close();
 			}
 		}
@@ -965,18 +1006,23 @@ public class Util {
 	 * 
 	 * @param activity
 	 */
-	public static void emulateLogin(final Activity activity) {
+	public static void emulateLogin(final Activity activity)
+	{
 
 		AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
 		CharSequence[] items = new CharSequence[AppConfig.EMULATED_USER_NAME.length];
-		for (int i = 0; i < AppConfig.EMULATED_USER_NAME.length; i++) {
+		for (int i = 0; i < AppConfig.EMULATED_USER_NAME.length; i++)
+		{
 			items[i] = AppConfig.EMULATED_USER_NAME[i];
 		}
-		dialog.setItems(items, new OnClickListener() {
+		dialog.setItems(items, new OnClickListener()
+		{
 
 			@Override
-			public void onClick(DialogInterface arg0, int which) {
-				try {
+			public void onClick(DialogInterface arg0, int which)
+			{
+				try
+				{
 					User user = new User(activity);
 					user.onAuthSucceed(AppConfig.EMULATED_USER_ID[which],
 							AppConfig.EMULATED_USER_NAME[which],
@@ -992,8 +1038,8 @@ public class Util {
 					json.put("userId", user.getUserId());
 					json.put("userName", user.getUserName());
 					json.put("userLink", user.getUserLink());
-					json.put("additionalAttributes", user
-							.getAdditionalUserAttributes());
+					json.put("additionalAttributes",
+							user.getAdditionalUserAttributes());
 
 					String userJsonStr = URLEncoder.encode(json.toString(),
 							"UTF-8");
@@ -1010,8 +1056,10 @@ public class Util {
 						boolean retry = true;
 						int retryCount = 0;
 						while ((retry)
-								&& (retryCount < AppConfig.SHARE_WITH_COMMUNITY_BEER_UPLOAD_RETRY_COUNT)) {
-							try {
+								&& (retryCount < AppConfig.SHARE_WITH_COMMUNITY_BEER_UPLOAD_RETRY_COUNT))
+						{
+							try
+							{
 
 								String response = com.cm.beer.util.Util
 										.openUrl(_url, "POST", parameters);
@@ -1019,7 +1067,8 @@ public class Util {
 								Log.i(TAG, "Response = " + response);
 								// Upload successful
 								retry = false;
-							} catch (Throwable e) {
+							} catch (Throwable e)
+							{
 								Log.e(TAG, "error: "
 										+ ((e.getMessage() != null) ? e
 												.getMessage().replace(" ", "_")
@@ -1033,7 +1082,8 @@ public class Util {
 						Log.d(TAG, "Final Retry Count = " + retryCount);
 					}
 
-				} catch (Throwable e) {
+				} catch (Throwable e)
+				{
 					Log.e(TAG, "error: "
 							+ ((e.getMessage() != null) ? e.getMessage()
 									.replace(" ", "_") : ""), e);
@@ -1051,7 +1101,8 @@ public class Util {
 	 * 
 	 * @param activity
 	 */
-	public static void emulateLogout(Activity activity) {
+	public static void emulateLogout(Activity activity)
+	{
 		User user = new User(activity);
 		user.onLogoutFinish();
 	}
@@ -1063,7 +1114,8 @@ public class Util {
 	 * @throws IOException
 	 */
 	public static String convertStreamToString(InputStream is, String charset)
-			throws IOException {
+			throws IOException
+	{
 		/*
 		 * To convert the InputStream to String we use the
 		 * BufferedReader.readLine() method. We iterate until the BufferedReader
@@ -1075,7 +1127,8 @@ public class Util {
 
 		String line = null;
 		reader = new BufferedReader(new InputStreamReader(is, charset));
-		while ((line = reader.readLine()) != null) {
+		while ((line = reader.readLine()) != null)
+		{
 			sb.append(line);
 		}
 		return sb.toString();
@@ -1089,7 +1142,8 @@ public class Util {
 	 * @throws ClientProtocolException
 	 */
 	public static String[] getResult(String url)
-			throws ClientProtocolException, IOException {
+			throws ClientProtocolException, IOException
+	{
 
 		InputStream _inStream = null;
 		HttpResponse _response;
@@ -1098,7 +1152,8 @@ public class Util {
 		String result = null;
 		String response[] = new String[2];
 
-		try {
+		try
+		{
 			HttpParams httpParameters = new BasicHttpParams();
 			// Set the timeout in milliseconds until a connection is
 			// established.
@@ -1116,12 +1171,11 @@ public class Util {
 			HttpGet httpget = new HttpGet(url);
 
 			// Execute the request
-			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, url);
-			}
+			Log.i(TAG, url);
 			_response = httpClient.execute(httpget);
 			// Examine the response status
-			if (AppConfig.LOGGING_ENABLED) {
+			if (AppConfig.LOGGING_ENABLED)
+			{
 				Log.i(TAG, _response.getStatusLine().toString());
 			}
 
@@ -1130,24 +1184,29 @@ public class Util {
 			// If the response does not enclose an entity, there is no need
 			// to worry about connection release
 
-			if (_entity != null) {
+			if (_entity != null)
+			{
 				// Get cursor string
 				// NOTE: cs cannot be null
 				cs = (_response.getLastHeader("cs") != null) ? _response
 						.getLastHeader("cs").getValue() : "";
-				Log.i(TAG, "Response cs = " + cs);
+				Log.i(TAG, "url: " + url + "::Response cs: " + cs);
 				// A Simple JSON Response Read
 				_inStream = _entity.getContent();
 				result = Util.convertStreamToString(_inStream, "UTF-8");
-				Log.i(TAG, "Response = " + result);
+				Log.i(TAG, "url: " + url + "::Response: " + result);
 			}
 
-		} finally {
-			if (_inStream != null) {
+		} finally
+		{
+			if (_inStream != null)
+			{
 				// Closing the input stream will trigger connection release
-				try {
+				try
+				{
 					_inStream.close();
-				} catch (IOException e) {
+				} catch (IOException e)
+				{
 					Log.e(TAG, "error: "
 							+ ((e.getMessage() != null) ? e.getMessage()
 									.replace(" ", "_") : ""), e);
@@ -1161,9 +1220,11 @@ public class Util {
 	}
 
 	public static String getSetReviewHelpfulUrl(String userId, String beerId,
-			String raterId, String helpful) {
+			String raterId, String helpful)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_SET_REVIEW_HELPFUL_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
@@ -1176,19 +1237,23 @@ public class Util {
 					+ ((raterId != null) ? URLEncoder.encode(raterId, "UTF-8")
 							: "") + AppConfig.COMMUNITY_REVIEW_HELPFUL_PARAM
 					+ helpful;
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 	}
 
 	public static String getSetUnfollowUrl(String userId, String userName,
 			String userLink, String followUserId, String followUserName,
-			String followUserLink) {
+			String followUserLink)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_SET_UNFOLLOW_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
@@ -1209,10 +1274,12 @@ public class Util {
 					+ AppConfig.COMMUNITY_FOLLOW_USER_LINK_PARAM
 					+ ((followUserLink != null) ? URLEncoder.encode(
 							followUserLink, "UTF-8") : "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
@@ -1220,9 +1287,11 @@ public class Util {
 
 	public static String getSetFollowUrl(String userId, String userName,
 			String userLink, String followUserId, String followUserName,
-			String followUserLink) {
+			String followUserLink)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_SET_FOLLOW_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
@@ -1243,137 +1312,174 @@ public class Util {
 					+ AppConfig.COMMUNITY_FOLLOW_USER_LINK_PARAM
 					+ ((followUserLink != null) ? URLEncoder.encode(
 							followUserLink, "UTF-8") : "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getFollowUrl(String userId) {
+	public static String getFollowUrl(String userId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_FOLLOW_Q
 					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getReviewHelpfulCountUrl(String beerId) {
+	public static String getReviewHelpfulCountUrl(String beerId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_REVIEW_HELPFUL_COUNT_Q
 					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getFollowCountUrl(String userId) {
+	public static String getFollowCountUrl(String userId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_FOLLOW_COUNT_Q
 					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getReviewCountUrl(String userId) {
+	public static String getReviewCountUrl(String userId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_REVIEW_COUNT_Q
 					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getImageUrl(String beerId) {
+	public static String getImageUrl(String beerId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_IMAGE_Q
 					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getUploadUserPhotoURLUrl() {
+	public static String getUploadUserPhotoURLUrl()
+	{
 		return AppConfig.COMMUNITY_GET_USER_SERVICE_URL
 				+ AppConfig.COMMUNITY_GET_UPLOAD_USER_PHOTO_URL_Q;
 	}
 
-	public static String getUserPhotoUrl(String userId) {
+	public static String getUserPhotoUrl(String userId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_USER_SERVICE_URL
 					+ AppConfig.COMMUNITY_GET_USER_PHOTO_Q
 					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getNewBeerReviewsNotificationUrl(String lastChecked) {
+	public static String getNewBeerReviewsNotificationUrl(String userId,
+			String lastChecked)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_NOTIFICATION_Q
+					+ AppConfig.COMMUNITY_USERID_PARAM
+					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
+							: "")
 					+ AppConfig.COMMUNITY_LAST_CHECKED_PARAM
 					+ ((lastChecked != null) ? URLEncoder.encode(lastChecked,
 							"UTF-8") : "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
 	public static String getNewBeerReviewsFromFollowingNotificationUrl(
-			String userId, String lastChecked) {
+			String userId, String lastChecked)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_FROM_FOLLOWING_NOTIFICATION_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
@@ -1382,19 +1488,23 @@ public class Util {
 					+ AppConfig.COMMUNITY_LAST_CHECKED_PARAM
 					+ ((lastChecked != null) ? URLEncoder.encode(lastChecked,
 							"UTF-8") : "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
 	public static String getBeerOfTheDayNotificationUrl(String userId,
-			String lastChecked) {
+			String lastChecked)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_BEER_OF_THE_DAY_NOTIFICATION_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
@@ -1403,51 +1513,126 @@ public class Util {
 					+ AppConfig.COMMUNITY_LAST_CHECKED_PARAM
 					+ ((lastChecked != null) ? URLEncoder.encode(lastChecked,
 							"UTF-8") : "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 	}
 
-	public static String getUpdateCheckUrl(String currentVersion) {
+	public static String getUpdateCheckUrl(String currentVersion)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_UPDATE_CHECK_Q
 					+ ((currentVersion != null) ? URLEncoder.encode(
 							currentVersion, "UTF-8") : "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getEmailSubscriptionStatusUrl(String userId) {
+	public static String getEmailSubscriptionStatusUrl(String userId)
+	{
 		String url = null;
-		try {
-			url = AppConfig.COMMUNITY_GET_BEERS_URL
+		try
+		{
+			url = AppConfig.COMMUNITY_GET_USER_SERVICE_URL
 					+ AppConfig.COMMUNITY_GET_EMAIL_SUBSCRIPTION_STATUS_Q
 					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+		}
+		return url;
+
+	}
+
+	public static String getCommentPostedEmailSubscriptionStatusUrl(
+			String userId)
+	{
+		String url = null;
+		try
+		{
+			url = AppConfig.COMMUNITY_GET_USER_SERVICE_URL
+					+ AppConfig.COMMUNITY_GET_COMMENT_POSTED_EMAIL_SUBSCRIPTION_STATUS_Q
+					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
+							: "");
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+		}
+		return url;
+
+	}
+
+	public static String getComparablesUrl(String beerId)
+	{
+		String url = null;
+		try
+		{
+			url = AppConfig.COMMUNITY_GET_BEERS_URL
+					+ AppConfig.COMMUNITY_GET_COMPARABLES_Q
+					+ AppConfig.COMMUNITY_BEERID_PARAM
+					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
+							: "");
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+		}
+		return url;
+
+	}
+
+	public static String getRecommendationsUrl(String userId)
+	{
+		String url = null;
+		try
+		{
+			url = AppConfig.COMMUNITY_GET_BEERS_URL
+					+ AppConfig.COMMUNITY_GET_RECOMMENDATIONS_Q
+					+ AppConfig.COMMUNITY_USERID_PARAM
+					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
+							: "");
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
 	public static String updateEmailSubscriptionStatusUrl(String userId,
-			String emailSubscriptionStatus) {
+			String emailSubscriptionStatus)
+	{
 		String url = null;
-		try {
-			url = AppConfig.COMMUNITY_GET_BEERS_URL
+		try
+		{
+			url = AppConfig.COMMUNITY_GET_USER_SERVICE_URL
 					+ AppConfig.COMMUNITY_UPDATE_EMAIL_SUBSCRIPTION_STATUS_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
 					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
@@ -1455,40 +1640,76 @@ public class Util {
 					+ AppConfig.COMMUNITY_EMAIL_SUBSCRIPTION_PARAM
 					+ ((emailSubscriptionStatus != null) ? URLEncoder.encode(
 							emailSubscriptionStatus, "UTF-8") : "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getLocalIpAddress() {
-		try {
+	public static String updateCommentPostedEmailSubscriptionStatusUrl(
+			String userId, String status)
+	{
+		String url = null;
+		try
+		{
+			url = AppConfig.COMMUNITY_GET_USER_SERVICE_URL
+					+ AppConfig.COMMUNITY_UPDATE_COMMENT_POSTED_EMAIL_SUBSCRIPTION_STATUS_Q
+					+ AppConfig.COMMUNITY_USERID_PARAM
+					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
+							: "")
+					+ AppConfig.COMMUNITY_COMMENT_POSTED_EMAIL_SUBSCRIPTION_PARAM
+					+ ((status != null) ? URLEncoder.encode(status, "UTF-8")
+							: "");
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+		}
+		return url;
+
+	}
+
+	public static String getLocalIpAddress()
+	{
+		try
+		{
 			for (Enumeration<NetworkInterface> en = NetworkInterface
-					.getNetworkInterfaces(); en.hasMoreElements();) {
+					.getNetworkInterfaces(); en.hasMoreElements();)
+			{
 				NetworkInterface intf = en.nextElement();
 				for (Enumeration<InetAddress> enumIpAddr = intf
-						.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+						.getInetAddresses(); enumIpAddr.hasMoreElements();)
+				{
 					InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress()) {
+					if (!inetAddress.isLoopbackAddress())
+					{
 						return inetAddress.getHostAddress().toString();
 					}
 				}
 			}
-		} catch (SocketException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (SocketException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return "";
 	}
 
 	public static String getAddToFavoritesUrl(String userId, String userName,
-			String userLink, String beerId) {
+			String userLink, String beerId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_ADD_TO_FAVORITES_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
@@ -1503,19 +1724,23 @@ public class Util {
 					+ AppConfig.COMMUNITY_BEERID_PARAM
 					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
 	public static String getRemoveFromFavoritesUrl(String userId,
-			String userName, String userLink, String beerId) {
+			String userName, String userLink, String beerId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_REMOVE_FROM_FAVORITES_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
@@ -1530,49 +1755,81 @@ public class Util {
 					+ AppConfig.COMMUNITY_BEERID_PARAM
 					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getFavoritesUrl(String userId) {
+	public static String getFavoritesUrl(String userId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_FAVORITES_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
 					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getUploadUserProfileUrl() {
+	public static String getCommentsUrl(String beerId)
+	{
+		String url = null;
+		try
+		{
+			url = AppConfig.COMMUNITY_COMMENTS_URL
+					+ AppConfig.COMMUNITY_GET_COMMENTS_Q
+					+ AppConfig.COMMUNITY_BEERID_PARAM
+					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
+							: "");
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+		}
+		return url;
+
+	}
+
+	public static String getUploadUserProfileUrl()
+	{
 		return AppConfig.COMMUNITY_GET_USER_SERVICE_URL
 				+ AppConfig.COMMUNITY_UPLOAD_USER_PROFILE_Q;
 	}
 
-	public static String getUserProfileUrl(String userId) {
+	public static String getUserProfileUrl(String userId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_USER_SERVICE_URL
 					+ AppConfig.COMMUNITY_GET_USER_PROFILE_Q
 					+ AppConfig.COMMUNITY_USERID_PARAM
 					+ ((userId != null) ? URLEncoder.encode(userId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
@@ -1581,18 +1838,23 @@ public class Util {
 	/**
 	 * 
 	 */
-	public static void evaluateNotificationService(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(context
-				.getString(R.string.app_name), Activity.MODE_PRIVATE);
+	public static void evaluateNotificationService(Context context)
+	{
+		SharedPreferences preferences = context.getSharedPreferences(
+				context.getString(R.string.app_name), Activity.MODE_PRIVATE);
 		// default all preferences to true
 		if (!preferences
-				.contains(AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS)) {
-			preferences.edit().putBoolean(
-					AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS, true)
-					.commit();
+				.contains(AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS))
+		{
+			preferences
+					.edit()
+					.putBoolean(
+							AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS,
+							true).commit();
 		}
 		if (!preferences
-				.contains(AppConfig.RECEIVE_NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATIONS)) {
+				.contains(AppConfig.RECEIVE_NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATIONS))
+		{
 			preferences
 					.edit()
 					.putBoolean(
@@ -1600,10 +1862,12 @@ public class Util {
 							true).commit();
 		}
 		if (!preferences
-				.contains(AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION)) {
-			preferences.edit().putBoolean(
-					AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION, true)
-					.commit();
+				.contains(AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION))
+		{
+			preferences
+					.edit()
+					.putBoolean(AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION,
+							true).commit();
 		}
 
 		// Start service only if any of the preferences permit
@@ -1614,12 +1878,13 @@ public class Util {
 								AppConfig.RECEIVE_NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATIONS,
 								true))
 				|| (preferences.getBoolean(
-						AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION, true))) {
+						AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION, true)))
+		{
 			Log.i(TAG, "Starting Notification Service...");
-			context
-					.startService(new Intent(context, NotificationService.class));
+			context.startService(new Intent(context, NotificationService.class));
 			Log.i(TAG, "Notification Service Started!");
-		} else {
+		} else
+		{
 			/** Stop the Notification Service **/
 			Log.i(TAG, "Stopping Notification Service...");
 			context.stopService(new Intent(context, NotificationService.class));
@@ -1627,51 +1892,63 @@ public class Util {
 		}
 	}
 
-	public static boolean isValidEmailAddress(String email) {
+	public static boolean isValidEmailAddress(String email)
+	{
 		if (email == null)
 			return false;
 		boolean result = true;
-		if (!hasNameAndDomain(email)) {
+		if (!hasNameAndDomain(email))
+		{
 			result = false;
 		}
 		return result;
 	}
 
-	private static boolean hasNameAndDomain(String email) {
+	private static boolean hasNameAndDomain(String email)
+	{
 		String[] tokens = email.split("@");
-		if (tokens.length == 2) {
+		if (tokens.length == 2)
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public static String getSendTestDailyCampaignUrl(String beerId) {
+	public static String getSendTestDailyCampaignUrl(String beerId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL
 					+ AppConfig.COMMUNITY_SEND_TEST_DAILY_CAMPAIGN_Q
 					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 
 	}
 
-	public static String getSendDailyCampaignUrl(String beerId) {
+	public static String getSendDailyCampaignUrl(String beerId)
+	{
 		String url = null;
-		try {
+		try
+		{
 			url = AppConfig.COMMUNITY_GET_DAILY_CAMPAIGN_SERVICE_URL
 					+ AppConfig.COMMUNITY_SEND_DAILY_CAMPAIGN_Q
 					+ ((beerId != null) ? URLEncoder.encode(beerId, "UTF-8")
 							: "");
-		} catch (UnsupportedEncodingException e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+		} catch (UnsupportedEncodingException e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 		}
 		return url;
 

@@ -366,13 +366,13 @@ public class NotesDbAdapter {
 	 *             if note could not be found/retrieved
 	 */
 	public Cursor fetchNotes(String beer, String rating, String price,
-			String alcohol, String style, String brewery, String state,
+			String alcohol, String style, String BREWERY, String state,
 			String country, String share, int page, int rowsPerPage)
 			throws SQLException {
 
 		Log.i(TAG, "fetchNotes:: beer:" + beer + " rating:" + rating
 				+ " price:" + price + " alcohol:" + alcohol + " style:" + style
-				+ " brewery:" + brewery + " state:" + state + " country:"
+				+ " BREWERY:" + BREWERY + " state:" + state + " country:"
 				+ country + " share:" + share);
 		String limit = String.valueOf((page * rowsPerPage));
 
@@ -407,10 +407,10 @@ public class NotesDbAdapter {
 			sbSelectionCriteria.append(style.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
-		if (brewery != null && (!brewery.equals(""))) {
+		if (BREWERY != null && (!BREWERY.equals(""))) {
 			sbSelectionCriteria.append("lower("+KEY_BREWERY+")");
 			sbSelectionCriteria.append(" like '%");
-			sbSelectionCriteria.append(brewery.toLowerCase());
+			sbSelectionCriteria.append(BREWERY.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
 		if (state != null && (!state.equals(""))) {

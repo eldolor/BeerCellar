@@ -203,10 +203,8 @@ public final class Util {
 									try {
 										input.close();
 									} catch (IOException e) {
-										Log.e("Facebook-Util",
-												(e.getMessage() != null) ? e
-														.getMessage().replace(
-																" ", "_") : "",
+										Log.e("Facebook-Util", (e.getMessage()!=null)?
+												e.getMessage().replace(" ", "_"):"",
 												e);
 									}
 							}

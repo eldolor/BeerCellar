@@ -322,7 +322,7 @@ public class ShareOnFacebook extends Activity {
 			brewery = note.getString(note
 					.getColumnIndexOrThrow(NotesDbAdapter.KEY_BREWERY));
 			if (brewery != null && (!brewery.equals(""))) {
-				_sbDescription.append("#Brewery: ");
+				_sbDescription.append("#brewery: ");
 				_sbDescription.append(brewery);
 			}
 

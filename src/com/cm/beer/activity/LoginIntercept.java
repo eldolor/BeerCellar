@@ -29,9 +29,9 @@ import com.cm.beer.config.AppConfig;
 import com.cm.beer.facebook.BaseRequestListener;
 import com.cm.beer.facebook.LoginButton;
 import com.cm.beer.facebook.SessionEvents;
-import com.cm.beer.facebook.SessionStore;
 import com.cm.beer.facebook.SessionEvents.AuthListener;
 import com.cm.beer.facebook.SessionEvents.LogoutListener;
+import com.cm.beer.facebook.SessionStore;
 import com.cm.beer.util.User;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
@@ -145,7 +145,7 @@ public class LoginIntercept extends Activity {
 		if (mFacebook.isSessionValid()) {
 			Log.d(TAG, "onStart::Intercepting!:Facebook Session Valid!");
 			// End the activity; pass back the original extras
-			mMainActivity.setResult(RESULT_OK, mOriginalIntent);
+			mMainActivity.setResult(RESULT_CANCELED, mOriginalIntent);
 			mMainActivity.finish();
 		} else {
 			Log.d(TAG, "onStart::Intercepting!:Facebook Session is NOT Valid!");

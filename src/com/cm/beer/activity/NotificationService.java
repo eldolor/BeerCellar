@@ -36,7 +36,9 @@ public class NotificationService extends Service {
 	Service mService;
 	GoogleAnalyticsTracker mTracker;
 	private SharedPreferences mPreferences;
-	private static Timer mTimer = new Timer();
+	private Timer mNewBeerReviewTimer = new Timer();
+	private Timer mNewBeerReviewFromFollowingTimer = new Timer();
+	private Timer mBeerOfTheDayTimer = new Timer();
 	long mAWeekAgoMillis;
 	String mDeviceId;
 
@@ -63,11 +65,10 @@ public class NotificationService extends Service {
 		mUser = new User(mService);
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
-		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
+				this);
 		mPreferences = getSharedPreferences(getString(R.string.app_name),
 				Activity.MODE_PRIVATE);
-		mPreferences.edit().putLong(AppConfig.NOTIFICATION_CHECK_BACK_LATER_IN,
-				AppConfig.NOTIFICATION_CHECK_INTERVAL).commit();
 		SimpleDateFormat sdf = new SimpleDateFormat("d MMM yyyy hh:mm aaa");
 		Calendar rightNow = Calendar.getInstance();
 		Log
@@ -99,9 +100,12 @@ public class NotificationService extends Service {
 
 	@Override
 	public void onDestroy() {
+		Log.i(TAG, "onDestroy");
 		// Cancel all persistent notifications
 		mNM.cancelAll();
-		mTimer.cancel();
+		mNewBeerReviewTimer.cancel();
+		mNewBeerReviewFromFollowingTimer.cancel();
+		mBeerOfTheDayTimer.cancel();
 		if (!Reflect.service_stopForeground(true, this)) {
 			// Fall back on the old API.
 			setForeground(false);
@@ -110,8 +114,21 @@ public class NotificationService extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		super.onStart(intent, startId);
 		Log.i(TAG, "onStart");
+		handleCommand(intent);
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.i(TAG, "onStartCommand");
+		handleCommand(intent);
+		// We want this service to continue running until it is explicitly
+		// stopped, so return sticky.
+		return START_STICKY;
+	}
+
+	private void handleCommand(Intent intent) {
+		Log.i(TAG, "handleCommand");
 		// default to true
 		if (!mPreferences
 				.contains(AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS)) {
@@ -134,7 +151,10 @@ public class NotificationService extends Service {
 					.commit();
 		}
 
-		scheduleAtFixedRate(AppConfig.NOTIFICATION_CHECK_INTERVAL);
+		scheduleNewBeerReviewTimerAtFixedRate(AppConfig.NOTIFICATION_CHECK_INTERVAL);
+		scheduleNewBeerReviewFromFollowingTimerAtFixedRate(AppConfig.NOTIFICATION_CHECK_INTERVAL);
+		scheduleBeerOfTheDayTimerAtFixedRate(AppConfig.NOTIFICATION_CHECK_INTERVAL);
+
 	}
 
 	public void removeNotification(int notificationId) {
@@ -146,17 +166,18 @@ public class NotificationService extends Service {
 	 * 
 	 * @param period
 	 */
-	private void scheduleAtFixedRate(long period) {
+	private void scheduleNewBeerReviewTimerAtFixedRate(long period) {
 		Log.i(TAG, "startService");
 		try {
-			mTimer.scheduleAtFixedRate(new TimerTask() {
+			mNewBeerReviewTimer.scheduleAtFixedRate(new TimerTask() {
 
 				public void run() {
 					Log.i(TAG, "TimerTask:run()");
 					String notificationLastChecked = String
-							.valueOf(mPreferences.getLong(
-									AppConfig.NOTIFICATION_LAST_CHECKED,
-									mAWeekAgoMillis));
+							.valueOf(mPreferences
+									.getLong(
+											AppConfig.NEW_BEER_REVIEW_NOTIFICATION_LAST_CHECKED,
+											mAWeekAgoMillis));
 					if (mPreferences.getBoolean(
 							AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS,
 							true)) {
@@ -165,19 +186,51 @@ public class NotificationService extends Service {
 										TAG,
 										"TimerTask:run():"
 												+ AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS);
-						String _url1 = Util
-								.getNewBeerReviewsNotificationUrl(notificationLastChecked);
+						String _userId = mUser.getUserId();
+						_userId = ((_userId == null) || (_userId.equals("")) ? ("IMEI|" + mDeviceId)
+								: _userId);
+						String _url1 = Util.getNewBeerReviewsNotificationUrl(
+								_userId, notificationLastChecked);
 						Log.i(TAG, _url1);
 						int notificationId1 = R.string.notification_new_beer_reviews;
 						String message1 = getString(R.string.notification_new_beer_reviews);
-						new AsyncGetNotification().execute(_url1,
+						new AsyncGetNewBeerReviewNotification().execute(_url1,
 								notificationId1, message1);
 					} else {
 						Log
 								.i(TAG,
 										"TimerTask:run():User does not want to receive new beer reviews notifications!");
 					}
-					/************************************/
+				}
+
+			}, 0, period);
+
+			Log.i(TAG, "New Beer Review Timer scheduled at fixed rate: " + period);
+
+		} catch (Throwable e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
+			mTracker.trackEvent("NotificationService", "StartServiceError", ((e
+					.getMessage() != null) ? e.getMessage().replace(" ", "_")
+					: "").replace(" ", "_"), 0);
+			mTracker.dispatch();
+		}
+
+	}
+
+	private void scheduleNewBeerReviewFromFollowingTimerAtFixedRate(long period) {
+		Log.i(TAG, "startService");
+		try {
+			mNewBeerReviewFromFollowingTimer.scheduleAtFixedRate(new TimerTask() {
+
+				public void run() {
+					Log.i(TAG, "TimerTask:run()");
+					String notificationLastChecked = String
+							.valueOf(mPreferences
+									.getLong(
+											AppConfig.NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_LAST_CHECKED,
+											mAWeekAgoMillis));
 					if (mUser.isLoggedIn()) {
 						Log
 								.i(
@@ -195,7 +248,7 @@ public class NotificationService extends Service {
 							Log.i(TAG, _url2);
 							int notificationId2 = R.string.notification_new_beer_reviews_from_following;
 							String message2 = getString(R.string.notification_new_beer_reviews_from_following);
-							new AsyncGetNotification().execute(_url2,
+							new AsyncGetNewBeerReviewFromFollowingNotification().execute(_url2,
 									notificationId2, message2);
 						} else {
 							Log
@@ -211,7 +264,36 @@ public class NotificationService extends Service {
 										"TimerTask:run():User NOT Logged In!:"
 												+ AppConfig.RECEIVE_NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATIONS);
 					}
-					/************************************/
+				}
+
+			}, 0, period);
+
+			Log.i(TAG, "New Beer Review From Following Timer scheduled at fixed rate: " + period);
+
+		} catch (Throwable e) {
+			Log.e(TAG, "error: "
+					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
+							"_") : ""), e);
+			mTracker.trackEvent("NotificationService", "StartServiceError", ((e
+					.getMessage() != null) ? e.getMessage().replace(" ", "_")
+					: "").replace(" ", "_"), 0);
+			mTracker.dispatch();
+		}
+
+	}
+
+	private void scheduleBeerOfTheDayTimerAtFixedRate(long period) {
+		Log.i(TAG, "startService");
+		try {
+			mBeerOfTheDayTimer.scheduleAtFixedRate(new TimerTask() {
+
+				public void run() {
+					Log.i(TAG, "TimerTask:run()");
+					String notificationLastChecked = String
+							.valueOf(mPreferences
+									.getLong(
+											AppConfig.BEER_OF_THE_DAY_NOTIFICATION_LAST_CHECKED,
+											mAWeekAgoMillis));
 					if (mPreferences.getBoolean(
 							AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION,
 							true)) {
@@ -228,7 +310,7 @@ public class NotificationService extends Service {
 						Log.i(TAG, _url);
 						int notificationId = R.string.notification_beer_of_the_day;
 						String message = getString(R.string.notification_beer_of_the_day);
-						new AsyncGetNotification().execute(_url,
+						new AsyncGetBeerOfTheDayNotification().execute(_url,
 								notificationId, message);
 					} else {
 						Log
@@ -240,7 +322,7 @@ public class NotificationService extends Service {
 
 			}, 0, period);
 
-			Log.i(TAG, "Timer scheduled at fixed rate: " + period);
+			Log.i(TAG, "Beer of the Day Timer scheduled at fixed rate: " + period);
 
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -254,26 +336,6 @@ public class NotificationService extends Service {
 
 	}
 
-	/**
-	 * 
-	 */
-	private void resetTimer() {
-		Log.i(TAG, "resetTimer");
-		try {
-			mTimer.cancel();
-			mTimer = new Timer();
-			Log.i(TAG, "Timer Cancelled and new Timer Instantiated!");
-		} catch (Throwable e) {
-			Log.e(TAG, "error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
-			mTracker.trackEvent("NotificationService", "StartServiceError", ((e
-					.getMessage() != null) ? e.getMessage().replace(" ", "_")
-					: "").replace(" ", "_"), 0);
-			mTracker.dispatch();
-		}
-
-	}
 
 	/**
 	 * Show a notification while this service is running.
@@ -337,7 +399,7 @@ public class NotificationService extends Service {
 	}
 
 	/************************************************************************************/
-	private class AsyncGetNotification extends AsyncTask<Object, Void, Object> {
+	private class AsyncGetNewBeerReviewNotification extends AsyncTask<Object, Void, Object> {
 		private JSONArray _mJsonArray = null;
 		private int _mNotificationId;
 		private String _mMessage;
@@ -361,7 +423,7 @@ public class NotificationService extends Service {
 
 					Log.i(TAG, "doInBackground lastChecked=" + _lastChecked);
 					mPreferences.edit().putLong(
-							AppConfig.NOTIFICATION_LAST_CHECKED, _lastChecked)
+							AppConfig.NEW_BEER_REVIEW_NOTIFICATION_LAST_CHECKED, _lastChecked)
 							.commit();
 
 					long _checkBackLaterIn = json.getLong("checkBackLaterIn");
@@ -369,15 +431,16 @@ public class NotificationService extends Service {
 							+ _checkBackLaterIn);
 
 					long _existingCBLIn = mPreferences.getLong(
-							AppConfig.NOTIFICATION_CHECK_BACK_LATER_IN, 0L);
+							AppConfig.NEW_BEER_REVIEW_NOTIFICATION_CHECK_BACK_LATER_IN, 0L);
 
 					if ((_checkBackLaterIn != 0L)
 							&& (_checkBackLaterIn != _existingCBLIn)) {
 						mPreferences.edit().putLong(
-								AppConfig.NOTIFICATION_CHECK_BACK_LATER_IN,
+								AppConfig.NEW_BEER_REVIEW_NOTIFICATION_CHECK_BACK_LATER_IN,
 								_checkBackLaterIn).commit();
-						resetTimer();
-						scheduleAtFixedRate(_checkBackLaterIn);
+						mNewBeerReviewTimer.cancel();
+						mNewBeerReviewTimer  = new Timer();
+						scheduleNewBeerReviewTimerAtFixedRate(_checkBackLaterIn);
 					}
 
 					_mJsonArray = json.getJSONArray("beerIdList");
@@ -390,6 +453,148 @@ public class NotificationService extends Service {
 								" ", "_") : ""), e);
 				mTracker.trackEvent("NotificationService",
 						"AsyncGetNewBeerReviewsNotificationError", ((e
+								.getMessage() != null) ? e.getMessage()
+								.replace(" ", "_") : "").replace(" ", "_"), 0);
+				mTracker.dispatch();
+			}
+
+			Log.i(TAG, "doInBackground finished");
+			return null;
+		}
+
+		protected void onPostExecute(Object result) {
+			Log.i(TAG, "onPostExecute starting");
+			showNotification(_mNotificationId, _mJsonArray, _mMessage);
+			Log.i(TAG, "onPostExecute finished");
+		}
+
+	}
+	/************************************************************************************/
+	private class AsyncGetNewBeerReviewFromFollowingNotification extends AsyncTask<Object, Void, Object> {
+		private JSONArray _mJsonArray = null;
+		private int _mNotificationId;
+		private String _mMessage;
+
+		/**
+		 * 
+		 * @param args
+		 * @return null
+		 */
+		protected Void doInBackground(Object... args) {
+			Log.i(TAG, "doInBackground starting");
+			String url = (String) args[0];
+			_mNotificationId = (Integer) args[1];
+			_mMessage = (String) args[2];
+
+			try {
+				String response[] = Util.getResult(url);
+				if ((response[0] != null) && (response[0].startsWith("{"))) {
+					JSONObject json = new JSONObject(response[0]);
+					long _lastChecked = json.getLong("lastChecked");
+
+					Log.i(TAG, "doInBackground lastChecked=" + _lastChecked);
+					mPreferences.edit().putLong(
+							AppConfig.NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_LAST_CHECKED, _lastChecked)
+							.commit();
+
+					long _checkBackLaterIn = json.getLong("checkBackLaterIn");
+					Log.i(TAG, "doInBackground checkBackLaterIn="
+							+ _checkBackLaterIn);
+
+					long _existingCBLIn = mPreferences.getLong(
+							AppConfig.NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_CHECK_BACK_LATER_IN, 0L);
+
+					if ((_checkBackLaterIn != 0L)
+							&& (_checkBackLaterIn != _existingCBLIn)) {
+						mPreferences.edit().putLong(
+								AppConfig.NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_CHECK_BACK_LATER_IN,
+								_checkBackLaterIn).commit();
+						mNewBeerReviewFromFollowingTimer.cancel();
+						mNewBeerReviewFromFollowingTimer = new Timer();
+						scheduleNewBeerReviewFromFollowingTimerAtFixedRate(_checkBackLaterIn);
+					}
+
+					_mJsonArray = json.getJSONArray("beerIdList");
+					Log.i(TAG, _mJsonArray.length() + " new beer reviews");
+				}
+
+			} catch (Throwable e) {
+				Log.e(TAG, "error: "
+						+ ((e.getMessage() != null) ? e.getMessage().replace(
+								" ", "_") : ""), e);
+				mTracker.trackEvent("NotificationService",
+						"AsyncGetNewBeerReviewsFromFollowingNotificationError", ((e
+								.getMessage() != null) ? e.getMessage()
+								.replace(" ", "_") : "").replace(" ", "_"), 0);
+				mTracker.dispatch();
+			}
+
+			Log.i(TAG, "doInBackground finished");
+			return null;
+		}
+
+		protected void onPostExecute(Object result) {
+			Log.i(TAG, "onPostExecute starting");
+			showNotification(_mNotificationId, _mJsonArray, _mMessage);
+			Log.i(TAG, "onPostExecute finished");
+		}
+
+	}
+	/************************************************************************************/
+	private class AsyncGetBeerOfTheDayNotification extends AsyncTask<Object, Void, Object> {
+		private JSONArray _mJsonArray = null;
+		private int _mNotificationId;
+		private String _mMessage;
+
+		/**
+		 * 
+		 * @param args
+		 * @return null
+		 */
+		protected Void doInBackground(Object... args) {
+			Log.i(TAG, "doInBackground starting");
+			String url = (String) args[0];
+			_mNotificationId = (Integer) args[1];
+			_mMessage = (String) args[2];
+
+			try {
+				String response[] = Util.getResult(url);
+				if ((response[0] != null) && (response[0].startsWith("{"))) {
+					JSONObject json = new JSONObject(response[0]);
+					long _lastChecked = json.getLong("lastChecked");
+
+					Log.i(TAG, "doInBackground lastChecked=" + _lastChecked);
+					mPreferences.edit().putLong(
+							AppConfig.BEER_OF_THE_DAY_NOTIFICATION_LAST_CHECKED, _lastChecked)
+							.commit();
+
+					long _checkBackLaterIn = json.getLong("checkBackLaterIn");
+					Log.i(TAG, "doInBackground checkBackLaterIn="
+							+ _checkBackLaterIn);
+
+					long _existingCBLIn = mPreferences.getLong(
+							AppConfig.BEER_OF_THE_DAY_NOTIFICATION_CHECK_BACK_LATER_IN, 0L);
+
+					if ((_checkBackLaterIn != 0L)
+							&& (_checkBackLaterIn != _existingCBLIn)) {
+						mPreferences.edit().putLong(
+								AppConfig.BEER_OF_THE_DAY_NOTIFICATION_CHECK_BACK_LATER_IN,
+								_checkBackLaterIn).commit();
+						mBeerOfTheDayTimer.cancel();
+						mBeerOfTheDayTimer = new Timer();
+						scheduleBeerOfTheDayTimerAtFixedRate(_checkBackLaterIn);
+					}
+
+					_mJsonArray = json.getJSONArray("beerIdList");
+					Log.i(TAG, _mJsonArray.length() + " new beer reviews");
+				}
+
+			} catch (Throwable e) {
+				Log.e(TAG, "error: "
+						+ ((e.getMessage() != null) ? e.getMessage().replace(
+								" ", "_") : ""), e);
+				mTracker.trackEvent("NotificationService",
+						"AsyncGetBeerOfTheDayNotificationError", ((e
 								.getMessage() != null) ? e.getMessage()
 								.replace(" ", "_") : "").replace(" ", "_"), 0);
 				mTracker.dispatch();

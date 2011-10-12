@@ -20,6 +20,8 @@
 	<string name="title_beer_of_the_day">Beer Cellar: Beer Of The Day</string>
 	<string name="title_login">Log In to Beer Cellar</string>
 	<string name="title_signup">Sign Up for Beer Cellar</string>
+	<string name="title_comparable_beer_reviews">Beer Cellar: You might also like</string>
+	<string name="title_recommended_beer_reviews">Beer Cellar: Recommendations for you</string>
 
 	<!--  End Application Specific Settings -->
 	
@@ -111,6 +113,8 @@
 	<string name="new_version_available_title">New Version Available</string>
 	<string name="new_version_available_message">Please click on Yes to upgrade to the new version.</string>
 	<string name="notification_beer_of_the_day">Beer Of The Day</string>
+	<string name="notification_comparable_beer_reviews">You might also like these reviews</string>
+	<string name="notification_recommended_beer_reviews">Recommendations for you</string>
 	<!-- End Notifications -->
 
 	<!-- Begin Preferences -->
@@ -120,6 +124,7 @@
 	<string name="receive_new_beer_reviews_notification_label">Receive new beer review notifications</string>
 	<string name="receive_beer_of_the_day_notification_label">Receive beer of the day notification</string>
 	<string name="email_subscription_label">Receive emails from Beer Cellar Community</string>
+	<string name="comment_posted_email_subscription_label">Receive emails when someone posts a comment on your beer review</string>
 	<string name="beer_list_rows_per_page_label">Number of Beer Reviews to display</string>
 	<string-array name="beer_list_rows_per_page_options">
 		<item>10</item>
@@ -333,7 +338,7 @@
 	<string name="beer_edit_alcohol_label">Alcohol %:</string>
 	<string name="beer_edit_price_label">Price:</string>
 	<string name="beer_edit_style_label">Style:</string>
-	<string name="beer_edit_brewery_label">Brewery:</string>
+	<string name="beer_edit_brewery_label">brewery:</string>
 	<string name="beer_edit_state_label">State/Province/Region:</string>
 	<string name="beer_edit_country_label">Country:</string>
 	<string name="beer_edit_notes_label">Notes:</string>
@@ -577,12 +582,17 @@
 	<string name="community_beer_alcohol_label">Alcohol %:</string>
 	<string name="community_beer_price_label">Price:</string>
 	<string name="community_beer_style_label">Style:</string>
-	<string name="community_beer_brewery_label">Brewery:</string>
-	<string name="community_beer_brewery_link_label">Brewery Link:</string>
+	<string name="community_beer_brewery_label">brewery:</string>
+	<string name="community_beer_brewery_link_label">brewery Link:</string>
 	<string name="community_beer_state_label">State/Province/Region:</string>
 	<string name="community_beer_country_label">Country:</string>
 	<string name="community_beer_notes_label">Notes:</string>
 
+	<string name="community_beer_comments_label">Comments</string>
+	<string name="community_beer_add_comments_label">Post a Comment</string>
+	<string name="comment_missing_message">Please enter a comment</string>
+	<string name="delete_comment_dialog_title">Delete Comment</string>
+	
 	<string name="community_beer_list_footer_view_label">-- Load More --</string>
 	<string name="community_landing_page_message">http://beercellarcommunity.appspot.com</string>
 
