@@ -51,7 +51,6 @@ import com.cm.beer.transfer.CommunityBeer;
 import com.cm.beer.util.ContentManager;
 import com.cm.beer.util.DrawableManager;
 import com.cm.beer.util.FacebookLikeButtonWebView;
-import com.cm.beer.util.RestClient;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -346,7 +345,7 @@ public class CommunityBeerView extends Activity
 				String _followUrl = Util.getFollowUrl(mUser.getUserId());
 				mContentManager.fetchContentOnThread(_followUrl);
 
-				//new AsyncSetupFacebookLikeButtonTask().execute();
+				// new AsyncSetupFacebookLikeButtonTask().execute();
 
 				Log.i(_TAG, "onActivityResult:");
 			}
@@ -369,7 +368,7 @@ public class CommunityBeerView extends Activity
 				String _favoritesUrl = Util.getFavoritesUrl(mUser.getUserId());
 				mContentManager.fetchContentOnThread(_favoritesUrl);
 
-				//new AsyncSetupFacebookLikeButtonTask().execute();
+				// new AsyncSetupFacebookLikeButtonTask().execute();
 
 				Log.i(_TAG, "onActivityResult:");
 			}
@@ -1426,23 +1425,24 @@ public class CommunityBeerView extends Activity
 			{//
 				/** Translate **/
 				{
-					String baseUrl = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&"
-							+ "&key="
+					String baseUrl = "https://www.googleapis.com/language/translate/v2"
+							+ "?key="
 							+ AppConfig.GOOGLE_API_KEY
-							+ "&hl="
+							+ "&prettyprint=true"
+							+ "&target="
 							+ Locale.getDefault().getLanguage()
 							+ "&userip="
-							+ Util.getLocalIpAddress()
-							+ "&langpair="
-							+ "%7C"
-							+ Locale.getDefault().getLanguage();
+							+ Util.getLocalIpAddress();
+					List<TextView> views = new ArrayList<TextView>();
+
 					if (!mColorTE.getText().equals(""))
 					{
 						// String _language = this.languageDetect(mColorTE
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mColorTE);
+						// translate(baseUrl, mColorTE);
+						views.add(mColorTE);
 					}
 					if (!mClarityTE.getText().equals(""))
 					{
@@ -1450,7 +1450,8 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mClarityTE);
+						// translate(baseUrl, mClarityTE);
+						views.add(mClarityTE);
 					}
 					if (!mFoamTE.getText().equals(""))
 					{
@@ -1458,7 +1459,8 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mFoamTE);
+						// translate(baseUrl, mFoamTE);
+						views.add(mFoamTE);
 					}
 					if (!mAromaTE.getText().equals(""))
 					{
@@ -1466,7 +1468,8 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mAromaTE);
+						// translate(baseUrl, mAromaTE);
+						views.add(mAromaTE);
 					}
 					if (!mBodyTE.getText().equals(""))
 					{
@@ -1474,7 +1477,8 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mBodyTE);
+						// translate(baseUrl, mBodyTE);
+						views.add(mColorTE);
 					}
 					if (!mMouthfeelTE.getText().equals(""))
 					{
@@ -1482,7 +1486,8 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mMouthfeelTE);
+						// translate(baseUrl, mMouthfeelTE);
+						views.add(mMouthfeelTE);
 					}
 					if (!mAftertasteTE.getText().equals(""))
 					{
@@ -1490,7 +1495,8 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mAftertasteTE);
+						// translate(baseUrl, mAftertasteTE);
+						views.add(mAftertasteTE);
 					}
 
 					if (!mBeer.getText().equals(""))
@@ -1500,7 +1506,8 @@ public class CommunityBeerView extends Activity
 						// .toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mBeer);
+						// translate(baseUrl, mBeer);
+						views.add(mBeer);
 					}
 					if (!mStyle.getText().equals(""))
 					{
@@ -1509,7 +1516,8 @@ public class CommunityBeerView extends Activity
 						// .toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mStyle);
+						// translate(baseUrl, mStyle);
+						views.add(mColorTE);
 					}
 					if (!mBrewery.getText().equals(""))
 					{
@@ -1517,7 +1525,8 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mBrewery);
+						// translate(baseUrl, mBrewery);
+						views.add(mBrewery);
 					}
 					if (!mState.getText().equals(""))
 					{
@@ -1526,7 +1535,8 @@ public class CommunityBeerView extends Activity
 						// .toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mState);
+						// translate(baseUrl, mState);
+						views.add(mState);
 					}
 					if (!mCountry.getText().equals(""))
 					{
@@ -1534,7 +1544,8 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mCountry);
+						// translate(baseUrl, mCountry);
+						views.add(mCountry);
 					}
 					if (!mNotes.getText().equals(""))
 					{
@@ -1543,7 +1554,8 @@ public class CommunityBeerView extends Activity
 						// .toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mNotes);
+						// translate(baseUrl, mNotes);
+						views.add(mNotes);
 					}
 					if (!mReviewedBy.getText().equals(""))
 					{
@@ -1551,16 +1563,19 @@ public class CommunityBeerView extends Activity
 						// .getText().toString());
 						// String _url = baseUrl + "&langpair=" + _language
 						// + "%7C" + Locale.getDefault().getLanguage();
-						translate(baseUrl, mReviewedBy);
+						// translate(baseUrl, mReviewedBy);
+						views.add(mReviewedBy);
 					}
 					// comments
 					for (Iterator<TextView> iterator = mCommentTextViews
 							.iterator(); iterator.hasNext();)
 					{
 						TextView textView = iterator.next();
-						translate(baseUrl, textView);
+						// translate(baseUrl, textView);
+						views.add(textView);
 					}
 
+					translate(baseUrl, views);
 				}
 
 			} catch (Throwable e)
@@ -1581,6 +1596,7 @@ public class CommunityBeerView extends Activity
 			return null;
 		}
 
+		@Deprecated
 		private String languageDetect(String languageHint) throws Exception
 		{
 			/** Detect the language **/
@@ -1616,6 +1632,7 @@ public class CommunityBeerView extends Activity
 
 		}
 
+		@Deprecated
 		private void translate(String url, final TextView textView)
 		{
 			try
@@ -1639,8 +1656,8 @@ public class CommunityBeerView extends Activity
 
 				JSONObject json = new JSONObject(builder.toString());
 				Log.i(_TAG, json.toString());
-				JSONObject responseData = json.getJSONObject("responseData");
-				final String _translatedText = responseData
+				JSONArray responseData = json.getJSONArray("translations");
+				final String _translatedText = responseData.getJSONObject(0)
 						.getString("translatedText");
 
 				mMainActivity.runOnUiThread(new Runnable()
@@ -1650,6 +1667,65 @@ public class CommunityBeerView extends Activity
 						textView.setText(_translatedText);
 					}
 				});
+
+			} catch (Throwable e)
+			{
+				Log.e(_TAG,
+						"error: "
+								+ ((e.getMessage() != null) ? e.getMessage()
+										.replace(" ", "_") : ""), e);
+				mTracker.trackEvent("CommunityBeerView",
+						"TranslateFinishError", ((e.getMessage() != null) ? e
+								.getMessage().replace(" ", "_") : "").replace(
+								" ", "_"), 0);
+				mTracker.dispatch();
+			}
+
+		}
+
+		private void translate(String url, final List<TextView> views)
+		{
+			try
+			{
+				StringBuilder q = new StringBuilder();
+				for (TextView view : views)
+				{
+					q.append("&q=");
+					q.append(URLEncoder.encode(((String) view.getText()),
+							"UTF-8"));
+				}
+				URL _url = new URL(url + q.toString());
+				Log.i(_TAG, url.toString());
+				URLConnection connection = _url.openConnection();
+				connection.addRequestProperty("Referer",
+						AppConfig.GOOGLE_TRANSLATE_REFERER);
+				String line;
+				StringBuilder builder = new StringBuilder();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(connection.getInputStream()));
+				while ((line = reader.readLine()) != null)
+				{
+					builder.append(line);
+				}
+
+				JSONObject json = new JSONObject(builder.toString());
+				Log.i(_TAG, json.toString());
+				JSONArray responseData = json.getJSONObject("data")
+						.getJSONArray("translations");
+				for (int i = 0; i < views.size(); i++)
+				{
+					final TextView view = views.get(i);
+					final String _translatedText = responseData
+							.getJSONObject(i).getString("translatedText");
+					mMainActivity.runOnUiThread(new Runnable()
+					{
+						public void run()
+						{
+							view.setText(_translatedText);
+						}
+					});
+
+				}
 
 			} catch (Throwable e)
 			{
@@ -1812,26 +1888,19 @@ public class CommunityBeerView extends Activity
 			try
 			{
 				// execute only if not present
-/*				if (mShortenedFacebookLikeHrefUrl == null)
-				{
-					String longUrl = AppConfig.FACEBOOK_LIKE_HREF_URL
-							+ mCommunityBeer.beerId;
-					JSONObject json = new JSONObject();
-					json.put("longUrl", longUrl);
-					// shorten the url
-					String response = RestClient.doPost(
-							AppConfig.GOOGLE_URL_SHORTENER_URL + "?key="
-									+ AppConfig.GOOGLE_API_KEY,
-							"application/json", json.toString());
-					if ((response != null) && (response.startsWith("{")))
-					{
-						Log.d(_TAG, "Shortened URL: " + response);
-						JSONObject shortUrlJson = new JSONObject(response);
-						mShortenedFacebookLikeHrefUrl = shortUrlJson
-								.getString("id");
-					}
-				}
-*/
+				/*
+				 * if (mShortenedFacebookLikeHrefUrl == null) { String longUrl =
+				 * AppConfig.FACEBOOK_LIKE_HREF_URL + mCommunityBeer.beerId;
+				 * JSONObject json = new JSONObject(); json.put("longUrl",
+				 * longUrl); // shorten the url String response =
+				 * RestClient.doPost( AppConfig.GOOGLE_URL_SHORTENER_URL +
+				 * "?key=" + AppConfig.GOOGLE_API_KEY, "application/json",
+				 * json.toString()); if ((response != null) &&
+				 * (response.startsWith("{"))) { Log.d(_TAG, "Shortened URL: " +
+				 * response); JSONObject shortUrlJson = new
+				 * JSONObject(response); mShortenedFacebookLikeHrefUrl =
+				 * shortUrlJson .getString("id"); } }
+				 */
 				String facebookToken = mMainActivity
 						.getSharedPreferences(
 								((AppConfig.SHARED_PREFERENCES_DYNAMIC_CONTEXT.replace(

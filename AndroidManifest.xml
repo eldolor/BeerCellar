@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.cm.beer.activity" android:versionCode="28"
-	android:versionName="Barley_Wine">
+	package="com.cm.beer.activity" android:versionCode="29"
+	android:versionName="Cream_Ale">
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-feature android:name="android.hardware.camera" />
 	<uses-feature android:name="android.hardware.camera.autofocus" />
