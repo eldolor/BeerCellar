@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.cm.beer.activity" android:versionCode="29"
-	android:versionName="Cream_Ale">
+	package="com.cm.beer.activity" android:versionCode="30"
+	android:versionName="Dortmunder">
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-feature android:name="android.hardware.camera" />
 	<uses-feature android:name="android.hardware.camera.autofocus" />
@@ -233,6 +233,9 @@
 				<category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
 			</intent-filter>
 		</activity>
+		<activity android:name="com.google.ads.AdActivity"
+			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
 		<service android:enabled="true" android:name=".NotificationService"></service>
 	</application>
 	<uses-sdk android:minSdkVersion="4" />

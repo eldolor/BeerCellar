@@ -17,12 +17,17 @@ import java.net.SocketException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
@@ -61,59 +66,227 @@ import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.transfer.Beer;
 import com.facebook.android.Facebook;
-import com.google.ads.AdSenseSpec;
-import com.google.ads.AdSenseSpec.AdType;
-import com.google.ads.AdSenseSpec.ExpandDirection;
-import com.google.ads.GoogleAdView;
+import com.google.ads.Ad;
+import com.google.ads.AdListener;
+import com.google.ads.AdRequest;
+import com.google.ads.AdRequest.ErrorCode;
+import com.google.ads.InterstitialAd;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class Util
 {
 	private static String TAG = Util.class.getName();
 
-	public static void setGoogleAdSense(final Activity activity)
+	public static void setGoogleAdSense(Object... args)
 	{
+		Log.i(TAG, "setGoogleAdSense(): Entering");
 		if (AppConfig.IS_BEER_LITE)
 		{
-			GoogleAdView adView = (GoogleAdView) activity
+			Activity activity = (Activity) args[0];
+			// default to AppConfig.KEYWORDS
+			Set<String> keywordsSet = (args.length > 1) ? (Set<String>) args[1]
+					: new HashSet<String>(Arrays.asList(AppConfig.KEYWORDS));
+			StringBuilder keywords = new StringBuilder();
+			for (Iterator<String> iterator = keywordsSet.iterator(); iterator
+					.hasNext();)
+			{
+				keywords.append(iterator.next());
+				keywords.append(", ");
+			}
+			Log.i(TAG, "setGoogleAdSense(): Keywords: " + keywords.toString());
+			final com.google.ads.AdView adView = (com.google.ads.AdView) activity
 					.findViewById(R.id.google_adview);
-			adView.setVisibility(View.VISIBLE);
-			// Set up GoogleAdView.
-			AdSenseSpec adSenseSpec = new AdSenseSpec(AppConfig.CLIENT_ID) // Specify
-					// client
-					// ID.
-					// (Required)
-					.setCompanyName(AppConfig.COMPANY_NAME) // Set company name.
-					// (Required)
-					.setAppName(AppConfig.APP_NAME) // Set application name.
-					// (Required)
-					.setKeywords(AppConfig.KEYWORDS) // Specify keywords.
-					.setChannel(AppConfig.BEER_CELLAR_LITE_CHANNEL_ID) // Set
-					// channel
-					// ID.
-					.setAdType(AdType.TEXT_IMAGE) // Set ad type .
-					.setAdTestEnabled(AppConfig.AD_TEST_ENABLED) // Keep true
-					// while
-					.setExpandDirection(ExpandDirection.TOP); // we placed our
-			// ad at
-			// the bottom and
-			// expected it to
-			// expand upwards
-			// testing.
-
-			// If application content is equivalent to an existing website URL
-			// then
-			// set:
-			// adSenseSpec.setWebEquivalentUrl(url) to improve ad targeting.
-
-			// Fetch Google ad.
-			// PLEASE DO NOT CLICK ON THE AD UNLESS YOU ARE IN TEST MODE.
-			// OTHERWISE, YOUR ACCOUNT MAY BE DISABLED.
 			if (adView != null)
 			{
-				adView.showAds(adSenseSpec);
+				AdRequest adRequest = new AdRequest();
+				adRequest.setKeywords(keywordsSet);
+				adRequest.setLocation(Util.getLocation(activity));
+				if (AppConfig.ADMOB_TEST_EMULATOR)
+				{
+					adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
+				}
+				adView.setAdListener(new AdListener()
+				{
+
+					/*
+					 * Called when the full-screen Activity presented with
+					 * onPresentScreen has been dismissed and control is
+					 * returning to your app. (non-Javadoc)
+					 * 
+					 * @see
+					 * com.google.ads.AdListener#onDismissScreen(com.google.
+					 * ads.Ad)
+					 */
+					public void onDismissScreen(Ad arg0)
+					{
+						Log.i(TAG, "setGoogleAdSense(): onDismissScreen");
+					}
+
+					/*
+					 * Sent when loadAd has failed, typically because of network
+					 * failure, an application configuration error, or a lack of
+					 * ad inventory. You may wish to log these events for
+					 * debugging (non-Javadoc)
+					 * 
+					 * @see
+					 * com.google.ads.AdListener#onFailedToReceiveAd(com.google.
+					 * ads.Ad, com.google.ads.AdRequest.ErrorCode)
+					 */
+					public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1)
+					{
+						Log.w(TAG, "setGoogleAdSense(): onFailedToReceiveAd");
+					}
+
+					/*
+					 * Called when an Ad touch will launch a new application.
+					 * (non-Javadoc)
+					 * 
+					 * @see
+					 * com.google.ads.AdListener#onLeaveApplication(com.google
+					 * .ads .Ad)
+					 */
+					public void onLeaveApplication(Ad arg0)
+					{
+						Log.i(TAG, "setGoogleAdSense(): onLeaveApplication");
+					}
+
+					/*
+					 * Called when an Activity is created in front of your app,
+					 * presenting the user with a full-screen ad UI in response
+					 * to their touching ad. (non-Javadoc)
+					 * 
+					 * @see
+					 * com.google.ads.AdListener#onPresentScreen(com.google.
+					 * ads.Ad)
+					 */
+					public void onPresentScreen(Ad arg0)
+					{
+						Log.i(TAG, "setGoogleAdSense(): onPresentScreen");
+					}
+
+					/*
+					 * Sent when AdView.loadAd has succeeded (non-Javadoc)
+					 * 
+					 * @see
+					 * com.google.ads.AdListener#onReceiveAd(com.google.ads.Ad)
+					 */
+					public void onReceiveAd(Ad arg0)
+					{
+						Log.i(TAG, "setGoogleAdSense(): onReceiveAd");
+					}
+				});
+				adView.loadAd(adRequest);
+				adView.setVisibility(View.VISIBLE);
 			}
+		} else
+		{
+			Log.i(TAG, "setGoogleAdSense(): Is not Beer Cellar Lite!");
 		}
+		Log.i(TAG, "setGoogleAdSense(): Exiting");
+
+	}
+
+	public static void loadInterstitialAd(Object... args)
+	{
+		Log.i(TAG, "loadInterstitialAd(): Entering");
+		if (AppConfig.IS_BEER_LITE)
+		{
+			Activity activity = (Activity) args[0];
+			// default to AppConfig.KEYWORDS
+			Set<String> keywordsSet = (args.length > 1) ? (Set<String>) args[1]
+					: new HashSet<String>(Arrays.asList(AppConfig.KEYWORDS));
+			StringBuilder keywords = new StringBuilder();
+			for (Iterator<String> iterator = keywordsSet.iterator(); iterator
+					.hasNext();)
+			{
+				keywords.append(iterator.next());
+				keywords.append(", ");
+			}
+			Log.i(TAG, "loadInterstitialAd(): Keywords: " + keywords.toString());
+			final InterstitialAd interstitial = new InterstitialAd(activity,
+					AppConfig.INTERSTITIAL_UNIT_ID);
+			AdRequest adRequest = new AdRequest();
+			adRequest.setKeywords(keywordsSet);
+			adRequest.setLocation(Util.getLocation(activity));
+			if (AppConfig.ADMOB_TEST_EMULATOR)
+			{
+				adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
+			}
+			interstitial.setAdListener(new AdListener()
+			{
+
+				/*
+				 * Called when the full-screen Activity presented with
+				 * onPresentScreen has been dismissed and control is returning
+				 * to your app. (non-Javadoc)
+				 * 
+				 * @see
+				 * com.google.ads.AdListener#onDismissScreen(com.google.ads.Ad)
+				 */
+				public void onDismissScreen(Ad arg0)
+				{
+					Log.i(TAG, "loadInterstitialAd(): onDismissScreen");
+				}
+
+				/*
+				 * Sent when loadAd has failed, typically because of network
+				 * failure, an application configuration error, or a lack of ad
+				 * inventory. You may wish to log these events for debugging
+				 * (non-Javadoc)
+				 * 
+				 * @see
+				 * com.google.ads.AdListener#onFailedToReceiveAd(com.google.
+				 * ads.Ad, com.google.ads.AdRequest.ErrorCode)
+				 */
+				public void onFailedToReceiveAd(Ad arg0, ErrorCode arg1)
+				{
+					Log.w(TAG, "loadInterstitialAd(): onFailedToReceiveAd");
+				}
+
+				/*
+				 * Called when an Ad touch will launch a new application.
+				 * (non-Javadoc)
+				 * 
+				 * @see
+				 * com.google.ads.AdListener#onLeaveApplication(com.google.ads
+				 * .Ad)
+				 */
+				public void onLeaveApplication(Ad arg0)
+				{
+					Log.i(TAG, "loadInterstitialAd(): onLeaveApplication");
+				}
+
+				/*
+				 * Called when an Activity is created in front of your app,
+				 * presenting the user with a full-screen ad UI in response to
+				 * their touching ad. (non-Javadoc)
+				 * 
+				 * @see
+				 * com.google.ads.AdListener#onPresentScreen(com.google.ads.Ad)
+				 */
+				public void onPresentScreen(Ad arg0)
+				{
+					Log.i(TAG, "loadInterstitialAd(): onPresentScreen");
+				}
+
+				/*
+				 * Sent when AdView.loadAd has succeeded (non-Javadoc)
+				 * 
+				 * @see com.google.ads.AdListener#onReceiveAd(com.google.ads.Ad)
+				 */
+				public void onReceiveAd(Ad arg0)
+				{
+					Log.i(TAG, "loadInterstitialAd(): onReceiveAd");
+					interstitial.show();
+				}
+			});
+			interstitial.loadAd(adRequest);
+			Log.i(TAG, "loadInterstitialAd(): Load Ad!");
+		} else
+		{
+			Log.i(TAG, "loadInterstitialAd(): Is not Beer Cellar Lite!");
+		}
+		Log.i(TAG, "loadInterstitialAd(): Exiting");
 
 	}
 
@@ -400,6 +573,21 @@ public class Util
 		return note;
 	}
 
+	public static String openUrl(String url, String method,
+			Map<String, String> params) throws MalformedURLException,
+			IOException
+	{
+		ArrayList<HttpParam> _params = new ArrayList<HttpParam>();
+		for (String key : params.keySet())
+		{
+			HttpParam param = new HttpParam();
+			param.name = key;
+			param.value = params.get(key);
+			_params.add(param);
+		}
+		return Util.openUrl(url, method, _params, null);
+	}
+
 	/**
 	 * 
 	 * @param url
@@ -410,8 +598,8 @@ public class Util
 	 * @throws IOException
 	 */
 	public static String openUrl(String url, String method,
-			Map<String, String> params) throws MalformedURLException,
-			IOException
+			List<HttpParam> params, Map<String, String> requestProperties)
+			throws MalformedURLException, IOException
 	{
 
 		String charset = "UTF-8";
@@ -429,17 +617,40 @@ public class Util
 		}
 		HttpURLConnection conn = (HttpURLConnection) new URL(url)
 				.openConnection();
-		conn.setRequestProperty("User-Agent", System.getProperties()
-				.getProperty("http.agent") + " Android");
+		if (requestProperties != null)
+		{
+			for (Iterator<String> iterator = requestProperties.keySet()
+					.iterator(); iterator.hasNext();)
+			{
+				String key = iterator.next();
+				conn.setRequestProperty(key, requestProperties.get(key));
+			}
+		} else
+		{
+			conn.setRequestProperty("User-Agent", System.getProperties()
+					.getProperty("http.agent") + " Android");
+		}
 
 		if (!method.equals("GET"))
 		{
-			if (!params.containsKey("file"))
+			boolean containsFile = false;
+			for (HttpParam httpParam : params)
+			{
+				if (httpParam.name.equalsIgnoreCase("file"))
+				{
+					containsFile = true;
+					break;
+				}
+			}
+			if (!containsFile)
 			{
 				// use method override
 				String encodedUrl = encodeUrl(params);
 				Log.d(TAG, "Encoded URL:" + encodedUrl);
-				params.put("method", method);
+				HttpParam param = new HttpParam();
+				param.name = "method";
+				param.value = method;
+				params.add(param);
 				conn.setRequestMethod("POST");
 				conn.setDoOutput(true);
 				conn.getOutputStream().write(encodedUrl.getBytes(charset));
@@ -471,9 +682,10 @@ public class Util
 				{
 					output = conn.getOutputStream();
 					// write other parameters
-					for (String key : params.keySet())
+					for (HttpParam param : params)
 					{
-						String value = params.get(key);
+						String key = param.name;
+						String value = param.value;
 
 						output.write((CRLF + TWO_HYPHENS + BOUNDARY + CRLF)
 								.getBytes(charset));
@@ -584,21 +796,59 @@ public class Util
 	 * @param parameters
 	 * @return
 	 */
-	public static String encodeUrl(Map<String, String> parameters)
+	public static String encodeUrl(List<HttpParam> parameters)
 	{
 		if (parameters == null)
 			return "";
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
-		for (String key : parameters.keySet())
+
+		for (HttpParam param : parameters)
 		{
 			if (first)
 				first = false;
 			else
 				sb.append("&");
-			sb.append(key + "=" + parameters.get(key));
+			sb.append(param.name + "=" + param.value);
+
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 
+	 * @param activity
+	 * @return
+	 */
+	public static Location getLocation(Activity activity)
+	{
+		Location location = null;
+		String location_context = Context.LOCATION_SERVICE;
+		LocationManager locationManager = (LocationManager) activity
+				.getSystemService(location_context);
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+		criteria.setPowerRequirement(Criteria.POWER_LOW);
+		criteria.setAltitudeRequired(false);
+		criteria.setBearingRequired(false);
+		criteria.setSpeedRequired(false);
+		criteria.setCostAllowed(true);
+
+		try
+		{
+			String bestProvider = locationManager.getBestProvider(criteria,
+					true);
+
+			location = locationManager.getLastKnownLocation(bestProvider);
+		} catch (Throwable e)
+		{
+			Log.e(TAG,
+					"error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+		}
+		return location;
+
 	}
 
 	/**
@@ -641,10 +891,15 @@ public class Util
 					"error: "
 							+ ((e.getMessage() != null) ? e.getMessage()
 									.replace(" ", "_") : ""), e);
-			mTracker.trackEvent("Util", "GetGpsLocation",
-					(e.getMessage() != null) ? e.getMessage().replace(" ", "_")
-							: "".replace(" ", "_"), 0);
-			mTracker.dispatch();
+			if (mTracker != null)
+			{
+				mTracker.trackEvent(
+						"Util",
+						"GetGpsLocation",
+						(e.getMessage() != null) ? e.getMessage().replace(" ",
+								"_") : "".replace(" ", "_"), 0);
+				mTracker.dispatch();
+			}
 		}
 		return gpsLocation;
 	}

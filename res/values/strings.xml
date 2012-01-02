@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-	<!--  Begin Application Specific Settings -->
+	<!--  Begin AdMob Settings -->
+    <string name="admob_ad_unit_id">a14ef4f9ea0b7ca</string>
+	<!--  End AdMob Settings -->
+    
+    	<!--  Begin Application Specific Settings -->
 	<string name="app_name">Beer Cellar</string>
 	<string name="title_beer_list">Beer Cellar: Beer List</string>
 	<string name="title_beer_label">Beer Cellar: Beer Label</string>
@@ -319,7 +323,8 @@
 	<string name="add_to_favorites_label">Favorite</string>
 	<string name="remove_from_favorites_label">Favorite</string>
 	<string name="select_label">Select</string>
-	<!-- End Labels -->
+	<string name="show_location_label">Show Location</string>
+		<!-- End Labels -->
 
 
 	<!--  Begin Beer Edit -->

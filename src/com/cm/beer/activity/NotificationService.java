@@ -83,7 +83,7 @@ public class NotificationService extends Service {
 
 		if (!Reflect.service_startForeground(1, new Notification(), this)) {
 			// Fall back on the old API.
-			setForeground(true);
+			Reflect.service_setForeground(true, this);
 		}
 		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		mDeviceId = telephonyManager.getDeviceId();
@@ -108,7 +108,7 @@ public class NotificationService extends Service {
 		mBeerOfTheDayTimer.cancel();
 		if (!Reflect.service_stopForeground(true, this)) {
 			// Fall back on the old API.
-			setForeground(false);
+			Reflect.service_setForeground(false, this);
 		}
 	}
 

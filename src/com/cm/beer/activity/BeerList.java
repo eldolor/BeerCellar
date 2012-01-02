@@ -145,6 +145,7 @@ public class BeerList extends ListActivity {
 		fillData();
 
 		Util.setGoogleAdSense(this);
+		Util.loadInterstitialAd(this);
 
 	}
 
@@ -660,8 +661,12 @@ public class BeerList extends ListActivity {
 
 		mTracker.trackEvent("BeerList", "ShowLocation", _selection, 0);
 		mTracker.dispatch();
-		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + latitude
-				+ "," + longitude + "?z=" + AppConfig.GOOGLE_MAPS_ZOOM_LEVEL));
+//		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + latitude
+//				+ "," + longitude + "?z=" + AppConfig.GOOGLE_MAPS_ZOOM_LEVEL));
+		Intent i = new Intent(Intent.ACTION_VIEW,
+				Uri.parse("http://maps.google.com/maps?" + "z="
+						+ AppConfig.GOOGLE_MAPS_ZOOM_LEVEL + "&t=m" + "&q=loc:"
+						+ latitude + "," + longitude));
 		startActivity(i);
 	}
 

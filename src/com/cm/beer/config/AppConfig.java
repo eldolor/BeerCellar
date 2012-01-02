@@ -1,15 +1,21 @@
 package com.cm.beer.config;
 
+import java.util.Currency;
+import java.util.Locale;
+
+import com.cm.beer.db.NotesDbAdapter;
+
 import android.os.Environment;
 
-public class AppConfig {
+public class AppConfig
+{
 
 	/** BEGIN: SET TO FALSE FOR PRODUCTION **/
 	public static final boolean EMULATE_LOGIN = false;
-	public static final String EMULATED_USER_ID[] = new String[] { "ElDolor",
-			"UserA", "UserB", "CocoMartini" };
-	public static final String EMULATED_USER_NAME[] = new String[] {
-			"El Dolor", "User A", "User B", "Coco Martini" };
+	public static final String EMULATED_USER_ID[] = new String[]
+	{ "ElDolor", "UserA", "UserB", "CocoMartini" };
+	public static final String EMULATED_USER_NAME[] = new String[]
+	{ "El Dolor", "User A", "User B", "Coco Martini" };
 	public static final String EMULATED_USER_LINK = "http://google.com";
 	public static final String EMULATED_USER_TYPE = "COMMUNITY";
 	public static final String ADMIN_USER_EMAIL_ADDRESS = "anshu.gaind@gmail.com";
@@ -35,7 +41,7 @@ public class AppConfig {
 
 	/** BEGIN: FACEBOOK LIKE BUTTON **/
 	public static final String FACEBOOK_LIKE_URL_BASE = "http://www.facebook.com/plugins/like.php?href=";
-	public static final String FACEBOOK_LIKE_HREF_URL ="http://beercellarcommunity.appspot.com/index.html?beerid=";
+	public static final String FACEBOOK_LIKE_HREF_URL = "http://beercellarcommunity.appspot.com/index.html?beerid=";
 	public static final String FACEBOOK_LIKE_URL_ETC = "&layout=button_count&show_faces=false&width=90&action=like&font&colorscheme=light&height=20";
 	public static final String FACEBOOK_LIKE_URL_LOCALE = "&locale=";
 	public static final String FACEBOOK_LIKE_URL_ACCESS_TOKEN = "&access_token=";
@@ -49,7 +55,7 @@ public class AppConfig {
 	public static final String NEW_BEER_REVIEW_NOTIFICATION_LAST_CHECKED = "NEW_BEER_REVIEW_NOTIFICATION_LAST_CHECKED";
 	public static final String NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_LAST_CHECKED = "NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_LAST_CHECKED";
 	public static final String BEER_OF_THE_DAY_NOTIFICATION_LAST_CHECKED = "BEER_OF_THE_DAY_NOTIFICATION_LAST_CHECKED";
-	
+
 	public static final String NEW_BEER_REVIEW_NOTIFICATION_CHECK_BACK_LATER_IN = "NEW_BEER_REVIEW_NOTIFICATION_CHECK_BACK_LATER_IN";
 	public static final String NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_CHECK_BACK_LATER_IN = "NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_CHECK_BACK_LATER_IN";
 	public static final String BEER_OF_THE_DAY_NOTIFICATION_CHECK_BACK_LATER_IN = "BEER_OF_THE_DAY_NOTIFICATION_CHECK_BACK_LATER_IN";
@@ -58,7 +64,7 @@ public class AppConfig {
 	/** BEGIN: Google Analytics **/
 	public static final String GOOGLE_ANALYTICS_WEB_PROPERTY_ID = "UA-10342197-7";
 	/** END: Google Analytics **/
-	
+
 	public static final String GOOGLE_API_KEY = "AIzaSyBs22hxkOqH0Fp_f4pdhbQTt3XwZBWMOhI";
 
 	/** BEGIN: Google URL Shortener **/
@@ -77,7 +83,8 @@ public class AppConfig {
 	/** END: BEER List **/
 
 	/** BEGIN: Google Translate **/
-//	public static final String GOOGLE_TRANSLATE_API_KEY = "ABQIAAAAVWY7GdKmSqNHmSBZbrO3qhRHMeJCkjT_mOiVypJw08F6FpQ0sBSyt4I80v6TGencZZLgCoGhMOZHNQ";
+	// public static final String GOOGLE_TRANSLATE_API_KEY =
+	// "ABQIAAAAVWY7GdKmSqNHmSBZbrO3qhRHMeJCkjT_mOiVypJw08F6FpQ0sBSyt4I80v6TGencZZLgCoGhMOZHNQ";
 	public static final String GOOGLE_TRANSLATE_REFERER = "http://beercellarcommunity.appspot.com/";
 	/** END: Google Translate **/
 
@@ -102,7 +109,7 @@ public class AppConfig {
 	public static final String PREFERENCE_DO_NOT_SHOW_RATE_AND_REVIEW = "DO_NOT_SHOW_RATE_AND_REVIEW";
 	public static final String PREFERENCE_BEER_LIST_ROWS_PER_PAGE = "BEER_LIST_ROWS_PER_PAGE";
 	public static final String PREFERENCE_RECOMMENDATIONS_LASTRUNDATE = "RECOMMENDATIONS_LASTRUNDATE";
-	
+
 	/** END: PREFERENCES **/
 
 	/** BEGIN: BEER Community **/
@@ -214,8 +221,8 @@ public class AppConfig {
 	public static final String COMMUNITY_COMPARABLE_BEER_REVIEWS = "COMPARABLE_BEER_REVIEWS";
 	public static final String COMMUNITY_RECOMMENDED_BEER_REVIEWS = "RECOMMENDED_BEER_REVIEWS";
 
-	public static final String[] COMMUNITY_OPTIONS = new String[] {
-			"My Profile", "Beers From Around the World", "Top Rated Beers",
+	public static final String[] COMMUNITY_OPTIONS = new String[]
+	{ "My Profile", "Beers From Around the World", "Top Rated Beers",
 			"Worst Beers", "Search Beers", "Beers by Country",
 			"Beers by State/Province/Region", "Favorite Beer Reviews",
 			"My Beer Reviews", "Following", "Followers" };
@@ -245,21 +252,25 @@ public class AppConfig {
 	public static final String YELP_LOGO_URL = "http://www.yelp.com";
 	/** END: YELP **/
 
-	/** BEGIN: Adsense setup **/
-	public static final boolean AD_TEST_ENABLED = false;
-	public static final String CLIENT_ID = "ca-mb-app-pub-0955368542600882";
-	public static final String COMPANY_NAME = "Coconut Martini Inc";
-	public static final String APP_NAME = "Beer Lite";
-	public static final String BEER_CELLAR_LITE_CHANNEL_ID = "6030210181";
-	public static final String KEYWORDS = "beer";
-	/** END: Adsense setup **/
+	/** BEGIN: AdMob setup **/
+	// public static final boolean AD_TEST_ENABLED = false;
+	// public static final String CLIENT_ID = "ca-mb-app-pub-0955368542600882";
+	// public static final String COMPANY_NAME = "Coconut Martini Inc";
+	// public static final String APP_NAME = "Beer Lite";
+	// public static final String BEER_CELLAR_LITE_CHANNEL_ID = "6030210181";
+	public static final String[] KEYWORDS =
+	{ "beer" };
+	public static final String INTERSTITIAL_UNIT_ID = "a14ef4f9ea0b7ca";
+	public static final boolean ADMOB_TEST_EMULATOR = false;
+	/** END: AdMob setup **/
 
 	public static final String ERROR_REPORT_EMAIL = "beercellar@beercellarcommunity.com";
 
 	/** BEGIN: Configurations **/
 	public static int DID_YOU_KNOW_DELAY_MS = 2000;
 	public static final boolean LOGGING_ENABLED = true;
-	public static CharSequence[] DID_YOU_KNOW_MESSAGES = {
+	public static CharSequence[] DID_YOU_KNOW_MESSAGES =
+	{
 			"You can Share Beers in your Beer List with your friends on Facebook",
 			"You can Backup your Beer List to your SD card, and Restore your Beer List from your Backup",
 			"You can find out More Information about your Beers in your Beer List",
@@ -303,9 +314,14 @@ public class AppConfig {
 	/** END: Referenced Urls **/
 
 	/** BEGIN: Seed Data **/
-	public static final String[] SEED_DATA = new String[] { "1",
-			"Chimay Blanche", "8", "9.95", "Trappist beer", "Chimay Brewery",
-			"Chimay", "Belgium", "5.0", "1.jpg",
+	public static final String DEFAULT_CURRENCY_CODE = Currency.getInstance(
+			Locale.getDefault()).getCurrencyCode();
+	public static final String DEFAULT_CURRENCY_SYMBOL = Currency.getInstance(
+			Locale.getDefault()).getSymbol();
+	public static final String[] SEED_DATA = new String[]
+	{ "1", "Chimay Blanche", "8", DEFAULT_CURRENCY_SYMBOL,
+			DEFAULT_CURRENCY_CODE, "9.95", "Trappist beer", "Chimay Brewery",
+			"Chimay", "Belgium", "5.0", "1.jpg", "A really nice beer",
 			String.valueOf(System.currentTimeMillis()),
 			String.valueOf(System.currentTimeMillis()) };
 
@@ -322,7 +338,7 @@ public class AppConfig {
 	/** END: EULA **/
 
 	/** BEGIN: Preferences **/
-	//public static final String PREFERENCES_BEER = "PREFERENCES_BEER";
+	// public static final String PREFERENCES_BEER = "PREFERENCES_BEER";
 	public static final String PREFERENCES_BEER_SEED_DATA_PICTURE_INITIALIZED = "PREFERENCES_BEER_SEED_DATA_PICTURE_INITIALIZED";
 	public static final String PREFERENCES_BEER_SORT_BY = "PREFERENCES_BEER_SORT_BY";
 	/** END: Preferences **/
@@ -343,10 +359,12 @@ public class AppConfig {
 			+ PATH_SEPARATOR
 			+ APPLICATION_PACKAGE
 			+ PATH_SEPARATOR
-			+ "databases" + PATH_SEPARATOR;
+			+ "databases"
+			+ PATH_SEPARATOR;
 	public static String BASE_APP_DIR = Environment
 			.getExternalStorageDirectory().getPath()
-			+ PATH_SEPARATOR + "beercellar";
+			+ PATH_SEPARATOR
+			+ "beercellar";
 	public static String PICTURES_DIR = BASE_APP_DIR + PATH_SEPARATOR
 			+ "pictures";
 	public static String BACKUP_DIR = BASE_APP_DIR + PATH_SEPARATOR + "backup";
@@ -359,7 +377,8 @@ public class AppConfig {
 	/** BEGIN: Facebook **/
 	public static final int FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE = 99;
 	public static final String FACEBOOK_APP_ID = "164683223557190";
-	public static final String[] FACEBOOK_PERMISSIONS = new String[] { "publish_stream, email" };
+	public static final String[] FACEBOOK_PERMISSIONS = new String[]
+	{ "publish_stream, email" };
 	// public static final String[] FACEBOOK_PERMISSIONS_WALL_POST = new
 	// String[] { "publish_stream" };
 	// public static final String[] FACEBOOK_PERMISSIONS_EMAIL = new String[] {
@@ -390,9 +409,10 @@ public class AppConfig {
 	public static final int BUTTON_COLOR_RED = 0xFFff0000;
 	/** END: BUTTON COLOR **/
 
-	public static final String[] BEERS = new String[] {};
-	public static final String[] STYLES = new String[] { "Aged Beer",
-			"American Belgo Style Ale", "American Belgo Style Dark Ale",
+	public static final String[] BEERS = new String[]
+	{};
+	public static final String[] STYLES = new String[]
+	{ "Aged Beer", "American Belgo Style Ale", "American Belgo Style Dark Ale",
 			"American Belgo Style Pale Ale", "American Rye Ale",
 			"American Style Amber Lager", "American Style Amber/Red Ale",
 			"American Style Barley Wine Ale", "American Style Brown Ale",
@@ -480,12 +500,12 @@ public class AppConfig {
 			"Wood and Barrel Aged Pale to Amber Beer",
 			"Wood and Barrel Aged Sour Beer",
 			"Wood and Barrel Aged Strong Beer", "Zozu", "Zutho", "Zwickelbier" };
-	public static final String[] COUNTRIES = new String[] { "Afghanistan",
-			"Albania", "Algeria", "American Samoa", "Andorra", "Angola",
-			"Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina",
-			"Armenia", "Aruba", "Australia", "Austria", "Azerbaijan",
-			"Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
-			"Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
+	public static final String[] COUNTRIES = new String[]
+	{ "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra",
+			"Angola", "Anguilla", "Antarctica", "Antigua and Barbuda",
+			"Argentina", "Armenia", "Aruba", "Australia", "Austria",
+			"Azerbaijan", "Bahrain", "Bangladesh", "Barbados", "Belarus",
+			"Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
 			"Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil",
 			"British Indian Ocean Territory", "British Virgin Islands",
 			"Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cote d'Ivoire",
@@ -537,10 +557,11 @@ public class AppConfig {
 			"Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
 			"Wallis and Futuna", "Western Sahara", "Yemen", "Yugoslavia",
 			"Zambia", "Zimbabwe" };
-	public static final String[] STATES = new String[] {};
+	public static final String[] STATES = new String[]
+	{};
 
-	public static final String[] CURRENCY_COUNTRY = {
-			"United States of America, Dollars", "Albania, Leke",
+	public static final String[] CURRENCY_COUNTRY =
+	{ "United States of America, Dollars", "Albania, Leke",
 			"Afghanistan, Afghanis", "Argentina, Pesos", "Aruba, Guilders",
 			"Australia, Dollars", "Azerbaijan, New Manats", "Bahamas, Dollars",
 			"Barbados, Dollars", "Belarus, Rubles", "Belgium, Euro",
@@ -589,8 +610,8 @@ public class AppConfig {
 			"Uruguay, Pesos", "Uzbekistan, Sums", "Vatican City, Euro",
 			"Venezuela, Bolivares Fuertes", "Vietnam, Dong", "Yemen, Rials",
 			"Zimbabwe, Zimbabwe Dollars" };
-	public static final String[] CURRENCY_SYMBOL = { "\u0024",
-			"\u004c\u0065\u006b", "\u060b", "\u0024", "\u0192", "\u0024",
+	public static final String[] CURRENCY_SYMBOL =
+	{ "\u0024", "\u004c\u0065\u006b", "\u060b", "\u0024", "\u0192", "\u0024",
 			"\u043c\u0430\u043d", "\u0024", "\u0024", "\u0070\u002e", "\u20ac",
 			"\u0042\u005a\u0024", "\u0024", "\u0024\u0062", "\u004b\u004d",
 			"\u0050", "\u043b\u0432", "\u0052\u0024", "\u00a3", "\u0024",
@@ -618,20 +639,20 @@ public class AppConfig {
 			"\u0024\u0055", "\u043b\u0432", "\u20ac", "\u0042\u0073", "\u20ab",
 			"\ufdfc", "\u005a\u0024" };
 
-	public static final String[] CURRENCY_CODE = { "USD", "ALL", "AFN", "ARS",
-			"AWG", "AUD", "AZN", "BSD", "BBD", "BYR", "EUR", "BZD", "BMD",
-			"BOB", "BAM", "BWP", "BGN", "BRL", "GBP", "BND", "KHR", "CAD",
-			"KYD", "CLP", "CNY", "COP", "CRC", "HRK", "CUP", "EUR", "CZK",
-			"DKK", "DOP", "XCD", "EGP", "SVC", "GBP", "EUR", "FKP", "FJD",
-			"EUR", "GHC", "GIP", "EUR", "GTQ", "GGP", "GYD", "EUR", "HNL",
-			"HKD", "HUF", "ISK", "INR", "IDR", "IRR", "EUR", "IMP", "ILS",
-			"EUR", "JMD", "JPY", "JEP", "KZT", "KPW", "KRW", "KGS", "LAK",
-			"LVL", "LBP", "LRD", "CHF", "LTL", "EUR", "MKD", "MYR", "EUR",
-			"MUR", "MXN", "MNT", "MZN", "NAD", "NPR", "ANG", "EUR", "NZD",
-			"NIO", "NGN", "KPW", "NOK", "OMR", "PKR", "PAB", "PYG", "PEN",
-			"PHP", "PLN", "QAR", "RON", "RUB", "SHP", "SAR", "RSD", "SCR",
-			"SGD", "EUR", "SBD", "SOS", "ZAR", "KRW", "EUR", "LKR", "SEK",
-			"CHF", "SRD", "SYP", "TWD", "THB", "TTD", "TRY", "TRL", "TVD",
-			"UAH", "GBP", "USD", "UYU", "UZS", "EUR", "VEF", "VND", "YER",
-			"ZWD" };
+	public static final String[] CURRENCY_CODE =
+	{ "USD", "ALL", "AFN", "ARS", "AWG", "AUD", "AZN", "BSD", "BBD", "BYR",
+			"EUR", "BZD", "BMD", "BOB", "BAM", "BWP", "BGN", "BRL", "GBP",
+			"BND", "KHR", "CAD", "KYD", "CLP", "CNY", "COP", "CRC", "HRK",
+			"CUP", "EUR", "CZK", "DKK", "DOP", "XCD", "EGP", "SVC", "GBP",
+			"EUR", "FKP", "FJD", "EUR", "GHC", "GIP", "EUR", "GTQ", "GGP",
+			"GYD", "EUR", "HNL", "HKD", "HUF", "ISK", "INR", "IDR", "IRR",
+			"EUR", "IMP", "ILS", "EUR", "JMD", "JPY", "JEP", "KZT", "KPW",
+			"KRW", "KGS", "LAK", "LVL", "LBP", "LRD", "CHF", "LTL", "EUR",
+			"MKD", "MYR", "EUR", "MUR", "MXN", "MNT", "MZN", "NAD", "NPR",
+			"ANG", "EUR", "NZD", "NIO", "NGN", "KPW", "NOK", "OMR", "PKR",
+			"PAB", "PYG", "PEN", "PHP", "PLN", "QAR", "RON", "RUB", "SHP",
+			"SAR", "RSD", "SCR", "SGD", "EUR", "SBD", "SOS", "ZAR", "KRW",
+			"EUR", "LKR", "SEK", "CHF", "SRD", "SYP", "TWD", "THB", "TTD",
+			"TRY", "TRL", "TVD", "UAH", "GBP", "USD", "UYU", "UZS", "EUR",
+			"VEF", "VND", "YER", "ZWD" };
 }

@@ -7,10 +7,14 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +31,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,6 +56,7 @@ import com.cm.beer.transfer.CommunityBeer;
 import com.cm.beer.util.ContentManager;
 import com.cm.beer.util.DrawableManager;
 import com.cm.beer.util.FacebookLikeButtonWebView;
+import com.cm.beer.util.HttpParam;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -107,6 +113,8 @@ public class CommunityBeerView extends Activity
 	TextView mMouthfeelTE;
 	TextView mAftertasteTE;
 	Button mTranslate;
+
+	Button mShowLocation;
 
 	DrawableManager mDrawableManager;
 	ContentManager mContentManager;
@@ -189,6 +197,18 @@ public class CommunityBeerView extends Activity
 				+ mCommunityBeer.beerId;
 		mTracker.trackEvent("CommunityBeerView", "View", _selection, 0);
 		mTracker.dispatch();
+	}
+
+	private void setupGoogleAdSense(Set<String> keywords)
+	{
+		HashSet<String> keywordsSet = new HashSet<String>(
+				Arrays.asList(AppConfig.KEYWORDS));
+		if (keywords != null)
+		{
+			keywordsSet.addAll(keywords);
+		}
+		Util.setGoogleAdSense(this, keywordsSet);
+
 	}
 
 	/*
@@ -523,6 +543,10 @@ public class CommunityBeerView extends Activity
 		mAddComments = (Button) findViewById(R.id.add_comments);
 		mAddComments.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
 				PorterDuff.Mode.MULTIPLY);
+		/****************************************/
+		mShowLocation = (Button) findViewById(R.id.show_location);
+		mShowLocation.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
+				PorterDuff.Mode.MULTIPLY);
 
 	}
 
@@ -531,10 +555,8 @@ public class CommunityBeerView extends Activity
 	 */
 	private void populateFields()
 	{
-		if (AppConfig.LOGGING_ENABLED)
-		{
-			Log.i(_TAG, "populateFields");
-		}
+		Log.i(_TAG, "populateFields");
+		HashSet<String> keywords = new HashSet<String>();
 		try
 		{
 
@@ -575,6 +597,7 @@ public class CommunityBeerView extends Activity
 			}
 
 			mBeer.setText(mCommunityBeer.beer);
+			keywords.add(mCommunityBeer.beer);
 			Log.i(_TAG, "populateFields::setting:" + mCommunityBeer.beer);
 			mAlcohol.setText(mCommunityBeer.alcohol);
 			Log.i(_TAG, "populateFields::setting:" + mCommunityBeer.alcohol);
@@ -602,8 +625,10 @@ public class CommunityBeerView extends Activity
 			}
 
 			mStyle.setText(mCommunityBeer.style);
+			keywords.add(mCommunityBeer.style);
 
 			mBrewery.setText(mCommunityBeer.brewery);
+			keywords.add(mCommunityBeer.brewery);
 			Log.i(_TAG, "populateFields::brewery: " + mCommunityBeer.brewery
 					+ " brewery link: " + mCommunityBeer.breweryLink);
 			if ((mCommunityBeer.breweryLink != null)
@@ -634,7 +659,9 @@ public class CommunityBeerView extends Activity
 			}
 
 			mState.setText(mCommunityBeer.state);
+			keywords.add(mCommunityBeer.state);
 			mCountry.setText(mCommunityBeer.country);
+			keywords.add(mCommunityBeer.country);
 			Log.i(_TAG, "populateFields::setting:" + mCommunityBeer.country);
 			String ratingStr = mCommunityBeer.rating;
 			if (ratingStr != null)
@@ -644,7 +671,7 @@ public class CommunityBeerView extends Activity
 			mNotes.setText(mCommunityBeer.notes);
 			try
 			{
-				setCharacteristicsTable();
+				setCharacteristicsTable(keywords);
 			} catch (JSONException e1)
 			{
 				Log.e(_TAG, e1.getMessage(), e1);
@@ -667,11 +694,46 @@ public class CommunityBeerView extends Activity
 				}
 			});
 
+			/*********************************************************/
+			if ((mCommunityBeer.latitude != null)
+					&& (!mCommunityBeer.latitude.equals("0.0")))
+			{
+				if ((mCommunityBeer.longitude != null)
+						&& (!mCommunityBeer.longitude.equals("0.0")))
+				{
+					mShowLocation.setOnClickListener(new OnClickListener()
+					{
+						public void onClick(View v)
+						{
+
+							String latitude = mCommunityBeer.latitude;
+							String longitude = mCommunityBeer.longitude;
+
+							String _selection = latitude + "," + longitude;
+
+							mTracker.trackEvent("CommunityWineView",
+									"ShowLocation", _selection, 0);
+							mTracker.dispatch();
+							Intent i = new Intent(Intent.ACTION_VIEW, Uri
+									.parse("http://maps.google.com/maps?"
+											+ "z="
+											+ AppConfig.GOOGLE_MAPS_ZOOM_LEVEL
+											+ "&t=m" + "&q=loc:" + latitude
+											+ "," + longitude));
+
+							startActivity(i);
+						}
+					});
+					mShowLocation.setVisibility(View.VISIBLE);
+				}
+			}
+			/*********************************************************/
 			setupAddToFavorites();
 			// comments
 			setupCommentsTable();
 
 			setupCommunityIcon();
+			setupGoogleAdSense(keywords);
 
 		} catch (Throwable e)
 		{
@@ -703,7 +765,8 @@ public class CommunityBeerView extends Activity
 
 	}
 
-	private void setCharacteristicsTable() throws JSONException
+	private void setCharacteristicsTable(Set<String> keywords)
+			throws JSONException
 	{
 		if ((mCommunityBeer.characteristics != null)
 				&& mCommunityBeer.characteristics.startsWith("{"))
@@ -719,6 +782,7 @@ public class CommunityBeerView extends Activity
 							.setVisibility(View.VISIBLE);
 					mColorTE.setVisibility(View.VISIBLE);
 					mColorTE.setText(_characteristics.getString("color"));
+					keywords.add(_characteristics.getString("color"));
 				}
 			}
 			if (_characteristics.has("clarity"))
@@ -729,6 +793,7 @@ public class CommunityBeerView extends Activity
 							.setVisibility(View.VISIBLE);
 					mClarityTE.setVisibility(View.VISIBLE);
 					mClarityTE.setText(_characteristics.getString("clarity"));
+					keywords.add(_characteristics.getString("clarity"));
 				}
 			}
 			if (_characteristics.has("foam"))
@@ -739,6 +804,7 @@ public class CommunityBeerView extends Activity
 							.setVisibility(View.VISIBLE);
 					mFoamTE.setVisibility(View.VISIBLE);
 					mFoamTE.setText(_characteristics.getString("foam"));
+					keywords.add(_characteristics.getString("foam"));
 				}
 			}
 			if (_characteristics.has("aroma"))
@@ -751,6 +817,7 @@ public class CommunityBeerView extends Activity
 					{
 						_aromaText.append(", ");
 						_aromaText.append(_aroma.getString(i));
+						keywords.add(_aroma.getString(i));
 					}
 					String _aromaStr = _aromaText.toString();
 					_aromaStr = _aromaStr.replaceFirst(", ", "");
@@ -769,6 +836,7 @@ public class CommunityBeerView extends Activity
 					mMouthfeelTE.setVisibility(View.VISIBLE);
 					mMouthfeelTE.setText(_characteristics
 							.getString("mouthfeel"));
+					keywords.add(_characteristics.getString("mouthfeel"));
 				}
 			}
 			if (_characteristics.has("body"))
@@ -779,6 +847,7 @@ public class CommunityBeerView extends Activity
 							.setVisibility(View.VISIBLE);
 					mBodyTE.setVisibility(View.VISIBLE);
 					mBodyTE.setText(_characteristics.getString("body"));
+					keywords.add(_characteristics.getString("body"));
 				}
 			}
 			if (_characteristics.has("aftertaste"))
@@ -790,6 +859,7 @@ public class CommunityBeerView extends Activity
 					mAftertasteTE.setVisibility(View.VISIBLE);
 					mAftertasteTE.setText(_characteristics
 							.getString("aftertaste"));
+					keywords.add(_characteristics.getString("aftertaste"));
 				}
 			}
 		}
@@ -1687,28 +1757,21 @@ public class CommunityBeerView extends Activity
 		{
 			try
 			{
-				StringBuilder q = new StringBuilder();
+				ArrayList<HttpParam> _params = new ArrayList<HttpParam>();
 				for (TextView view : views)
 				{
-					q.append("&q=");
-					q.append(URLEncoder.encode(((String) view.getText()),
-							"UTF-8"));
+					HttpParam param = new HttpParam();
+					param.name = "q";
+					param.value = URLEncoder.encode(((String) view.getText()),
+							"UTF-8");
+					_params.add(param);
 				}
-				URL _url = new URL(url + q.toString());
-				Log.i(_TAG, url.toString());
-				URLConnection connection = _url.openConnection();
-				connection.addRequestProperty("Referer",
-						AppConfig.GOOGLE_TRANSLATE_REFERER);
-				String line;
-				StringBuilder builder = new StringBuilder();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(connection.getInputStream()));
-				while ((line = reader.readLine()) != null)
-				{
-					builder.append(line);
-				}
-
-				JSONObject json = new JSONObject(builder.toString());
+				HashMap<String, String> requestProperties = new HashMap<String, String>();
+				requestProperties.put("X-HTTP-Method-Override", "GET");
+				String response = Util.openUrl(url, "POST", _params,
+						requestProperties);
+				Log.i(_TAG, "Response: " + response);
+				JSONObject json = new JSONObject(response);
 				Log.i(_TAG, json.toString());
 				JSONArray responseData = json.getJSONObject("data")
 						.getJSONArray("translations");

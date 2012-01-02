@@ -75,6 +75,7 @@ public class AroundMe extends ListActivity {
 				getString(R.string.around_me_progress_searching_message), true,
 				true);
 
+		Util.setGoogleAdSense(this);
 	}
 
 	/*

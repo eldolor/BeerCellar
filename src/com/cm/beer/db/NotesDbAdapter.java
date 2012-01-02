@@ -21,7 +21,8 @@ import com.cm.beer.util.Util;
  * of using a collection of inner classes (which is less scalable and not
  * recommended).
  */
-public class NotesDbAdapter {
+public class NotesDbAdapter
+{
 	static String TAG = "Beer::NotesDbAdapter";
 
 	public static final String KEY_ROWID = "_id";
@@ -88,15 +89,18 @@ public class NotesDbAdapter {
 
 	private static final String INSERT_SEED_DATA_SQL = "Insert into "
 			+ DATABASE_TABLE + "(" + KEY_ROWID + "," + KEY_BEER + ","
-			+ KEY_ALCOHOL + "," + KEY_PRICE + "," + KEY_STYLE + ","
-			+ KEY_BREWERY + "," + KEY_STATE + "," + KEY_COUNTRY + ","
-			+ KEY_RATING + "," + KEY_PICTURE + "," + KEY_CREATED + ","
-			+ KEY_UPDATED + ") values(?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ KEY_ALCOHOL + "," + KEY_CURRENCY_SYMBOL + "," + KEY_CURRENCY_CODE
+			+ "," + KEY_PRICE + "," + KEY_STYLE + "," + KEY_BREWERY + ","
+			+ KEY_STATE + "," + KEY_COUNTRY + "," + KEY_RATING + ","
+			+ KEY_PICTURE + "," + KEY_NOTES + "," + KEY_CREATED + ","
+			+ KEY_UPDATED + ") values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private final Context mCtx;
 
-	private static class DatabaseHelper extends SQLiteOpenHelper {
+	private static class DatabaseHelper extends SQLiteOpenHelper
+	{
 
-		DatabaseHelper(Context context) {
+		DatabaseHelper(Context context)
+		{
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
 			Log.i(TAG, "DatabaseHelper");
@@ -104,7 +108,8 @@ public class NotesDbAdapter {
 		}
 
 		@Override
-		public void onCreate(SQLiteDatabase db) {
+		public void onCreate(SQLiteDatabase db)
+		{
 			Log.i(TAG, "DatabaseHelper::onCreate");
 			db.execSQL(DATABASE_CREATE);
 			Log.i(TAG, "DatabaseHelper::onCreate: Database " + DATABASE_TABLE
@@ -114,18 +119,22 @@ public class NotesDbAdapter {
 		}
 
 		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+		{
 			Log.i(TAG, "DatabaseHelper::onUpgrade");
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion);
 			db.execSQL(DATABASE_CREATE);
 			Log.i(TAG, "DatabaseHelper::onUpgrade: Database " + DATABASE_TABLE
 					+ " created");
-			if (oldVersion == 1) {
+			if (oldVersion == 1)
+			{
 				Util.onUpgradeToV4FromV1(db);
-			} else if (oldVersion == 2) {
+			} else if (oldVersion == 2)
+			{
 				Util.onUpgradeToV4FromV2(db);
-			} else if (oldVersion == 3) {
+			} else if (oldVersion == 3)
+			{
 				Util.onUpgradeToV4FromV3(db);
 			}
 			Log.i(TAG, "DatabaseHelper::onUpgrade: Data imported");
@@ -140,7 +149,8 @@ public class NotesDbAdapter {
 	 * @param ctx
 	 *            the Context within which to work
 	 */
-	public NotesDbAdapter(Context ctx) {
+	public NotesDbAdapter(Context ctx)
+	{
 		Log.i(TAG, "NotesDbAdapter");
 		this.mCtx = ctx;
 	}
@@ -155,7 +165,8 @@ public class NotesDbAdapter {
 	 * @throws SQLException
 	 *             if the database could be neither opened or created
 	 */
-	public NotesDbAdapter open() throws SQLException {
+	public NotesDbAdapter open() throws SQLException
+	{
 
 		Log.i(TAG, "open");
 
@@ -168,16 +179,19 @@ public class NotesDbAdapter {
 	 * 
 	 * @return SQLiteDatabase
 	 */
-	public SQLiteDatabase getDatabase() {
+	public SQLiteDatabase getDatabase()
+	{
 		this.open();
 		return this.mDb;
 	}
 
-	public void close() {
+	public void close()
+	{
 
 		Log.i(TAG, "close");
 
-		if (mDbHelper != null) {
+		if (mDbHelper != null)
+		{
 			mDbHelper.close();
 		}
 	}
@@ -189,7 +203,8 @@ public class NotesDbAdapter {
 	 * 
 	 * @return rowId or -1 if failed
 	 */
-	public long createNote(Note note) {
+	public long createNote(Note note)
+	{
 
 		Log.i(TAG, "createNote");
 
@@ -205,10 +220,10 @@ public class NotesDbAdapter {
 		initialValues.put(KEY_RATING, note.rating.trim());
 		initialValues.put(KEY_NOTES, note.notes.trim());
 		initialValues.put(KEY_PICTURE, note.picture.trim());
-		initialValues.put(KEY_CREATED, String.valueOf(System
-				.currentTimeMillis()));
-		initialValues.put(KEY_UPDATED, String.valueOf(System
-				.currentTimeMillis()));
+		initialValues.put(KEY_CREATED,
+				String.valueOf(System.currentTimeMillis()));
+		initialValues.put(KEY_UPDATED,
+				String.valueOf(System.currentTimeMillis()));
 		/** New columns for Version 2 **/
 		initialValues.put(KEY_SHARE, note.share.trim());
 		initialValues.put(KEY_LATITUDE, note.latitude.trim());
@@ -234,7 +249,8 @@ public class NotesDbAdapter {
 	 *            id of note to delete
 	 * @return true if deleted, false otherwise
 	 */
-	public boolean deleteNote(long rowId) {
+	public boolean deleteNote(long rowId)
+	{
 
 		Log.i(TAG, "deleteNote");
 
@@ -246,12 +262,13 @@ public class NotesDbAdapter {
 	 * 
 	 * @return Cursor over all notes
 	 */
-	public Cursor fetchAllNotes() {
+	public Cursor fetchAllNotes()
+	{
 
 		Log.i(TAG, "fetchAllNotes");
 
-		Cursor cursor = mDb.query(DATABASE_TABLE, new String[] { KEY_ROWID,
-				KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
+		Cursor cursor = mDb.query(DATABASE_TABLE, new String[]
+		{ KEY_ROWID, KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
 				KEY_COUNTRY, KEY_PICTURE, KEY_SHARE, KEY_LATITUDE,
 				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
 				KEY_CHARACTERISTICS, KEY_CURRENCY_CODE, KEY_CURRENCY_SYMBOL },
@@ -264,20 +281,23 @@ public class NotesDbAdapter {
 	 * 
 	 * @return Cursor over all notes
 	 */
-	public Cursor fetchAllNotes(int page, int rowsPerPage) {
+	public Cursor fetchAllNotes(int page, int rowsPerPage)
+	{
 
 		Log.i(TAG, "fetchAllNotes");
 		String limit = String.valueOf((page * rowsPerPage));
 
-		Cursor cursor = mDb.query(DATABASE_TABLE, new String[] { KEY_ROWID,
-				KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
+		Cursor cursor = mDb.query(DATABASE_TABLE, new String[]
+		{ KEY_ROWID, KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
 				KEY_COUNTRY, KEY_PICTURE, KEY_SHARE, KEY_LATITUDE,
 				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
 				KEY_CHARACTERISTICS, KEY_BREWERY_LINK, KEY_CURRENCY_CODE,
 				KEY_CURRENCY_SYMBOL }, null, null, null, null, KEY_UPDATED
 				+ " DESC", limit);
-		if (cursor != null) {
-			if (page > 1) {
+		if (cursor != null)
+		{
+			if (page > 1)
+			{
 				cursor.moveToPosition(((page - 1) * rowsPerPage));
 			}
 		}
@@ -290,19 +310,22 @@ public class NotesDbAdapter {
 	 * 
 	 * @return Cursor over all notes
 	 */
-	public Cursor fetchAllNotes(int page, int rowsPerPage, String sortBy) {
+	public Cursor fetchAllNotes(int page, int rowsPerPage, String sortBy)
+	{
 
 		Log.i(TAG, "fetchAllNotes");
 		String limit = String.valueOf((page * rowsPerPage));
 
-		Cursor cursor = mDb.query(DATABASE_TABLE, new String[] { KEY_ROWID,
-				KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
+		Cursor cursor = mDb.query(DATABASE_TABLE, new String[]
+		{ KEY_ROWID, KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
 				KEY_COUNTRY, KEY_PICTURE, KEY_SHARE, KEY_LATITUDE,
 				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
 				KEY_CHARACTERISTICS, KEY_BREWERY_LINK, KEY_CURRENCY_CODE,
 				KEY_CURRENCY_SYMBOL }, null, null, null, null, sortBy, limit);
-		if (cursor != null) {
-			if (page > 1) {
+		if (cursor != null)
+		{
+			if (page > 1)
+			{
 				cursor.moveToPosition(((page - 1) * rowsPerPage));
 			}
 		}
@@ -315,17 +338,19 @@ public class NotesDbAdapter {
 	 * 
 	 * @return Cursor over all notes
 	 */
-	public Cursor fetchAllNotesData() {
+	public Cursor fetchAllNotesData()
+	{
 
 		Log.i(TAG, "fetchAllNotesData");
 
-		return mDb.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_BEER,
-				KEY_ALCOHOL, KEY_PRICE, KEY_STYLE, KEY_BREWERY, KEY_STATE,
-				KEY_COUNTRY, KEY_RATING, KEY_NOTES, KEY_PICTURE, KEY_CREATED,
-				KEY_UPDATED, KEY_SHARE, KEY_LATITUDE, KEY_LONGITUDE,
-				KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK, KEY_CHARACTERISTICS,
-				KEY_BREWERY_LINK, KEY_CURRENCY_CODE, KEY_CURRENCY_SYMBOL },
-				null, null, null, null, KEY_UPDATED + " DESC");
+		return mDb.query(DATABASE_TABLE, new String[]
+		{ KEY_ROWID, KEY_BEER, KEY_ALCOHOL, KEY_PRICE, KEY_STYLE, KEY_BREWERY,
+				KEY_STATE, KEY_COUNTRY, KEY_RATING, KEY_NOTES, KEY_PICTURE,
+				KEY_CREATED, KEY_UPDATED, KEY_SHARE, KEY_LATITUDE,
+				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
+				KEY_CHARACTERISTICS, KEY_BREWERY_LINK, KEY_CURRENCY_CODE,
+				KEY_CURRENCY_SYMBOL }, null, null, null, null, KEY_UPDATED
+				+ " DESC");
 
 	}
 
@@ -338,20 +363,23 @@ public class NotesDbAdapter {
 	 * @throws SQLException
 	 *             if note could not be found/retrieved
 	 */
-	public Cursor fetchNote(long rowId) throws SQLException {
+	public Cursor fetchNote(long rowId) throws SQLException
+	{
 
 		Log.i(TAG, "fetchNote:id=" + rowId);
 
 		Cursor cursor =
 
-		mDb.query(false, DATABASE_TABLE, new String[] { KEY_ROWID, KEY_BEER,
-				KEY_ALCOHOL, KEY_PRICE, KEY_STYLE, KEY_BREWERY, KEY_STATE,
-				KEY_COUNTRY, KEY_RATING, KEY_NOTES, KEY_PICTURE, KEY_CREATED,
-				KEY_UPDATED, KEY_SHARE, KEY_LATITUDE, KEY_LONGITUDE,
-				KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK, KEY_CHARACTERISTICS,
-				KEY_BREWERY_LINK, KEY_CURRENCY_CODE, KEY_CURRENCY_SYMBOL },
-				KEY_ROWID + "=" + rowId, null, null, null, null, null);
-		if (cursor != null) {
+		mDb.query(false, DATABASE_TABLE, new String[]
+		{ KEY_ROWID, KEY_BEER, KEY_ALCOHOL, KEY_PRICE, KEY_STYLE, KEY_BREWERY,
+				KEY_STATE, KEY_COUNTRY, KEY_RATING, KEY_NOTES, KEY_PICTURE,
+				KEY_CREATED, KEY_UPDATED, KEY_SHARE, KEY_LATITUDE,
+				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
+				KEY_CHARACTERISTICS, KEY_BREWERY_LINK, KEY_CURRENCY_CODE,
+				KEY_CURRENCY_SYMBOL }, KEY_ROWID + "=" + rowId, null, null,
+				null, null, null);
+		if (cursor != null)
+		{
 			cursor.moveToFirst();
 		}
 		return cursor;
@@ -368,7 +396,8 @@ public class NotesDbAdapter {
 	public Cursor fetchNotes(String beer, String rating, String price,
 			String alcohol, String style, String BREWERY, String state,
 			String country, String share, int page, int rowsPerPage)
-			throws SQLException {
+			throws SQLException
+	{
 
 		Log.i(TAG, "fetchNotes:: beer:" + beer + " rating:" + rating
 				+ " price:" + price + " alcohol:" + alcohol + " style:" + style
@@ -377,55 +406,64 @@ public class NotesDbAdapter {
 		String limit = String.valueOf((page * rowsPerPage));
 
 		StringBuilder sbSelectionCriteria = new StringBuilder();
-		if (beer != null && (!beer.equals(""))) {
-			sbSelectionCriteria.append("lower("+KEY_BEER+")");
+		if (beer != null && (!beer.equals("")))
+		{
+			sbSelectionCriteria.append("lower(" + KEY_BEER + ")");
 			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(beer.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
-		if (rating != null && (!rating.equals(""))) {
+		if (rating != null && (!rating.equals("")))
+		{
 			sbSelectionCriteria.append(KEY_RATING);
 			sbSelectionCriteria.append(" = '");
 			sbSelectionCriteria.append(rating);
 			sbSelectionCriteria.append("' and ");
 		}
-		if (price != null && (!price.equals(""))) {
+		if (price != null && (!price.equals("")))
+		{
 			sbSelectionCriteria.append(KEY_PRICE);
 			sbSelectionCriteria.append(" = '");
 			sbSelectionCriteria.append(price);
 			sbSelectionCriteria.append("' and ");
 		}
-		if (alcohol != null && (!alcohol.equals(""))) {
+		if (alcohol != null && (!alcohol.equals("")))
+		{
 			sbSelectionCriteria.append(KEY_ALCOHOL);
 			sbSelectionCriteria.append(" = '");
 			sbSelectionCriteria.append(alcohol);
 			sbSelectionCriteria.append("' and ");
 		}
-		if (style != null && (!style.equals(""))) {
-			sbSelectionCriteria.append("lower("+KEY_STYLE+")");
+		if (style != null && (!style.equals("")))
+		{
+			sbSelectionCriteria.append("lower(" + KEY_STYLE + ")");
 			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(style.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
-		if (BREWERY != null && (!BREWERY.equals(""))) {
-			sbSelectionCriteria.append("lower("+KEY_BREWERY+")");
+		if (BREWERY != null && (!BREWERY.equals("")))
+		{
+			sbSelectionCriteria.append("lower(" + KEY_BREWERY + ")");
 			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(BREWERY.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
-		if (state != null && (!state.equals(""))) {
-			sbSelectionCriteria.append("lower("+KEY_STATE+")");
+		if (state != null && (!state.equals("")))
+		{
+			sbSelectionCriteria.append("lower(" + KEY_STATE + ")");
 			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(state.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
-		if (country != null && (!country.equals(""))) {
-			sbSelectionCriteria.append("lower("+KEY_COUNTRY+")");
+		if (country != null && (!country.equals("")))
+		{
+			sbSelectionCriteria.append("lower(" + KEY_COUNTRY + ")");
 			sbSelectionCriteria.append(" like '%");
 			sbSelectionCriteria.append(country.toLowerCase());
 			sbSelectionCriteria.append("%' and ");
 		}
-		if (share != null && (!share.equals(""))) {
+		if (share != null && (!share.equals("")))
+		{
 			sbSelectionCriteria.append(KEY_SHARE);
 			sbSelectionCriteria.append(" = '");
 			sbSelectionCriteria.append(share);
@@ -437,8 +475,8 @@ public class NotesDbAdapter {
 
 		Log.i(TAG, "selection criteria:" + sSelectionCriteria);
 
-		Cursor cursor = mDb.query(DATABASE_TABLE, new String[] { KEY_ROWID,
-				KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
+		Cursor cursor = mDb.query(DATABASE_TABLE, new String[]
+		{ KEY_ROWID, KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
 				KEY_COUNTRY, KEY_PICTURE, KEY_SHARE, KEY_LATITUDE,
 				KEY_LONGITUDE, KEY_USER_ID, KEY_USER_NAME, KEY_USER_LINK,
 				KEY_CHARACTERISTICS, KEY_BREWERY_LINK, KEY_CURRENCY_CODE,
@@ -461,7 +499,8 @@ public class NotesDbAdapter {
 	 *            value to set note body to
 	 * @return true if the note was successfully updated, false otherwise
 	 */
-	public boolean updateNote(Note note) {
+	public boolean updateNote(Note note)
+	{
 
 		Log.i(TAG, "updateNote");
 
@@ -469,65 +508,86 @@ public class NotesDbAdapter {
 		/*
 		 * Identify deltas
 		 */
-		if ((note.beer != null) && ((!note.beer.equals("")))) {
+		if ((note.beer != null) && ((!note.beer.equals(""))))
+		{
 			args.put(KEY_BEER, note.beer.trim());
 		}
-		if ((note.alcohol != null) && ((!note.alcohol.equals("")))) {
+		if ((note.alcohol != null) && ((!note.alcohol.equals(""))))
+		{
 			args.put(KEY_ALCOHOL, note.alcohol.trim());
 		}
-		if ((note.price != null) && ((!note.price.equals("")))) {
+		if ((note.price != null) && ((!note.price.equals(""))))
+		{
 			args.put(KEY_PRICE, note.price.trim());
 		}
-		if ((note.style != null) && ((!note.style.equals("")))) {
+		if ((note.style != null) && ((!note.style.equals(""))))
+		{
 			args.put(KEY_STYLE, note.style.trim());
 		}
-		if ((note.brewery != null) && ((!note.brewery.equals("")))) {
+		if ((note.brewery != null) && ((!note.brewery.equals(""))))
+		{
 			args.put(KEY_BREWERY, note.brewery.trim());
 		}
-		if ((note.breweryLink != null) && ((!note.breweryLink.equals("")))) {
+		if ((note.breweryLink != null) && ((!note.breweryLink.equals(""))))
+		{
 			args.put(KEY_BREWERY_LINK, note.breweryLink.trim());
 		}
-		if ((note.state != null) && ((!note.state.equals("")))) {
+		if ((note.state != null) && ((!note.state.equals(""))))
+		{
 			args.put(KEY_STATE, note.state.trim());
 		}
-		if ((note.country != null) && ((!note.country.equals("")))) {
+		if ((note.country != null) && ((!note.country.equals(""))))
+		{
 			args.put(KEY_COUNTRY, note.country.trim());
 		}
-		if ((note.rating != null) && ((!note.rating.equals("0.0")))) {
+		if ((note.rating != null) && ((!note.rating.equals("0.0"))))
+		{
 			args.put(KEY_RATING, note.rating.trim());
 		}
-		if ((note.notes != null) && ((!note.notes.equals("")))) {
+		if ((note.notes != null) && ((!note.notes.equals(""))))
+		{
 			args.put(KEY_NOTES, note.notes.trim());
 		}
-		if ((note.picture != null) && ((!note.picture.equals("")))) {
+		if ((note.picture != null) && ((!note.picture.equals(""))))
+		{
 			args.put(KEY_PICTURE, note.picture.trim());
 		}
-		if ((note.share != null) && ((!note.share.equals("")))) {
+		if ((note.share != null) && ((!note.share.equals(""))))
+		{
 			args.put(KEY_SHARE, note.share.trim());
 		}
-		if ((note.latitude != null) && ((!note.latitude.equals("0.0")))) {
+		if ((note.latitude != null) && ((!note.latitude.equals("0.0"))))
+		{
 			args.put(KEY_LATITUDE, note.latitude.trim());
 		}
-		if ((note.longitude != null) && ((!note.longitude.equals("0.0")))) {
+		if ((note.longitude != null) && ((!note.longitude.equals("0.0"))))
+		{
 			args.put(KEY_LONGITUDE, note.longitude.trim());
 		}
-		if ((note.userId != null) && ((!note.userId.equals("")))) {
+		if ((note.userId != null) && ((!note.userId.equals(""))))
+		{
 			args.put(KEY_USER_ID, note.userId.trim());
 		}
-		if ((note.userName != null) && ((!note.userName.equals("")))) {
+		if ((note.userName != null) && ((!note.userName.equals(""))))
+		{
 			args.put(KEY_USER_NAME, note.userName.trim());
 		}
-		if ((note.userLink != null) && ((!note.userLink.equals("")))) {
+		if ((note.userLink != null) && ((!note.userLink.equals(""))))
+		{
 			args.put(KEY_USER_LINK, note.userLink.trim());
 		}
 		if ((note.characteristics != null)
-				&& ((!note.characteristics.equals("")))) {
+				&& ((!note.characteristics.equals(""))))
+		{
 			args.put(KEY_CHARACTERISTICS, note.characteristics.trim());
 		}
-		if ((note.currencyCode != null) && ((!note.currencyCode.equals("")))) {
+		if ((note.currencyCode != null) && ((!note.currencyCode.equals(""))))
+		{
 			args.put(KEY_CURRENCY_CODE, note.currencyCode.trim());
 		}
-		if ((note.currencySymbol != null) && ((!note.currencySymbol.equals("")))) {
+		if ((note.currencySymbol != null)
+				&& ((!note.currencySymbol.equals(""))))
+		{
 			args.put(KEY_CURRENCY_SYMBOL, note.currencySymbol.trim());
 		}
 		args.put(KEY_UPDATED, String.valueOf(System.currentTimeMillis()));

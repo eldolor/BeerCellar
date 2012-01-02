@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.util.User;
+import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class CommunityOptions extends ListActivity {
@@ -71,6 +72,7 @@ public class CommunityOptions extends ListActivity {
 		Toast.makeText(this, getString(R.string.community_description),
 				Toast.LENGTH_LONG).show();
 
+		Util.setGoogleAdSense(this);
 	}
 
 	@Override

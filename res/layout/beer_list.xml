@@ -1,22 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content" android:layout_height="wrap_content">
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_above="@+id/google_adview"
-		android:layout_alignParentTop="true">
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+ 
+    <!-- GoogleAdView -->
+    <com.google.ads.AdView
+        android:id="@+id/google_adview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/admob_ad_unit_id"
+        android:visibility="gone" />
 
-		<ListView android:id="@+id/android:list"
-			android:layout_marginTop="10dp" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" />
-		<TextView android:id="@+id/android:empty"
-			android:layout_marginTop="10dp" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:text="@string/no_beers"
-			android:padding="10dp" android:textSize="16sp" android:textStyle="bold" />
-	</LinearLayout>
-	<!-- GoogleAdView -->
-	<com.google.ads.GoogleAdView android:id="@+id/google_adview"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true" android:visibility="gone" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_below="@+id/google_adview" >
+
+        <ListView
+            android:id="@+id/android:list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/android:empty"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:text="@string/no_beers"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </RelativeLayout>
