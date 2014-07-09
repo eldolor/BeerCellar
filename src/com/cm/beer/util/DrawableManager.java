@@ -18,6 +18,7 @@ package com.cm.beer.util;
  specific language governing permissions and limitations
  under the License.    
  */
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
@@ -29,6 +30,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -73,6 +76,7 @@ public class DrawableManager {
 		}
 	}
 
+
 	/**
 	 * 
 	 */
@@ -98,11 +102,10 @@ public class DrawableManager {
 					+ urlString);
 			SoftReference<Drawable> softReference = mDrawableCache
 					.get(urlString);
-			if ((softReference == null) || (softReference.get() == null)) {
+			if ((softReference==null)||(softReference.get() == null)) {
 				mDrawableCache.remove(urlString);
-				Log.d(this.getClass().getName(),
-						"fetchDrawable():Soft Reference has been Garbage Collected:"
-								+ urlString);
+				Log.d(this.getClass().getName(), "fetchDrawable():Soft Reference has been Garbage Collected:"
+						+ urlString);
 			} else {
 				return softReference.get();
 			}
@@ -132,6 +135,63 @@ public class DrawableManager {
 		}
 	}
 
+	
+	/**
+	 * 
+	 * @param urlString
+	 * @return
+	 */
+	public byte[] fetchDrawableAsByteArray(String urlString) {
+		byte[] bitmapdata = null;
+		
+		if (mDrawableCache.containsKey(urlString)) {
+			Log.d(this.getClass().getName(), "Returning Drawable from Cache:"
+					+ urlString);
+			SoftReference<Drawable> softReference = mDrawableCache
+					.get(urlString);
+			if ((softReference==null)||(softReference.get() == null)) {
+				mDrawableCache.remove(urlString);
+				Log.d(this.getClass().getName(), "fetchDrawable():Soft Reference has been Garbage Collected:"
+						+ urlString);
+			} else {
+				Drawable drawable =  softReference.get();
+				Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+				bitmapdata = stream.toByteArray();
+			}
+		}
+
+		Log.d(this.getClass().getName(), "image url:" + urlString);
+		try {
+			// prevents multithreaded fetches for the same image
+			mLockCache.put(urlString, urlString);
+			Log.d(this.getClass().getName(), "Begin Downloading:" + urlString);
+			InputStream is = fetch(urlString);
+			Log.d(this.getClass().getName(), "End Downloading:" + urlString);
+			Drawable drawable = Drawable.createFromStream(is, "src");
+			mDrawableCache
+					.put(urlString, new SoftReference<Drawable>(drawable));
+			mLockCache.remove(urlString);
+			Log.d(this.getClass().getName(), "got a thumbnail drawable: "
+					+ drawable.getBounds() + ", "
+					+ drawable.getIntrinsicHeight() + ","
+					+ drawable.getIntrinsicWidth() + ", "
+					+ drawable.getMinimumHeight() + ","
+					+ drawable.getMinimumWidth());
+			
+			Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+			bitmapdata = stream.toByteArray();
+			
+		} catch (Throwable e) {
+			Log.e(this.getClass().getName(), "fetchDrawable failed", e);
+			return null;
+		}
+		return bitmapdata;
+	}
+
 	/**
 	 * 
 	 * @param urlString
@@ -144,11 +204,10 @@ public class DrawableManager {
 					+ urlString);
 			SoftReference<Drawable> softReference = mDrawableCache
 					.get(urlString);
-			if ((softReference == null) || (softReference.get() == null)) {
+			if ((softReference==null)||(softReference.get() == null)) {
 				mDrawableCache.remove(urlString);
-				Log.d(this.getClass().getName(),
-						"fetchDrawableOnThread():Soft Reference has been Garbage Collected:"
-								+ urlString);
+				Log.d(this.getClass().getName(), "fetchDrawableOnThread():Soft Reference has been Garbage Collected:"
+						+ urlString);
 			} else {
 				imageView.setImageDrawable(softReference.get());
 				return;

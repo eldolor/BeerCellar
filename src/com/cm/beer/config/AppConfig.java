@@ -202,7 +202,7 @@ public class AppConfig
 	public static final String COMMUNITY_COMMENT_POSTED_EMAIL_SUBSCRIPTION_PARAM = "&commentpostedemailsubscriptionstatus=";
 
 	public static final String COMMUNITY_R_PARAM = "&r=";
-	public static final String COMMUNITY_R_VALUE = "10";
+	public static final String COMMUNITY_R_VALUE = "20";
 	public static final String COMMUNITY_R = AppConfig.COMMUNITY_R_PARAM
 			+ AppConfig.COMMUNITY_R_VALUE;
 	public static final String COMMUNITY_BEERS_FROM_AROUND_THE_WORLD = "BEERS_FROM_AROUND_THE_WORLD";
@@ -375,6 +375,11 @@ public class AppConfig
 	/** END: Pictures **/
 
 	/** BEGIN: Facebook **/
+	public static final int FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST = 44798;
+	public static final int FACEBOOK_AUTHORIZE_ACTIVITY_RESULT_CODE = 357111;
+	public static int FACEBOOK_MAX_IMAGE_DIMENSION = 720;
+	public static final String FACEBOOK_HACK_ICON_URL = "http://www.facebookmobileweb.com/hackbook/img/facebook_icon_large.png";
+
 	public static final int FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE = 99;
 	public static final String FACEBOOK_APP_ID = "164683223557190";
 	public static final String[] FACEBOOK_PERMISSIONS = new String[]

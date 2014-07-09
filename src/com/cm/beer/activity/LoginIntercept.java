@@ -94,14 +94,14 @@ public class LoginIntercept extends Activity {
 				: null;
 		mFacebookPermissions = ((extras != null)
 				&& (extras.getStringArray("FACEBOOK_PERMISSIONS") != null) ? extras
-				.getStringArray("FACEBOOK_PERMISSIONS")
-				: new String[] {});
+				.getStringArray("FACEBOOK_PERMISSIONS") : new String[] {});
 		mFacebookOnly = ((extras != null)
 				&& (extras.getString("FACEBOOK_ONLY") != null) ? extras
 				.getString("FACEBOOK_ONLY") : "N");
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
-		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
+				this);
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		}
@@ -123,18 +123,39 @@ public class LoginIntercept extends Activity {
 				}
 			});
 		} else {
-			findViewById(R.id.shareWithCommunityMessage2).setVisibility(View.GONE);
+			findViewById(R.id.shareWithCommunityMessage2).setVisibility(
+					View.GONE);
+			mCommunityLoginButton.setVisibility(View.GONE);
+		}
+
+		if (mFacebookOnly.equals("N")) {
+			mCommunityLoginButton.getBackground().setColorFilter(
+					AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
+			mCommunityLoginButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Log.i(TAG, "mCommunityLoginButton:onClick:userId:");
+					Intent intent = new Intent(mMainActivity,
+							CommunitySignIn.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivityForResult(intent, SIGN_IN_REQUEST);
+				}
+			});
+		} else {
+			findViewById(R.id.shareWithCommunityMessage2).setVisibility(
+					View.GONE);
 			mCommunityLoginButton.setVisibility(View.GONE);
 		}
 
 		mText = (TextView) findViewById(R.id.txt);
 
-		mFacebook = new Facebook();
+		mFacebook = new Facebook(AppConfig.FACEBOOK_APP_ID);
 		mAsyncRunner = new AsyncFacebookRunner(mFacebook);
 		SessionStore.restore(mFacebook, this);
-		SessionEvents.addAuthListener(new BeerAuthListener());
-		SessionEvents.addLogoutListener(new BeerLogoutListener());
-		mLoginButton.init(mFacebook, mFacebookPermissions);
+		SessionEvents.addAuthListener(new WineCellarAuthListener());
+		SessionEvents.addLogoutListener(new WineCellarLogoutListener());
+		mLoginButton.init(this,
+				AppConfig.FACEBOOK_AUTHORIZE_ACTIVITY_RESULT_CODE, mFacebook,
+				mFacebookPermissions);
 
 	}
 
@@ -144,8 +165,9 @@ public class LoginIntercept extends Activity {
 		super.onStart();
 		if (mFacebook.isSessionValid()) {
 			Log.d(TAG, "onStart::Intercepting!:Facebook Session Valid!");
+			mFacebook.extendAccessTokenIfNeeded(this, null);
 			// End the activity; pass back the original extras
-			mMainActivity.setResult(RESULT_CANCELED, mOriginalIntent);
+			mMainActivity.setResult(RESULT_OK, mOriginalIntent);
 			mMainActivity.finish();
 		} else {
 			Log.d(TAG, "onStart::Intercepting!:Facebook Session is NOT Valid!");
@@ -161,12 +183,21 @@ public class LoginIntercept extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
+		Log.d(TAG, "onActivityResult");
 		Bundle extras = (intent != null) ? intent.getExtras() : null;
 		if (requestCode == SIGN_IN_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				mMainActivity.setResult(RESULT_OK, intent);
 				mMainActivity.finish();
 			}
+		} else if (requestCode == AppConfig.FACEBOOK_AUTHORIZE_ACTIVITY_RESULT_CODE) {
+			/**
+			 * IMPORTANT: This method must be invoked at the top of the calling
+			 * activity's onActivityResult() function or Facebook authentication
+			 * will not function properly!
+			 */
+			Log.d(TAG, "authorizeCallback");
+			mFacebook.authorizeCallback(requestCode, resultCode, intent);
 		}
 	}
 
@@ -242,7 +273,7 @@ public class LoginIntercept extends Activity {
 
 	/************************************************************************************/
 
-	public class BeerAuthListener implements AuthListener {
+	public class WineCellarAuthListener implements AuthListener {
 
 		public void onAuthSucceed() {
 			if (AppConfig.LOGGING_ENABLED) {
@@ -252,8 +283,9 @@ public class LoginIntercept extends Activity {
 					0);
 			mTracker.dispatch();
 			// Get user profile data
-			mAsyncRunner.request("me", new Bundle(), "GET",
-					new GetUserProfileRequestListener());
+			// mAsyncRunner.request("me", new Bundle(), "GET",
+			// new GetUserProfileRequestListener());
+			mAsyncRunner.request("me", new GetUserProfileRequestListener());
 
 		}
 
@@ -268,7 +300,7 @@ public class LoginIntercept extends Activity {
 	}
 
 	/************************************************************************************/
-	public class BeerLogoutListener implements LogoutListener {
+	public class WineCellarLogoutListener implements LogoutListener {
 		public void onLogoutBegin() {
 			if (AppConfig.LOGGING_ENABLED) {
 				Log.d(TAG, "VVWLogoutListener: onLogoutBegin");
@@ -302,7 +334,21 @@ public class LoginIntercept extends Activity {
 	/************************************************************************************/
 	public class GetUserProfileRequestListener extends BaseRequestListener {
 
-		public void onComplete(final String response) {
+		private void handleError(Exception e) {
+			Log.e(TAG,
+					"Facebook Error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+			if ((dialog != null) && (dialog.isShowing())) {
+				if (AppConfig.LOGGING_ENABLED) {
+					Log.i(TAG, "onFacebookError: handleError");
+				}
+				removeDialog(ACTIVE_DIALOG);
+			}
+		}
+
+		@Override
+		public void onComplete(String response, Object state) {
 			if (AppConfig.LOGGING_ENABLED) {
 				Log.d(TAG, "GetUserProfileRequestListener: onComplete "
 						+ response.toString());
@@ -312,12 +358,11 @@ public class LoginIntercept extends Activity {
 			try {
 				JSONObject json = Util.parseJson(response);
 
-				mUser.onAuthSucceed(json.getString("id"), json
-						.getString("name"), json.getString("link"),
+				mUser.onAuthSucceed(json.getString("id"),
+						json.getString("name"), json.getString("link"),
 						AppConfig.USER_TYPE_FACEBOOK);
 				final String text = mUser.getUserName() + " "
 						+ mMainActivity.getString(R.string.on_facebook_login);
-
 				mMainActivity.runOnUiThread(new Runnable() {
 					public void run() {
 						if (mText != null) {
@@ -325,7 +370,6 @@ public class LoginIntercept extends Activity {
 						}
 					}
 				});
-
 				try {
 					String email = json.getString("email");
 					Log.i(TAG, "User email: " + email);
@@ -335,19 +379,19 @@ public class LoginIntercept extends Activity {
 							.toString());
 
 					new AsyncUploadUserProfile().execute(mUser.getUserId(),
-							mUser.getUserName(), mUser.getUserLink(), mUser
-									.getAdditionalUserAttributes());
+							mUser.getUserName(), mUser.getUserLink(),
+							mUser.getAdditionalUserAttributes());
 
 				} catch (JSONException e) {
 					Log.e(TAG, "Email address is not available");
 				}
-
 			} catch (JSONException e) {
 				Log.e(TAG, "JSON Error in response");
 			} catch (FacebookError e) {
-				Log.e(TAG, "Facebook Error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""));
+				Log.e(TAG,
+						"Facebook Error: "
+								+ ((e.getMessage() != null) ? e.getMessage()
+										.replace(" ", "_") : ""));
 			}
 
 			if ((dialog != null) && (dialog.isShowing())) {
@@ -363,7 +407,28 @@ public class LoginIntercept extends Activity {
 		}
 
 		@Override
-		public void onFacebookError(FacebookError e) {
+		public void onIOException(IOException e, Object state) {
+			handleError(e);
+			super.onIOException(e);
+		}
+
+		@Override
+		public void onFileNotFoundException(FileNotFoundException e,
+				Object state) {
+			handleError(e);
+			super.onFileNotFoundException(e);
+		}
+
+		@Override
+		public void onMalformedURLException(MalformedURLException e,
+				Object state) {
+			handleError(e);
+			super.onMalformedURLException(e);
+
+		}
+
+		@Override
+		public void onFacebookError(FacebookError e, Object state) {
 			if ((dialog != null) && (dialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
 					Log.i(TAG, "GetWallPostRequestListener: onFacebookError");
@@ -381,36 +446,7 @@ public class LoginIntercept extends Activity {
 				}
 			});
 			super.onFacebookError(e);
-		}
 
-		@Override
-		public void onFileNotFoundException(FileNotFoundException e) {
-			handleError(e);
-			super.onFileNotFoundException(e);
-		}
-
-		@Override
-		public void onIOException(IOException e) {
-			handleError(e);
-			super.onIOException(e);
-		}
-
-		@Override
-		public void onMalformedURLException(MalformedURLException e) {
-			handleError(e);
-			super.onMalformedURLException(e);
-		}
-
-		private void handleError(Exception e) {
-			Log.e(TAG, "Facebook Error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
-			if ((dialog != null) && (dialog.isShowing())) {
-				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "onFacebookError: handleError");
-				}
-				removeDialog(ACTIVE_DIALOG);
-			}
 		}
 
 	}
@@ -485,12 +521,15 @@ public class LoginIntercept extends Activity {
 				Log.i(TAG, "Response = " + response);
 
 			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("LoginIntercept", "UploadUserProfile", ((e
-						.getMessage() != null) ? e.getMessage().replace(" ",
-						"_") : "").replace(" ", "_"), 0);
+				Log.e(TAG,
+						"error: "
+								+ ((e.getMessage() != null) ? e.getMessage()
+										.replace(" ", "_") : ""), e);
+				mTracker.trackEvent(
+						"LoginIntercept",
+						"UploadUserProfile",
+						((e.getMessage() != null) ? e.getMessage().replace(" ",
+								"_") : "").replace(" ", "_"), 0);
 				mTracker.dispatch();
 			}
 			if (AppConfig.LOGGING_ENABLED) {

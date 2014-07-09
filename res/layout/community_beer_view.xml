@@ -14,7 +14,6 @@
         android:visibility="gone" />
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -25,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:textSize="12sp" />
 
@@ -33,20 +32,32 @@
             android:id="@+id/translate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/favorites"
             android:gravity="center_vertical"
             android:text="@string/translate_label" />
+
+        <ImageView
+            android:id="@+id/share_on_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/translate"
+            android:gravity="center_vertical"
+            android:src="@drawable/share_on_facebook"
+            android:visibility="gone" />
 
         <com.cm.beer.util.FacebookLikeButtonWebView
             android:id="@+id/facebook_like_webview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="14dp"
-            android:layout_toRightOf="@+id/translate"
-            android:gravity="center_vertical" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="9dp"
+            android:layout_toRightOf="@+id/share_on_facebook"
+            android:gravity="center_vertical"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <ScrollView
@@ -56,7 +67,6 @@
         android:layout_below="@+id/header" >
 
         <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
 
@@ -89,7 +99,6 @@
                 android:gravity="center_vertical" />
 
             <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/user_profile_header"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -162,12 +171,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical" />
-            <!--
-                 <TextView android:id="@+id/following_reviewer_message" android:layout_width="wrap_content" 
-				android:layout_height="fill_parent" android:layout_below="@+id/follow_reviewer" 
-				android:layout_marginTop="10dp" android:layout_marginLeft="5dp" android:gravity="center_vertical" 
-				android:textSize="18sp" android:visibility="gone" />
-            -->
 
             <TextView
                 android:id="@+id/date_created_label"
@@ -241,7 +244,6 @@
                 android:background="@drawable/divider" />
 
             <TableLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/characteristics_table"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -612,7 +614,6 @@
                 android:background="@drawable/divider" />
 
             <TableLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/comments_table"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -634,7 +635,6 @@
     </ScrollView>
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -644,7 +644,8 @@
             android:id="@+id/community_icon"
             android:layout_width="75dip"
             android:layout_height="75dip"
-            android:src="@drawable/community_button" />
+            android:src="@drawable/community_button"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

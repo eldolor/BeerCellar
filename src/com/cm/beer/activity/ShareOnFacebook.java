@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +18,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +34,8 @@ import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.facebook.BaseRequestListener;
 import com.cm.beer.facebook.SessionStore;
+import com.cm.beer.transfer.CommunityBeer;
+import com.cm.beer.util.DrawableManager;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
@@ -61,6 +65,8 @@ public class ShareOnFacebook extends Activity {
 
 	// Stateful Field
 	Long mRowId;
+	CommunityBeer mCommunityBeer;
+	String mShareType;
 
 	GoogleAnalyticsTracker mTracker;
 
@@ -78,21 +84,11 @@ public class ShareOnFacebook extends Activity {
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
-		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
+				this);
 		if (AppConfig.LOGGING_ENABLED) {
 			Log.i(TAG, "onCreate:Google Tracker Instantiated");
 		}
-
-		Bundle extras = getIntent().getExtras();
-
-		mRowId = extras != null ? extras.getLong(NotesDbAdapter.KEY_ROWID)
-				: null;
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate::_id="
-					+ ((mRowId != null) ? mRowId.longValue() : null));
-		}
-
-		mDescription = setNoteForGraphApi();
 
 		setContentView(R.layout.share_on_facebook);
 		mText = (TextView) findViewById(R.id.txt);
@@ -101,44 +97,85 @@ public class ShareOnFacebook extends Activity {
 				.findViewById(R.id.facebook_post_beer);
 		mThumbnail = (ImageView) ShareOnFacebook.this
 				.findViewById(R.id.thumbnail);
-		setThumbnailView(mThumbnail, String.valueOf(mRowId));
 		mFacebookPostDescription = (TextView) ShareOnFacebook.this
 				.findViewById(R.id.facebook_post_description);
-
-		String _mDescriptionForDisplay = mDescription.replace("#", ", ");
-		_mDescriptionForDisplay = (_mDescriptionForDisplay.length() > 150) ? (_mDescriptionForDisplay
-				.substring(0, 150))
-				+ "..."
-				: _mDescriptionForDisplay;
-
-		mFacebookPostBeer.setText(mName);
-		mFacebookPostDescription.setText(_mDescriptionForDisplay);
 
 		mPostButton = (Button) findViewById(R.id.postButton);
 		mPostButton.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
 				PorterDuff.Mode.MULTIPLY);
 
-		mFacebook = new Facebook();
+		mFacebook = new Facebook(AppConfig.FACEBOOK_APP_ID);
 		mAsyncRunner = new AsyncFacebookRunner(mFacebook);
 		SessionStore.restore(mFacebook, this);
 
+		Bundle extras = getIntent().getExtras();
+		mShareType = extras != null ? extras.getString("SHARE") : "";
+		// default to empty string
+		mShareType = (mShareType!=null)?mShareType:"";
+
 		mPostButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				if (AppConfig.LOGGING_ENABLED) {
-					Log.d(TAG, "mPostButton.setOnClickListener");
+				try {
+					if (AppConfig.LOGGING_ENABLED) {
+						Log.d(TAG, "mPostButton.setOnClickListener");
+					}
+					showDialog(AppConfig.DIALOG_POSTING_ID);
+					Bundle parameters = new Bundle();
+					String _description = mDescription.replace("#", "\n");
+					String _caption = mMessage.getText().toString() + "\n"
+							+ mName + "\n" + _description;
+					parameters.putString("caption", _caption);
+
+					if (mRowId != null) {
+						Uri _photoUri = Uri.parse(AppConfig.PICTURES_DIR
+								+ AppConfig.PATH_SEPARATOR + mRowId
+								+ AppConfig.PICTURES_EXTENSION);
+						parameters.putByteArray("photo", com.cm.beer.util.Util
+								.convertPhotoToByteArray(_photoUri));
+					}
+					// if community wine
+					if (mShareType.equals("COMMUNITY_BEER")) {
+						DrawableManager _drawableManager = DrawableManager
+								.getInstance();
+						byte[] bitmapdata = _drawableManager
+								.fetchDrawableAsByteArray(com.cm.beer.util.Util
+										.getImageUrl(mCommunityBeer.beerId));
+						parameters.putByteArray("photo", bitmapdata);
+					}
+
+					mAsyncRunner.request("me/photos", parameters, "POST",
+							new WallPostRequestListener(), /* state */null);
+				} catch (Exception e) {
+					Log.e(TAG, ((e.getMessage() != null) ? e.getMessage()
+							.replace(" ", "_") : ""), e);
 				}
-				showDialog(AppConfig.DIALOG_POSTING_ID);
-				Bundle parameters = new Bundle();
-				String _mDescription = mDescription.replace("#", "\n");
-				parameters.putString("message", mMessage.getText().toString()
-						+ "\n" + mName + "\n" + _mDescription);
-				parameters.putString("file", AppConfig.PICTURES_DIR
-						+ AppConfig.PATH_SEPARATOR + mRowId
-						+ AppConfig.PICTURES_EXTENSION);
-				mAsyncRunner.request("me/photos", parameters, "POST",
-						new WallPostRequestListener());
 			}
 		});
+
+
+		if (mShareType.equals("COMMUNITY_BEER")) {
+			mCommunityBeer = extras != null ? (CommunityBeer) extras
+					.getSerializable("COMMUNITY_BEER") : null;
+			mDescription = setCommunityBeerForGraphApi();
+			mThumbnail.setImageDrawable(DrawableManager.getInstance()
+					.fetchDrawable(
+							com.cm.beer.util.Util
+									.getImageUrl(mCommunityBeer.beerId)));
+		} else {
+			// default
+			mRowId = extras != null ? extras.getLong(NotesDbAdapter.KEY_ROWID)
+					: null;
+			mDescription = setMyBeerForGraphApi();
+			setThumbnailView(mThumbnail, String.valueOf(mRowId));
+		}
+		Log.i(TAG, "Description: " + mDescription);
+		String _mDescriptionForDisplay = mDescription.replace("#", ", ");
+		_mDescriptionForDisplay = (_mDescriptionForDisplay.length() > 150) ? (_mDescriptionForDisplay
+				.substring(0, 150)) + "..."
+				: _mDescriptionForDisplay;
+		mFacebookPostBeer.setText(mName);
+		mFacebookPostDescription.setText(_mDescriptionForDisplay);
+
 	}
 
 	/*
@@ -269,9 +306,86 @@ public class ShareOnFacebook extends Activity {
 	/**
 	 * 
 	 * @return
+	 */
+	private String setCommunityBeerForGraphApi() {
+		String beer = null, alcohol = null, price = null, style = null, brewery = null, state = null, country = null, notes = null;
+		float rating = 0f;
+
+		StringBuilder _sbDescription = new StringBuilder();
+
+		try {
+
+			beer = mCommunityBeer.beer;
+			if (beer != null && (!beer.equals(""))) {
+				mName = beer;
+			}
+
+			rating = Float.valueOf(mCommunityBeer.rating);
+			if (rating > 0) {
+				String _rating = "Rated " + ((int) rating) + " out of 5";
+				// json.accumulate("caption", _rating);
+				_sbDescription.append(_rating);
+
+			}
+			alcohol = mCommunityBeer.alcohol;
+			if (alcohol != null && (!alcohol.equals(""))) {
+				_sbDescription.append("#Alcohol: ");
+				_sbDescription.append(alcohol + "%");
+			}
+			price = mCommunityBeer.price;
+			if (price != null && (!price.equals(""))) {
+				_sbDescription.append("#Price: ");
+				String _currencySymbol = ((mCommunityBeer.currencySymbol != null) && (!mCommunityBeer.currencySymbol
+						.equals(""))) ? mCommunityBeer.currencySymbol : "";
+				_sbDescription.append(_currencySymbol + " " + price);
+			}
+			style = mCommunityBeer.style;
+			if (style != null && (!style.equals(""))) {
+				_sbDescription.append("#Style: ");
+				_sbDescription.append(style);
+			}
+
+			brewery = mCommunityBeer.brewery;
+			if (brewery != null && (!brewery.equals(""))) {
+				_sbDescription.append("#Brewery: ");
+				_sbDescription.append(brewery);
+			}
+
+			state = mCommunityBeer.state;
+			if (state != null && (!state.equals(""))) {
+				_sbDescription.append("#State: ");
+				_sbDescription.append(state);
+			}
+			country = mCommunityBeer.country;
+			if (country != null && (!country.equals(""))) {
+				_sbDescription.append("#Country: ");
+				_sbDescription.append(country);
+			}
+
+			notes = mCommunityBeer.notes;
+			if (notes != null && (!notes.equals(""))) {
+				_sbDescription.append("#Notes: ");
+				_sbDescription.append(notes);
+			}
+			String _characteristicsJson = mCommunityBeer.characteristics;
+			_sbDescription
+					.append(this.getCharacteristics(_characteristicsJson));
+
+		} catch (Exception e) {
+			Log.e(TAG,
+					((e.getMessage() != null) ? e.getMessage()
+							.replace(" ", "_") : ""), e);
+		}
+
+		return _sbDescription.toString();
+	}
+
+	/**
+	 * 
+	 * @return
 	 * @throws JSONException
 	 */
-	private String setNoteForGraphApi() {
+	private String setMyBeerForGraphApi() {
 		String beer = null, alcohol = null, price = null, style = null, brewery = null, state = null, country = null, notes = null;
 		float rating = 0f;
 		NotesDbAdapter mDbHelper = null;
@@ -322,7 +436,7 @@ public class ShareOnFacebook extends Activity {
 			brewery = note.getString(note
 					.getColumnIndexOrThrow(NotesDbAdapter.KEY_BREWERY));
 			if (brewery != null && (!brewery.equals(""))) {
-				_sbDescription.append("#brewery: ");
+				_sbDescription.append("#Brewery: ");
 				_sbDescription.append(brewery);
 			}
 
@@ -345,10 +459,15 @@ public class ShareOnFacebook extends Activity {
 				_sbDescription.append("#Notes: ");
 				_sbDescription.append(notes);
 			}
+			String _characteristicsJson = note.getString(note
+					.getColumnIndexOrThrow(NotesDbAdapter.KEY_CHARACTERISTICS));
+			_sbDescription
+					.append(this.getCharacteristics(_characteristicsJson));
 
 		} catch (Exception e) {
-			Log.e(TAG, ((e.getMessage() != null) ? e.getMessage().replace(" ",
-					"_") : ""), e);
+			Log.e(TAG,
+					((e.getMessage() != null) ? e.getMessage()
+							.replace(" ", "_") : ""), e);
 		} finally {
 			if (mDbHelper != null) {
 				// close the Db connection
@@ -357,6 +476,91 @@ public class ShareOnFacebook extends Activity {
 		}
 
 		return _sbDescription.toString();
+	}
+
+	/**
+	 * 
+	 * @param characteristicsJson
+	 * @return
+	 * @throws JSONException
+	 */
+	private String getCharacteristics(String characteristicsJson)
+			throws JSONException {
+		StringBuffer _characteristics = new StringBuffer();
+		Log.i(TAG, "Characteristics Json: "
+				+ characteristicsJson);
+
+		if (characteristicsJson != null && (!characteristicsJson.equals(""))
+				&& (characteristicsJson.startsWith("{"))) {
+			JSONObject _characteristicsJson = new JSONObject(
+					characteristicsJson);
+
+			if (_characteristicsJson != null) {
+				if (_characteristicsJson.has("color")) {
+					if (!_characteristicsJson.getString("color").equals("")) {
+						_characteristics.append("#Color: ");
+						_characteristics.append(_characteristicsJson
+								.getString("color"));
+					}
+				}
+				if (_characteristicsJson.has("clarity")) {
+					if (!_characteristicsJson.getString("clarity").equals("")) {
+						_characteristics.append("#Clarity: ");
+						_characteristics.append(_characteristicsJson
+								.getString("clarity"));
+					}
+				}
+				if (_characteristicsJson.has("aroma")) {
+					if (_characteristicsJson.getJSONArray("aroma").length() > 0) {
+						JSONArray _aroma = _characteristicsJson
+								.getJSONArray("aroma");
+						StringBuilder _aromaText = new StringBuilder();
+						for (int i = 0; i < _aroma.length(); i++) {
+							_aromaText.append(", ");
+							_aromaText.append(_aroma.getString(i));
+						}
+						String _aromaStr = _aromaText.toString();
+						_aromaStr = _aromaStr.replaceFirst(", ", "");
+						_characteristics.append("#Aroma: ");
+						_characteristics.append(_aromaStr);
+					}
+				}
+				if (_characteristicsJson.has("foam")) {
+					if (!_characteristicsJson.getString("foam").equals("")) {
+						_characteristics.append("#Foam: ");
+						_characteristics.append(_characteristicsJson
+								.getString("foam"));
+					}
+				}
+
+				if (_characteristicsJson.has("mouthfeel")) {
+					if (!_characteristicsJson.getString("mouthfeel").equals("")) {
+						_characteristics.append("#Mouthfeel: ");
+						_characteristics.append(_characteristicsJson
+								.getString("mouthfeel"));
+					}
+				}
+				if (_characteristicsJson.has("body")) {
+					if (!_characteristicsJson.getString("body").equals("")) {
+						_characteristics.append("#Body: ");
+						_characteristics.append(_characteristicsJson
+								.getString("body"));
+					}
+				}
+				if (_characteristicsJson.has("aftertaste")) {
+					if (!_characteristicsJson.getString("aftertaste")
+							.equals("")) {
+						_characteristics.append("#Aftertaste: ");
+						_characteristics.append(_characteristicsJson
+								.getString("aftertaste"));
+					}
+				}
+			}
+
+		}
+		Log.i(TAG, "Characteristics: " + _characteristics.toString());
+		return _characteristics.toString();
+
 	}
 
 	/**
@@ -419,67 +623,11 @@ public class ShareOnFacebook extends Activity {
 	 */
 	public class WallPostRequestListener extends BaseRequestListener {
 
-		public void onComplete(final String response) {
-			if (AppConfig.LOGGING_ENABLED) {
-				Log.d(TAG, "WallPostRequestListener:onComplete "
-						+ response.toString());
-			}
-			Log.d(TAG, "Got response: " + response);
-			final String postId;
-
-			try {
-				JSONObject json = Util.parseJson(response);
-				postId = json.getString("id");
-				Log.d(TAG, "Post Id:" + postId);
-			} catch (JSONException e) {
-				Log.e(TAG, "JSON Error in response");
-			} catch (FacebookError e) {
-				Log.e(TAG, "Facebook Error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""));
-			}
-			if ((mDialog != null) && (mDialog.isShowing())) {
-				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "WallPostRequestListener:onComplete");
-				}
-				removeDialog(ACTIVE_DIALOG);
-				setResult(AppConfig.FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE);
-				mTracker.trackEvent("ShareOnFacebook", "FacebookWallPost", "Y",
-						0);
-				mTracker.dispatch();
-				finish();
-			}
-
-		}
-
-		@Override
-		public void onFacebookError(FacebookError e) {
-			handleError(e);
-			super.onFacebookError(e);
-		}
-
-		@Override
-		public void onFileNotFoundException(FileNotFoundException e) {
-			handleError(e);
-			super.onFileNotFoundException(e);
-		}
-
-		@Override
-		public void onIOException(IOException e) {
-			handleError(e);
-			super.onIOException(e);
-		}
-
-		@Override
-		public void onMalformedURLException(MalformedURLException e) {
-			handleError(e);
-			super.onMalformedURLException(e);
-		}
-
 		private void handleError(Throwable e) {
-			Log.e(TAG, "Facebook Error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
+			Log.e(TAG,
+					"Facebook Error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
 
 			mTracker.trackEvent("ShareOnFacebook", "FacebookWallPostError", ((e
 					.getMessage() != null) ? e.getMessage().replace(" ", "_")
@@ -495,11 +643,72 @@ public class ShareOnFacebook extends Activity {
 			ShareOnFacebook.this.runOnUiThread(new Runnable() {
 				public void run() {
 					if (mText != null) {
-						mText
-								.setText(R.string.on_facebook_wall_post_unsuccessful);
+						mText.setText(R.string.on_facebook_wall_post_unsuccessful);
 					}
 				}
 			});
+		}
+
+		@Override
+		public void onComplete(String response, Object state) {
+			if (AppConfig.LOGGING_ENABLED) {
+				Log.d(TAG,
+						"WallPostRequestListener:onComplete "
+								+ response.toString());
+			}
+			Log.d(TAG, "Got response: " + response);
+			final String postId;
+
+			try {
+				JSONObject json = Util.parseJson(response);
+				postId = json.getString("id");
+				Log.d(TAG, "Post Id:" + postId);
+			} catch (JSONException e) {
+				Log.e(TAG, "JSON Error in response");
+			} catch (FacebookError e) {
+				Log.e(TAG,
+						"Facebook Error: "
+								+ ((e.getMessage() != null) ? e.getMessage()
+										.replace(" ", "_") : ""));
+			}
+			if ((mDialog != null) && (mDialog.isShowing())) {
+				if (AppConfig.LOGGING_ENABLED) {
+					Log.i(TAG, "WallPostRequestListener:onComplete");
+				}
+				removeDialog(ACTIVE_DIALOG);
+				setResult(AppConfig.FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE);
+				mTracker.trackEvent("ShareOnFacebook", "FacebookWallPost", "Y",
+						0);
+				mTracker.dispatch();
+				finish();
+			}
+		}
+
+		@Override
+		public void onIOException(IOException e, Object state) {
+			handleError(e);
+			super.onIOException(e);
+		}
+
+		@Override
+		public void onFileNotFoundException(FileNotFoundException e,
+				Object state) {
+			handleError(e);
+			super.onFileNotFoundException(e);
+
+		}
+
+		@Override
+		public void onMalformedURLException(MalformedURLException e,
+				Object state) {
+			handleError(e);
+			super.onMalformedURLException(e);
+		}
+
+		@Override
+		public void onFacebookError(FacebookError e, Object state) {
+			handleError(e);
+			super.onFacebookError(e);
 		}
 
 	}
@@ -513,10 +722,32 @@ public class ShareOnFacebook extends Activity {
 	 */
 	public class GetWallPostRequestListener extends BaseRequestListener {
 
-		public void onComplete(final String response) {
+		private void handleError(Exception e) {
+			Log.e(TAG,
+					"Facebook Error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+			if ((mDialog != null) && (mDialog.isShowing())) {
+				if (AppConfig.LOGGING_ENABLED) {
+					Log.i(TAG, "onFacebookError: handleError");
+				}
+				removeDialog(ACTIVE_DIALOG);
+			}
+			ShareOnFacebook.this.runOnUiThread(new Runnable() {
+				public void run() {
+					if (mText != null) {
+						mText.setText(getString(R.string.facebook_wall_post_unsuccessful_message));
+					}
+				}
+			});
+		}
+
+		@Override
+		public void onComplete(String response, Object state) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.d(TAG, "GetWallPostRequestListener: onComplete "
-						+ response.toString());
+				Log.d(TAG,
+						"GetWallPostRequestListener: onComplete "
+								+ response.toString());
 			}
 			Log.d(TAG, "Got response: " + response);
 			String message = "<empty>";
@@ -527,9 +758,10 @@ public class ShareOnFacebook extends Activity {
 			} catch (JSONException e) {
 				Log.e(TAG, "JSON Error in response");
 			} catch (FacebookError e) {
-				Log.e(TAG, "Facebook Error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""));
+				Log.e(TAG,
+						"Facebook Error: "
+								+ ((e.getMessage() != null) ? e.getMessage()
+										.replace(" ", "_") : ""));
 			}
 			final String text = "Your Wall Post: " + message;
 			ShareOnFacebook.this.runOnUiThread(new Runnable() {
@@ -546,11 +778,30 @@ public class ShareOnFacebook extends Activity {
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}
-
 		}
 
 		@Override
-		public void onFacebookError(FacebookError e) {
+		public void onIOException(IOException e, Object state) {
+			handleError(e);
+			super.onIOException(e);
+		}
+
+		@Override
+		public void onFileNotFoundException(FileNotFoundException e,
+				Object state) {
+			handleError(e);
+			super.onFileNotFoundException(e);
+		}
+
+		@Override
+		public void onMalformedURLException(MalformedURLException e,
+				Object state) {
+			handleError(e);
+			super.onMalformedURLException(e);
+		}
+
+		@Override
+		public void onFacebookError(FacebookError e, Object state) {
 			if ((mDialog != null) && (mDialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
 					Log.i(TAG, "GetWallPostRequestListener: onFacebookError");
@@ -568,44 +819,6 @@ public class ShareOnFacebook extends Activity {
 				}
 			});
 			super.onFacebookError(e);
-		}
-
-		@Override
-		public void onFileNotFoundException(FileNotFoundException e) {
-			handleError(e);
-			super.onFileNotFoundException(e);
-		}
-
-		@Override
-		public void onIOException(IOException e) {
-			handleError(e);
-			super.onIOException(e);
-		}
-
-		@Override
-		public void onMalformedURLException(MalformedURLException e) {
-			handleError(e);
-			super.onMalformedURLException(e);
-		}
-
-		private void handleError(Exception e) {
-			Log.e(TAG, "Facebook Error: "
-					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
-							"_") : ""), e);
-			if ((mDialog != null) && (mDialog.isShowing())) {
-				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "onFacebookError: handleError");
-				}
-				removeDialog(ACTIVE_DIALOG);
-			}
-			ShareOnFacebook.this.runOnUiThread(new Runnable() {
-				public void run() {
-					if (mText != null) {
-						mText
-								.setText(getString(R.string.facebook_wall_post_unsuccessful_message));
-					}
-				}
-			});
 		}
 
 	}

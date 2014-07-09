@@ -68,8 +68,7 @@ public class User {
 		}
 	}
 
-	public void onAuthSucceed(String userId, String userName, String userLink,
-			String userType) {
+	public void onAuthSucceed(String userId, String userName, String userLink, String userType) {
 		Log.i(TAG, "onAuthSucceed::");
 		mPreferences.edit().putString(AppConfig.USER_ID, userId).commit();
 		mPreferences.edit().putString(AppConfig.USER_NAME, userName).commit();

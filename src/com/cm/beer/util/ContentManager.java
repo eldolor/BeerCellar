@@ -95,11 +95,10 @@ public class ContentManager {
 			Log.d(this.getClass().getName(), "Returning Content from Cache:"
 					+ urlString);
 			SoftReference<String> softReference = mContentCache.get(urlString);
-			if ((softReference == null) || (softReference.get() == null)) {
+			if ((softReference==null)||(softReference.get() == null)) {
 				mContentCache.remove(urlString);
-				Log.d(this.getClass().getName(),
-						"fetchContent():Soft Reference has been Garbage Collected:"
-								+ urlString);
+				Log.d(this.getClass().getName(), "fetchContent():Soft Reference has been Garbage Collected:"
+						+ urlString);
 			} else {
 				return softReference.get();
 			}
@@ -115,7 +114,7 @@ public class ContentManager {
 
 			String result = Util.convertStreamToString(is, "UTF-8");
 
-			mContentCache.put(urlString, new SoftReference<String>(result));
+			mContentCache.put(urlString, new SoftReference<String>(result) );
 			mLockCache.remove(urlString);
 
 			Log.d(this.getClass().getName(), result);
@@ -137,11 +136,10 @@ public class ContentManager {
 		if (mContentCache.containsKey(urlString)) {
 			SoftReference<String> softReference = mContentCache.get(urlString);
 
-			if ((softReference == null) || (softReference.get() == null)) {
+			if ((softReference==null)||(softReference.get() == null)) {
 				mContentCache.remove(urlString);
-				Log.d(this.getClass().getName(),
-						"fetchContentOnThread():Soft Reference has been Garbage Collected:"
-								+ urlString);
+				Log.d(this.getClass().getName(), "fetchContentOnThread():Soft Reference has been Garbage Collected:"
+						+ urlString);
 			} else {
 				String jsonStr = softReference.get();
 				Log.d(this.getClass().getName(), urlString + "=>" + jsonStr);
@@ -217,5 +215,6 @@ public class ContentManager {
 		HttpResponse response = httpClient.execute(request);
 		return response.getEntity().getContent();
 	}
+
 
 }

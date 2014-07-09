@@ -211,13 +211,17 @@ public class ShareWithCommunity extends Activity
 					mDoNotShare.getBackground().setColorFilter(
 							AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
 
-					mFacebook = new Facebook();
+					mFacebook = new Facebook(AppConfig.FACEBOOK_APP_ID);
 					mAsyncRunner = new AsyncFacebookRunner(mFacebook);
 					SessionStore.restore(mFacebook, this);
 					SessionEvents.addAuthListener(new BeerAuthListener());
-					SessionEvents.addLogoutListener(new BeerLogoutListener());
-					mLoginButton.init(mFacebook, new String[]
-					{});
+					SessionEvents
+							.addLogoutListener(new BeerLogoutListener());
+					mLoginButton.init(this,
+							AppConfig.FACEBOOK_AUTHORIZE_ACTIVITY_RESULT_CODE,
+							mFacebook);
+
+
 
 					mCommunityLoginButton
 							.setOnClickListener(new OnClickListener()
@@ -316,6 +320,14 @@ public class ShareWithCommunity extends Activity
 			Intent data = new Intent();
 			mMainActivity.setResult(RESULT_OK, data);
 			mMainActivity.finish();
+		} else if (requestCode == AppConfig.FACEBOOK_AUTHORIZE_ACTIVITY_RESULT_CODE) {
+		    /**
+		     * IMPORTANT: This method must be invoked at the top of the calling
+		     * activity's onActivityResult() function or Facebook authentication will
+		     * not function properly!
+		     */
+			Log.d(TAG, "authorizeCallback");
+			mFacebook.authorizeCallback(requestCode, resultCode, intent);
 		}
 	}
 
@@ -538,8 +550,8 @@ public class ShareWithCommunity extends Activity
 			mTracker.dispatch();
 			// mText.setText(R.string.on_facebook_login);
 			// Get user profile data
-			mAsyncRunner.request("me", new Bundle(), "GET",
-					new GetUserProfileRequestListener());
+			mAsyncRunner.request("me", new GetUserProfileRequestListener());
+
 
 		}
 
@@ -586,20 +598,30 @@ public class ShareWithCommunity extends Activity
 	}
 
 	/************************************************************************************/
-	public class GetUserProfileRequestListener extends BaseRequestListener
-	{
+	public class GetUserProfileRequestListener extends BaseRequestListener {
 
-		public void onComplete(final String response)
-		{
-			if (AppConfig.LOGGING_ENABLED)
-			{
+		private void handleError(Exception e) {
+			Log.e(TAG,
+					"Facebook Error: "
+							+ ((e.getMessage() != null) ? e.getMessage()
+									.replace(" ", "_") : ""), e);
+			if ((dialog != null) && (dialog.isShowing())) {
+				if (AppConfig.LOGGING_ENABLED) {
+					Log.i(TAG, "onFacebookError: handleError");
+				}
+				removeDialog(ACTIVE_DIALOG);
+			}
+		}
+
+		@Override
+		public void onComplete(String response, Object state) {
+			if (AppConfig.LOGGING_ENABLED) {
 				Log.d(TAG, "GetUserProfileRequestListener: onComplete "
 						+ response.toString());
 			}
 			Log.d(TAG, "Got response: " + response);
 
-			try
-			{
+			try {
 				JSONObject json = Util.parseJson(response);
 
 				mUser.onAuthSucceed(json.getString("id"),
@@ -608,10 +630,8 @@ public class ShareWithCommunity extends Activity
 
 				final String text = mUser.getUserName() + " "
 						+ mMainActivity.getString(R.string.on_facebook_login);
-				mMainActivity.runOnUiThread(new Runnable()
-				{
-					public void run()
-					{
+				mMainActivity.runOnUiThread(new Runnable() {
+					public void run() {
 						mText.setText(text);
 					}
 				});
@@ -622,8 +642,7 @@ public class ShareWithCommunity extends Activity
 				// Execute the original request
 				new AsyncShareWithCommunity().execute(mAction, mUploadPhoto,
 						mNote);
-				try
-				{
+				try {
 					String email = json.getString("email");
 					Log.i(TAG, "User email: " + email);
 					JSONObject additionalAttributes = new JSONObject();
@@ -635,45 +654,55 @@ public class ShareWithCommunity extends Activity
 							mUser.getUserName(), mUser.getUserLink(),
 							mUser.getAdditionalUserAttributes());
 
-				} catch (JSONException e)
-				{
+				} catch (JSONException e) {
 					Log.e(TAG, "Email address is not available");
 				}
 
-			} catch (JSONException e)
-			{
+			} catch (JSONException e) {
 				Log.e(TAG, "JSON Error in response");
-			} catch (FacebookError e)
-			{
+			} catch (FacebookError e) {
 				Log.e(TAG,
 						"Facebook Error: "
 								+ ((e.getMessage() != null) ? e.getMessage()
 										.replace(" ", "_") : ""));
 			}
 
-			if ((dialog != null) && (dialog.isShowing()))
-			{
-				if (AppConfig.LOGGING_ENABLED)
-				{
+			if ((dialog != null) && (dialog.isShowing())) {
+				if (AppConfig.LOGGING_ENABLED) {
 					Log.i(TAG, "GetUserProfileRequestListener: onComplete");
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}
-
 			// End the activity
 			Intent data = new Intent();
 			mMainActivity.setResult(RESULT_OK, data);
 			mMainActivity.finish();
-
 		}
 
 		@Override
-		public void onFacebookError(FacebookError e)
-		{
-			if ((dialog != null) && (dialog.isShowing()))
-			{
-				if (AppConfig.LOGGING_ENABLED)
-				{
+		public void onIOException(IOException e, Object state) {
+			handleError(e);
+			super.onIOException(e);
+		}
+
+		@Override
+		public void onFileNotFoundException(FileNotFoundException e,
+				Object state) {
+			handleError(e);
+			super.onFileNotFoundException(e);
+		}
+
+		@Override
+		public void onMalformedURLException(MalformedURLException e,
+				Object state) {
+			handleError(e);
+			super.onMalformedURLException(e);
+		}
+
+		@Override
+		public void onFacebookError(FacebookError e, Object state) {
+			if ((dialog != null) && (dialog.isShowing())) {
+				if (AppConfig.LOGGING_ENABLED) {
 					Log.i(TAG, "GetWallPostRequestListener: onFacebookError");
 				}
 				removeDialog(ACTIVE_DIALOG);
@@ -681,51 +710,12 @@ public class ShareWithCommunity extends Activity
 			final String text = "Unable to retrieve User Profile from Facebook. "
 					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
 							"_") : "");
-			ShareWithCommunity.this.runOnUiThread(new Runnable()
-			{
-				public void run()
-				{
+			ShareWithCommunity.this.runOnUiThread(new Runnable() {
+				public void run() {
 					mText.setText(text);
 				}
 			});
 			super.onFacebookError(e);
-		}
-
-		@Override
-		public void onFileNotFoundException(FileNotFoundException e)
-		{
-			handleError(e);
-			super.onFileNotFoundException(e);
-		}
-
-		@Override
-		public void onIOException(IOException e)
-		{
-			handleError(e);
-			super.onIOException(e);
-		}
-
-		@Override
-		public void onMalformedURLException(MalformedURLException e)
-		{
-			handleError(e);
-			super.onMalformedURLException(e);
-		}
-
-		private void handleError(Exception e)
-		{
-			Log.e(TAG,
-					"Facebook Error: "
-							+ ((e.getMessage() != null) ? e.getMessage()
-									.replace(" ", "_") : ""), e);
-			if ((dialog != null) && (dialog.isShowing()))
-			{
-				if (AppConfig.LOGGING_ENABLED)
-				{
-					Log.i(TAG, "onFacebookError: handleError");
-				}
-				removeDialog(ACTIVE_DIALOG);
-			}
 		}
 
 	}

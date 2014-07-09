@@ -32,6 +32,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
@@ -42,13 +43,15 @@ public class BeerView extends Activity
 {
 	protected static final int BEER_EDIT_ACTIVITY_REQUEST_CODE = 0;
 	protected static final int VIEW_IMAGE_ACTIVITY_REQUEST_CODE = 1;
-
+	static final int ACTIVITY_SHARE_ON_FACEBOOK = 2;
+	
 	String TAG;
 
 	ProgressDialog mDialog;
 
 	int ACTIVE_DIALOG;
 
+	ImageView mShareOnFacebook;
 	Button mEdit;
 	TextView mBeer;
 	TextView mAlcohol;
@@ -132,10 +135,16 @@ public class BeerView extends Activity
 			Log.w(TAG, "onCreate::ID is ZERO!!!");
 			this.finish();
 		}
+		setup();
+	}
+
+	private void setup() {
 		setContentView(R.layout.beer_view);
 		display();
 		populateFields();
+
 	}
+
 
 	private void setupGoogleAdSense(Set<String> keywords)
 	{
@@ -303,6 +312,9 @@ public class BeerView extends Activity
 		mShowLocation = (Button) findViewById(R.id.show_location);
 		mShowLocation.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
 				PorterDuff.Mode.MULTIPLY);
+		/****************************************/
+		mShareOnFacebook = (ImageView) findViewById(R.id.share_on_facebook);
+		/****************************************/
 	}
 
 	/**
@@ -447,7 +459,25 @@ public class BeerView extends Activity
 		if (resultCode == AppConfig.BEER_DELETED_RESULT_CODE)
 		{
 			mMainActivity.finish();
-		}
+		} else if (requestCode == BeerView.BEER_EDIT_ACTIVITY_REQUEST_CODE) {
+			setup();
+		} else if (requestCode == AppConfig.FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST) {
+			if (resultCode == RESULT_OK) {
+				Bundle extras = (data != null) ? data.getExtras() : null;
+				// pass the rowId along to ShareOnFacebook
+				long rowId = (extras != null) ? extras
+						.getLong(NotesDbAdapter.KEY_ROWID) : 0L;
+				Log.i(TAG, "onActivityResult:Row Id=" + rowId);
+				Intent newIntent = new Intent(this, ShareOnFacebook.class);
+				newIntent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
+				startActivityForResult(newIntent, ACTIVITY_SHARE_ON_FACEBOOK);
+			}
+		} else {
+			// fillData();
+			if (resultCode == AppConfig.FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE) {
+				Toast.makeText(BeerView.this, R.string.on_facebook_wall_post,
+						Toast.LENGTH_SHORT).show();
+			}		}
 	}
 
 	/*
@@ -623,6 +653,23 @@ public class BeerView extends Activity
 					mShowLocation.setVisibility(View.VISIBLE);
 				}
 			}
+			/*********************************************************/
+			mShareOnFacebook.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					// Perform action on clicks
+					Log.i(TAG, "share on facebook");
+					//showDialog(AppConfig.DIALOG_LOADING_ID);
+					Intent intent = new Intent(mMainActivity.getApplication(),
+							LoginIntercept.class);
+					intent.putExtra("FACEBOOK_PERMISSIONS",
+							AppConfig.FACEBOOK_PERMISSIONS);
+					intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
+					Log.i(TAG, "shareOnFacebook:Row Id=" + mRowId);
+					startActivityForResult(
+							intent,
+							AppConfig.FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST);
+				}
+			});
 			/*********************************************************/
 		} else
 		{

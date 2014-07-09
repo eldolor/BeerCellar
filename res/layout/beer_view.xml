@@ -14,7 +14,6 @@
         android:visibility="gone" />
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -28,6 +27,16 @@
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:text="@string/edit_label" />
+
+        <ImageView
+            android:id="@+id/share_on_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/edit"
+            android:gravity="center_vertical"
+            android:src="@drawable/share_on_facebook" />
     </RelativeLayout>
 
     <ScrollView
@@ -38,7 +47,6 @@
         android:layout_marginTop="10dp" >
 
         <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
 
@@ -142,7 +150,6 @@
                 android:background="@drawable/divider" />
 
             <TableLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/characteristics_table"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

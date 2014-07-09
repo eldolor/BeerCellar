@@ -1,8 +1,8 @@
 package com.cm.beer.facebook;
 
 import com.facebook.android.DialogError;
-import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+import com.facebook.android.Facebook.DialogListener;
 
 /**
  * Skeleton base class for RequestListeners, providing default error 

@@ -1,6 +1,7 @@
 package com.cm.beer.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,9 +54,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 
@@ -2206,6 +2212,115 @@ public class Util
 									.replace(" ", "_") : ""), e);
 		}
 		return url;
+
+	}
+	
+	public static byte[] scaleImage(Context context, Uri photoUri)
+			throws IOException {
+		InputStream is =  context.getContentResolver().openInputStream(photoUri);
+		BitmapFactory.Options dbo = new BitmapFactory.Options();
+		dbo.inJustDecodeBounds = true;
+		BitmapFactory.decodeStream(is, null, dbo);
+		is.close();
+
+		int rotatedWidth, rotatedHeight;
+		int orientation = getOrientation(context, photoUri);
+
+		if (orientation == 90 || orientation == 270) {
+			rotatedWidth = dbo.outHeight;
+			rotatedHeight = dbo.outWidth;
+		} else {
+			rotatedWidth = dbo.outWidth;
+			rotatedHeight = dbo.outHeight;
+		}
+
+		Bitmap srcBitmap;
+		is = context.getContentResolver().openInputStream(photoUri);
+		if (rotatedWidth > AppConfig.FACEBOOK_MAX_IMAGE_DIMENSION
+				|| rotatedHeight > AppConfig.FACEBOOK_MAX_IMAGE_DIMENSION) {
+			float widthRatio = ((float) rotatedWidth)
+					/ ((float) AppConfig.FACEBOOK_MAX_IMAGE_DIMENSION);
+			float heightRatio = ((float) rotatedHeight)
+					/ ((float) AppConfig.FACEBOOK_MAX_IMAGE_DIMENSION);
+			float maxRatio = Math.max(widthRatio, heightRatio);
+
+			// Create the bitmap from file
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inSampleSize = (int) maxRatio;
+			srcBitmap = BitmapFactory.decodeStream(is, null, options);
+		} else {
+			srcBitmap = BitmapFactory.decodeStream(is);
+		}
+		is.close();
+
+		/*
+		 * if the orientation is not 0 (or -1, which means we don't know), we
+		 * have to do a rotation.
+		 */
+		if (orientation > 0) {
+			Matrix matrix = new Matrix();
+			matrix.postRotate(orientation);
+
+			srcBitmap = Bitmap.createBitmap(srcBitmap, 0, 0,
+					srcBitmap.getWidth(), srcBitmap.getHeight(), matrix, true);
+		}
+
+		String type = context.getContentResolver().getType(photoUri);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		if (type.equals("image/png")) {
+			srcBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+		} else if (type.equals("image/jpg") || type.equals("image/jpeg")) {
+			srcBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		}
+		byte[] bMapArray = baos.toByteArray();
+		baos.close();
+		return bMapArray;
+	}
+
+	public static int getOrientation(Context context, Uri photoUri) {
+		/* it's on the external media. */
+		Cursor cursor = context.getContentResolver().query(photoUri,
+				new String[] { MediaStore.Images.ImageColumns.ORIENTATION },
+				null, null, null);
+
+		if (cursor.getCount() != 1) {
+			return -1;
+		}
+
+		cursor.moveToFirst();
+		return cursor.getInt(0);
+	}
+	
+	
+	/**
+	 * 
+	 * @param photoUri
+	 * @return
+	 * @throws IOException
+	 */
+	public static byte[] convertPhotoToByteArray(Uri photoUri)
+			throws IOException {
+		ByteArrayOutputStream baos = null;
+		FileInputStream is = null;
+		try {
+			baos = new ByteArrayOutputStream();
+
+			is = new FileInputStream(photoUri.toString());
+			Bitmap srcBitmap = BitmapFactory.decodeStream(is);
+
+			if (photoUri.toString().endsWith(".png")) {
+				srcBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+			} else if (photoUri.toString().endsWith(".jpg")) {
+				srcBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+			}
+			byte[] bMapArray = baos.toByteArray();
+			return bMapArray;
+		} finally {
+			if (baos != null)
+				baos.close();
+			if (is != null)
+				is.close();
+		}
 
 	}
 
