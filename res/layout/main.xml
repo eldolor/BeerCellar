@@ -15,12 +15,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/text_1"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dip"
-                android:text="@string/community_beers_from_around_the_world" />
+                android:layout_height="match_parent"
+                android:background="@drawable/beer_yellow" >
+
+                <TextView
+                    android:id="@+id/text_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dip"
+                    android:text="@string/community_beers_from_around_the_world" />
+            </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -34,12 +40,18 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <TextView
-                android:id="@+id/text_2"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dip"
-                android:text="@string/community_top_rated_beers" />
+                android:layout_height="match_parent"
+                android:background="@drawable/beer_yellow" >
+
+                <TextView
+                    android:id="@+id/text_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dip"
+                    android:text="@string/community_top_rated_beers" />
+            </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -53,12 +65,18 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <TextView
-                android:id="@+id/text_3"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dip"
-                android:text="@string/community_worst_beers" />
+                android:layout_height="match_parent"
+                android:background="@drawable/beer_yellow" >
+
+                <TextView
+                    android:id="@+id/text_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dip"
+                    android:text="@string/community_worst_beers" />
+            </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -72,13 +90,19 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <TextView
-                android:id="@+id/text_4"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dip"
-                android:text="@string/community_most_helpful_beer_reviews"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:background="@drawable/beer_yellow" >
+
+                <TextView
+                    android:id="@+id/text_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dip"
+                    android:text="@string/community_most_helpful_beer_reviews"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -94,12 +118,18 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <TextView
-                android:id="@+id/text_5"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dip"
-                android:text="@string/my_beers" />
+                android:layout_height="match_parent"
+                android:background="@drawable/beer_yellow" >
+
+                <TextView
+                    android:id="@+id/text_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dip"
+                    android:text="@string/my_beers" />
+            </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -113,12 +143,18 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <TextView
-                android:id="@+id/text_6"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dip"
-                android:text="@string/community_favorite_beer_reviews" />
+                android:layout_height="match_parent"
+                android:background="@drawable/beer_yellow" >
+
+                <TextView
+                    android:id="@+id/text_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dip"
+                    android:text="@string/community_favorite_beer_reviews" />
+            </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
