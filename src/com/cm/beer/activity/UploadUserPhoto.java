@@ -22,6 +22,7 @@ import android.widget.ImageView;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.util.BitmapScaler;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -46,20 +47,20 @@ public class UploadUserPhoto extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		Bundle extras = getIntent().getExtras();
 		mUserId = extras != null ? extras.getString("USERID") : null;
 		mFileName = extras != null ? extras.getString("FILENAME") : null;
-		Log.i(TAG, "onCreate: FILENAME: " + mFileName);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: FILENAME: " + mFileName);
 		setContentView(R.layout.view_user_photo);
 		setup();
 	}
@@ -72,7 +73,7 @@ public class UploadUserPhoto extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == DIALOG_UPLOADING_USER_PHOTO_ID) {
@@ -93,12 +94,12 @@ public class UploadUserPhoto extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -140,7 +141,7 @@ public class UploadUserPhoto extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			try {
 				String response[] = Util.getResult(Util
 						.getUploadUserPhotoURLUrl());
@@ -149,7 +150,7 @@ public class UploadUserPhoto extends Activity {
 					if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
 						JSONObject uploadUrlJson = new JSONObject(jsonStr);
 						String _url = uploadUrlJson.getString("uploadUrl");
-						Log.i(TAG, "Upload Url: " + _url);
+						if (Logger.isLogEnabled())  Logger.log("Upload Url: " + _url);
 
 						HashMap<String, String> parameters = new HashMap<String, String>();
 						parameters.put("userid", mUserId);
@@ -180,7 +181,7 @@ public class UploadUserPhoto extends Activity {
 											+ retryCount);
 								}
 							}
-							Log.d(TAG, "Final Retry Count = " + retryCount);
+							if (Logger.isLogEnabled())  Logger.log("Final Retry Count = " + retryCount);
 							if (retryCount > 0) {
 								mTracker.trackEvent("CommunitySignIn", "Login",
 										"RetryCount", retryCount);
@@ -189,7 +190,7 @@ public class UploadUserPhoto extends Activity {
 						}
 
 						// Examine the response status
-						Log.i(TAG, "Response = " + _response);
+						if (Logger.isLogEnabled())  Logger.log("Response = " + _response);
 					}
 
 				}
@@ -204,29 +205,29 @@ public class UploadUserPhoto extends Activity {
 				mTracker.dispatch();
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			Log.i(TAG, "onPreExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute starting");
 			if (mMainActivity != null) {
 				mMainActivity.showDialog(DIALOG_UPLOADING_USER_PHOTO_ID);
 			}
-			Log.i(TAG, "onPreExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute finished");
 		}
 
 		@Override
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			mDialog.cancel();
 			Intent intent = new Intent();
-			Log.i(TAG, "onPostExecute: FILENAME: " + mFileName);
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute: FILENAME: " + mFileName);
 			intent.putExtra("FILENAME", mFileName);
 			mMainActivity.setResult(RESULT_OK, intent);
 			mMainActivity.finish();
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}

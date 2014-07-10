@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -56,14 +57,14 @@ public class CommunitySignUp extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		setContentView(R.layout.community_signup);
@@ -96,12 +97,12 @@ public class CommunitySignUp extends Activity {
 		mSignUp.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.d(TAG, "mSignUp.setOnClickListener");
+					if (Logger.isLogEnabled())  Logger.log("mSignUp.setOnClickListener");
 				}
 				mTracker.trackEvent("ShareWithCommunity", "CommunitySignUp",
 						"Clicked", 0);
 				mTracker.dispatch();
-				Log.i(TAG, "mSignUp:onClick:userId:");
+				if (Logger.isLogEnabled())  Logger.log("mSignUp:onClick:userId:");
 
 				//
 				String _userName = mUserName.getText().toString();
@@ -154,12 +155,12 @@ public class CommunitySignUp extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -185,7 +186,7 @@ public class CommunitySignUp extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == DIALOG_SIGNUP_ID) {
@@ -207,11 +208,11 @@ public class CommunitySignUp extends Activity {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(AppConfig.DIALOG_LOADING_ID);
 		}
@@ -228,7 +229,7 @@ public class CommunitySignUp extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String _userName = (String) args[0];
 			String _userId = (String) args[1];
 			String _password = (String) args[2];
@@ -256,7 +257,7 @@ public class CommunitySignUp extends Activity {
 
 				String _userProfileStr = _userProfile.toString();
 				_userProfileStr = URLEncoder.encode(_userProfileStr, "UTF-8");
-				Log.i(TAG, _userProfileStr);
+				if (Logger.isLogEnabled())  Logger.log(_userProfileStr);
 
 				HashMap<String, String> parameters = new HashMap<String, String>();
 				parameters.put("q", AppConfig.COMMUNITY_SIGNUP_Q_VALUE);
@@ -264,7 +265,7 @@ public class CommunitySignUp extends Activity {
 
 				// Prepare a request object
 				String _url = AppConfig.COMMUNITY_GET_USER_SERVICE_URL;
-				Log.i(TAG, _url);
+				if (Logger.isLogEnabled())  Logger.log(_url);
 				{
 					boolean retry = true;
 					int retryCount = 0;
@@ -287,7 +288,7 @@ public class CommunitySignUp extends Activity {
 									+ retryCount);
 						}
 					}
-					Log.d(TAG, "Final Retry Count = " + retryCount);
+					if (Logger.isLogEnabled())  Logger.log("Final Retry Count = " + retryCount);
 					if (retryCount > 0) {
 						mTracker.trackEvent("CommunitySignIn", "Login",
 								"RetryCount", retryCount);
@@ -296,7 +297,7 @@ public class CommunitySignUp extends Activity {
 				}
 
 				// Examine the response status
-				Log.i(TAG, "Response = " + _response);
+				if (Logger.isLogEnabled())  Logger.log("Response = " + _response);
 				_mResponse = _response;
 
 			} catch (Throwable e) {
@@ -309,22 +310,22 @@ public class CommunitySignUp extends Activity {
 				mTracker.dispatch();
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			Log.i(TAG, "onPreExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute starting");
 			if (mMainActivity != null) {
 				mMainActivity.showDialog(DIALOG_SIGNUP_ID);
 			}
-			Log.i(TAG, "onPreExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute finished");
 		}
 
 		@Override
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			if ((mMainActivity != null) && (mMessage != null)
 					&& (_mResponse != null) && (_mResponse.startsWith("{"))) {
 				JSONObject _responseJson;
@@ -384,7 +385,7 @@ public class CommunitySignUp extends Activity {
 			} else {
 				// TODO:
 			}
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}

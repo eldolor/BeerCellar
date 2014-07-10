@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class Characteristics extends Activity {
@@ -55,13 +56,13 @@ public class Characteristics extends Activity {
 		// setup TAG
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
-		Log.i(TAG, "onCreate");
+		if (Logger.isLogEnabled())  Logger.log("onCreate");
 		mMainActivity = this;
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
-		Log.i(TAG, "onCreate:Google Tracker Instantiated");
+		if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		mOriginalIntent = getIntent();
 		Bundle extras = mOriginalIntent.getExtras();
 		String jsonStr = extras != null ? extras.getString("CHARACTERISTICS")
@@ -87,7 +88,7 @@ public class Characteristics extends Activity {
 	 */
 	protected void display() {
 
-		Log.i(TAG, "display");
+		if (Logger.isLogEnabled())  Logger.log("display");
 		/****************************************/
 		mColor = (Spinner) findViewById(R.id.color);
 		ArrayAdapter<CharSequence> adapterColor = ArrayAdapter
@@ -220,7 +221,7 @@ public class Characteristics extends Activity {
 		mAromaButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// Perform action on clicks
-				Log.i(TAG, "aroma button");
+				if (Logger.isLogEnabled())  Logger.log("aroma button");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						new ContextThemeWrapper(Characteristics.this,
 								android.R.style.Theme_Dialog));
@@ -263,7 +264,7 @@ public class Characteristics extends Activity {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which, boolean isChecked) {
-								Log.i(TAG, "which=" + which + " isChecked="
+								if (Logger.isLogEnabled())  Logger.log("which=" + which + " isChecked="
 										+ ((isChecked) ? "Y" : "N"));
 								checkedItems[which] = isChecked;
 							}
@@ -279,7 +280,7 @@ public class Characteristics extends Activity {
 											jsonArray.put(items[i]);
 										}
 									}
-									Log.i(TAG, "aroma selected: "
+									if (Logger.isLogEnabled())  Logger.log("aroma selected: "
 											+ jsonArray.toString());
 									mMainActivity.mOriginalCharacteristicsJson
 											.put("aroma", jsonArray);
@@ -418,7 +419,7 @@ public class Characteristics extends Activity {
 					Log.e(TAG, e.getMessage(), e);
 				}
 
-				Log.i(TAG, mOriginalCharacteristicsJson.toString());
+				if (Logger.isLogEnabled())  Logger.log(mOriginalCharacteristicsJson.toString());
 				mOriginalIntent.putExtra("CHARACTERISTICS",
 						mOriginalCharacteristicsJson.toString());
 				mMainActivity.setResult(RESULT_OK, mOriginalIntent);
@@ -436,7 +437,7 @@ public class Characteristics extends Activity {
 			public void onClick(View v) {
 				// Perform action on clicks
 
-				Log.i(TAG, "cancel");
+				if (Logger.isLogEnabled())  Logger.log("cancel");
 
 				showDialog(AppConfig.DIALOG_LOADING_ID);
 				setResult(RESULT_OK);
@@ -483,12 +484,12 @@ public class Characteristics extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -514,7 +515,7 @@ public class Characteristics extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		mDialog = ProgressDialog.show(Characteristics.this, null, this
 				.getString(R.string.progress_loading_message), true, true);
@@ -530,11 +531,11 @@ public class Characteristics extends Activity {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(AppConfig.DIALOG_LOADING_ID);
 		}

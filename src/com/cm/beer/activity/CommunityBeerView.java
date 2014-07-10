@@ -59,6 +59,7 @@ import com.cm.beer.util.ContentManager;
 import com.cm.beer.util.DrawableManager;
 import com.cm.beer.util.FacebookLikeButtonWebView;
 import com.cm.beer.util.HttpParam;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.facebook.android.AsyncFacebookRunner;
@@ -168,7 +169,7 @@ public class CommunityBeerView extends Activity {
 				+ this.getClass().getName();
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(_TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 		mDrawableManager = DrawableManager.getInstance();
@@ -179,7 +180,7 @@ public class CommunityBeerView extends Activity {
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
 				this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(_TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		Bundle extras = getIntent().getExtras();
@@ -225,12 +226,12 @@ public class CommunityBeerView extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(_TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(_TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -242,7 +243,7 @@ public class CommunityBeerView extends Activity {
 	 */
 	@Override
 	protected void onResume() {
-		Log.i(_TAG, "onResume");
+		if (Logger.isLogEnabled())  Logger.log("onResume");
 		if ((mUser != null) && (mUser.isLoggedIn())
 				&& (mFollowReviewerHandler != null)) {
 			mContentManager.fetchContentOnThread(
@@ -267,11 +268,11 @@ public class CommunityBeerView extends Activity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.i(_TAG, "onCreateOptionsMenu: userid "
+		if (Logger.isLogEnabled())  Logger.log("onCreateOptionsMenu: userid "
 				+ ((mUser.getUserId() != null) ? mUser.getUserId() : "NULL"));
 		super.onCreateOptionsMenu(menu);
 		int menuPosition = 0;
-		if ((mUser != null)
+		if ((mUser != null && mUser.getUserId() != null)
 				&& (mUser.getUserId()
 						.equalsIgnoreCase(AppConfig.ADMIN_USER_EMAIL_ADDRESS))) {
 			menu.add(MENU_GROUP, SEND_TEST_DAILY_CAMPAIGN, menuPosition++,
@@ -290,7 +291,7 @@ public class CommunityBeerView extends Activity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(_TAG, "onMenuItemSelected");
+			if (Logger.isLogEnabled())  Logger.log("onMenuItemSelected");
 		}
 		switch (item.getItemId()) {
 		case SEND_TEST_DAILY_CAMPAIGN:
@@ -308,9 +309,9 @@ public class CommunityBeerView extends Activity {
 		try {
 			String url = Util
 					.getSendTestDailyCampaignUrl(mCommunityBeer.beerId);
-			Log.i(_TAG, "sendTestDailyCampaign():" + url);
+			if (Logger.isLogEnabled())  Logger.log("sendTestDailyCampaign():" + url);
 			String response[] = Util.getResult(url);
-			Log.i(_TAG, response[0]);
+			if (Logger.isLogEnabled())  Logger.log(response[0]);
 		} catch (Throwable e) {
 			Log.e(_TAG,
 					"error: "
@@ -323,9 +324,9 @@ public class CommunityBeerView extends Activity {
 	private void sendDailyCampaign() {
 		try {
 			String url = Util.getSendDailyCampaignUrl(mCommunityBeer.beerId);
-			Log.i(_TAG, "getSendDailyCampaignUrl():" + url);
+			if (Logger.isLogEnabled())  Logger.log("getSendDailyCampaignUrl():" + url);
 			String response[] = Util.getResult(url);
-			Log.i(_TAG, response[0]);
+			if (Logger.isLogEnabled())  Logger.log(response[0]);
 		} catch (Throwable e) {
 			Log.e(_TAG,
 					"error: "
@@ -361,7 +362,7 @@ public class CommunityBeerView extends Activity {
 
 				// new AsyncSetupFacebookLikeButtonTask().execute();
 
-				Log.i(_TAG, "onActivityResult:");
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:");
 			}
 		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_ADD_TO_FAVORITES) {
 			if (resultCode == RESULT_OK) {
@@ -382,7 +383,7 @@ public class CommunityBeerView extends Activity {
 
 				// new AsyncSetupFacebookLikeButtonTask().execute();
 
-				Log.i(_TAG, "onActivityResult:");
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:");
 			}
 			// } else if (requestCode ==
 			// LOGIN_INTERCEPT_REQUEST_CODE_FOR_FACEBOOK_LIKE_BUTTON)
@@ -399,7 +400,7 @@ public class CommunityBeerView extends Activity {
 				mContentManager.removeContent(Util
 						.getCommentsUrl(mCommunityBeer.beerId));
 				setupCommentsTable();
-				Log.i(_TAG, "onActivityResult:REQUEST_CODE_TO_POST_A_COMMENT");
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:REQUEST_CODE_TO_POST_A_COMMENT");
 			}
 		} else if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_TO_POST_A_COMMENT) {
 			if (resultCode == RESULT_OK) {
@@ -425,7 +426,7 @@ public class CommunityBeerView extends Activity {
 				// pass the rowId along to ShareOnFacebook
 				long rowId = (extras != null) ? extras
 						.getLong(NotesDbAdapter.KEY_ROWID) : 0L;
-				Log.i(_TAG, "onActivityResult:Row Id=" + rowId);
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:Row Id=" + rowId);
 				Intent newIntent = new Intent(this, ShareOnFacebook.class);
 				newIntent.putExtra("SHARE", "COMMUNITY_BEER");
 				newIntent.putExtra("COMMUNITY_BEER", mCommunityBeer);
@@ -462,7 +463,7 @@ public class CommunityBeerView extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(_TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_LOADING_ID) {
@@ -485,7 +486,7 @@ public class CommunityBeerView extends Activity {
 	 */
 	protected void display() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(_TAG, "display");
+			if (Logger.isLogEnabled())  Logger.log("display");
 		}
 		/****************************************/
 		mFavorites = (Button) findViewById(R.id.favorites);
@@ -570,7 +571,7 @@ public class CommunityBeerView extends Activity {
 	 * 
 	 */
 	private void populateFields() {
-		Log.i(_TAG, "populateFields");
+		if (Logger.isLogEnabled())  Logger.log("populateFields");
 		HashSet<String> keywords = new HashSet<String>();
 		try {
 
@@ -610,9 +611,9 @@ public class CommunityBeerView extends Activity {
 
 			mBeer.setText(mCommunityBeer.beer);
 			keywords.add(mCommunityBeer.beer);
-			Log.i(_TAG, "populateFields::setting:" + mCommunityBeer.beer);
+			if (Logger.isLogEnabled())  Logger.log("populateFields::setting:" + mCommunityBeer.beer);
 			mAlcohol.setText(mCommunityBeer.alcohol);
-			Log.i(_TAG, "populateFields::setting:" + mCommunityBeer.alcohol);
+			if (Logger.isLogEnabled())  Logger.log("populateFields::setting:" + mCommunityBeer.alcohol);
 
 			if ((mCommunityBeer.price != null)
 					&& (!mCommunityBeer.price.trim().equals(""))) {
@@ -638,7 +639,7 @@ public class CommunityBeerView extends Activity {
 
 			mBrewery.setText(mCommunityBeer.brewery);
 			keywords.add(mCommunityBeer.brewery);
-			Log.i(_TAG, "populateFields::brewery: " + mCommunityBeer.brewery
+			if (Logger.isLogEnabled())  Logger.log("populateFields::brewery: " + mCommunityBeer.brewery
 					+ " brewery link: " + mCommunityBeer.breweryLink);
 			if ((mCommunityBeer.breweryLink != null)
 					&& (!mCommunityBeer.breweryLink.trim().equals(""))
@@ -668,7 +669,7 @@ public class CommunityBeerView extends Activity {
 			keywords.add(mCommunityBeer.state);
 			mCountry.setText(mCommunityBeer.country);
 			keywords.add(mCommunityBeer.country);
-			Log.i(_TAG, "populateFields::setting:" + mCommunityBeer.country);
+			if (Logger.isLogEnabled())  Logger.log("populateFields::setting:" + mCommunityBeer.country);
 			String ratingStr = mCommunityBeer.rating;
 			if (ratingStr != null) {
 				mRating.setRating(Float.valueOf(ratingStr));
@@ -728,7 +729,7 @@ public class CommunityBeerView extends Activity {
 			mShareOnFacebook.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					// Perform action on clicks
-					Log.i(_TAG, "share on facebook");
+					if (Logger.isLogEnabled())  Logger.log("share on facebook");
 					// showDialog(AppConfig.DIALOG_LOADING_ID);
 					Intent intent = new Intent(mMainActivity.getApplication(),
 							LoginIntercept.class);
@@ -736,7 +737,7 @@ public class CommunityBeerView extends Activity {
 							AppConfig.FACEBOOK_PERMISSIONS);
 					intent.putExtra(NotesDbAdapter.KEY_ROWID,
 							mCommunityBeer.beerId);
-					Log.i(_TAG, "shareOnFacebook:Row Id="
+					if (Logger.isLogEnabled())  Logger.log("shareOnFacebook:Row Id="
 							+ mCommunityBeer.beerId);
 					startActivityForResult(
 							intent,
@@ -866,7 +867,7 @@ public class CommunityBeerView extends Activity {
 			@Override
 			public void handleMessage(Message message) {
 				String jsonStr = (String) message.obj;
-				Log.i(_TAG, jsonStr);
+				if (Logger.isLogEnabled())  Logger.log(jsonStr);
 				if ((jsonStr != null) && (jsonStr.startsWith("["))) {
 					JSONArray json;
 					try {
@@ -907,7 +908,7 @@ public class CommunityBeerView extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						Log.i(_TAG, "Favorites: " + mCommunityBeer.userName);
+						if (Logger.isLogEnabled())  Logger.log("Favorites: " + mCommunityBeer.userName);
 
 						if (mUser.isLoggedIn()) {
 
@@ -1008,7 +1009,7 @@ public class CommunityBeerView extends Activity {
 				mAddComments.getBackground().setColorFilter(
 						AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
 				String jsonStr = (String) message.obj;
-				Log.i(_TAG, jsonStr);
+				if (Logger.isLogEnabled())  Logger.log(jsonStr);
 				if ((jsonStr != null) && (jsonStr.startsWith("["))) {
 					JSONArray json;
 					try {
@@ -1133,7 +1134,7 @@ public class CommunityBeerView extends Activity {
 		mCommunityIcon.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
-				Log.i(_TAG, "back to community options menu");
+				if (Logger.isLogEnabled())  Logger.log("back to community options menu");
 
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
@@ -1173,7 +1174,7 @@ public class CommunityBeerView extends Activity {
 			@Override
 			public void handleMessage(Message message) {
 				String jsonStr = (String) message.obj;
-				Log.i(_TAG, jsonStr);
+				if (Logger.isLogEnabled())  Logger.log(jsonStr);
 				if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
 					try {
 						JSONObject mFollowJson = new JSONObject(jsonStr);
@@ -1187,11 +1188,11 @@ public class CommunityBeerView extends Activity {
 						for (int i = 0; ((followingList != null) && (i < followingList
 								.length())); i++) {
 							_str = followingList.getString(i);
-							Log.i(_TAG, "Following " + _str);
+							if (Logger.isLogEnabled())  Logger.log("Following " + _str);
 							if ((_str != null)
 									&& (_str.equalsIgnoreCase(mCommunityBeer.userId))) {
 								mAlreadyFollowingReviewer = true;
-								Log.i(_TAG, "Already Following Receiver!");
+								if (Logger.isLogEnabled())  Logger.log("Already Following Receiver!");
 							}
 						}
 
@@ -1225,7 +1226,7 @@ public class CommunityBeerView extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						Log.i(_TAG, "Follow: " + mCommunityBeer.userName);
+						if (Logger.isLogEnabled())  Logger.log("Follow: " + mCommunityBeer.userName);
 
 						if (mUser.isLoggedIn()) {
 
@@ -1286,7 +1287,7 @@ public class CommunityBeerView extends Activity {
 			@Override
 			public void handleMessage(Message message) {
 				String jsonStr = (String) message.obj;
-				Log.i(_TAG, jsonStr);
+				if (Logger.isLogEnabled())  Logger.log(jsonStr);
 				if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
 					JSONObject json;
 					try {
@@ -1316,7 +1317,7 @@ public class CommunityBeerView extends Activity {
 			@Override
 			public void handleMessage(Message message) {
 				String jsonStr = (String) message.obj;
-				Log.i(_TAG, jsonStr);
+				if (Logger.isLogEnabled())  Logger.log(jsonStr);
 				if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
 					JSONObject json;
 					try {
@@ -1342,7 +1343,7 @@ public class CommunityBeerView extends Activity {
 
 	// public void handleUserNotLoggedInFacebook()
 	// {
-	// Log.i(_TAG, "handleUserNotLoggedInFacebook");
+	// if (Logger.isLogEnabled())  Logger.log("handleUserNotLoggedInFacebook");
 	// Intent intent = new Intent(mMainActivity, LoginIntercept.class);
 	// intent.putExtra("FACEBOOK_PERMISSIONS", AppConfig.FACEBOOK_PERMISSIONS);
 	// intent.putExtra("FACEBOOK_ONLY", "Y");
@@ -1361,7 +1362,7 @@ public class CommunityBeerView extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(_TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String url = (String) args[0];
 			try {
 				Util.getResult(url);
@@ -1377,12 +1378,12 @@ public class CommunityBeerView extends Activity {
 				mTracker.dispatch();
 			}
 
-			Log.i(_TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(_TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			/** Remove follow count from cache **/
 			mContentManager.removeContent(Util
 					.getFollowCountUrl(mCommunityBeer.userId));
@@ -1393,7 +1394,7 @@ public class CommunityBeerView extends Activity {
 			mMainActivity.setupFollowReviewer();
 			mMainActivity.setupFollowCount();
 
-			Log.i(_TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -1408,7 +1409,7 @@ public class CommunityBeerView extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(_TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			try {//
 				/** Translate **/
 				{
@@ -1561,7 +1562,7 @@ public class CommunityBeerView extends Activity {
 				mTracker.dispatch();
 			}
 
-			Log.i(_TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
@@ -1576,7 +1577,7 @@ public class CommunityBeerView extends Activity {
 							+ AppConfig.GOOGLE_API_KEY + "&hl="
 							+ Locale.getDefault().getLanguage() + "&userip="
 							+ Util.getLocalIpAddress());
-			Log.i(_TAG, url.toString());
+			if (Logger.isLogEnabled())  Logger.log(url.toString());
 			URLConnection connection = url.openConnection();
 			connection.addRequestProperty("Referer",
 					AppConfig.GOOGLE_TRANSLATE_REFERER);
@@ -1590,10 +1591,10 @@ public class CommunityBeerView extends Activity {
 			}
 
 			JSONObject json = new JSONObject(builder.toString());
-			Log.i(_TAG, json.toString());
+			if (Logger.isLogEnabled())  Logger.log(json.toString());
 			JSONObject responseData = json.getJSONObject("responseData");
 			String language = responseData.getString("language");
-			Log.i(_TAG, "Language Detected: " + language);
+			if (Logger.isLogEnabled())  Logger.log("Language Detected: " + language);
 
 			return language;
 
@@ -1606,7 +1607,7 @@ public class CommunityBeerView extends Activity {
 						+ "&q="
 						+ URLEncoder.encode(((String) textView.getText()),
 								"UTF-8"));
-				Log.i(_TAG, url.toString());
+				if (Logger.isLogEnabled())  Logger.log(url.toString());
 				URLConnection connection = _url.openConnection();
 				connection.addRequestProperty("Referer",
 						AppConfig.GOOGLE_TRANSLATE_REFERER);
@@ -1619,7 +1620,7 @@ public class CommunityBeerView extends Activity {
 				}
 
 				JSONObject json = new JSONObject(builder.toString());
-				Log.i(_TAG, json.toString());
+				if (Logger.isLogEnabled())  Logger.log(json.toString());
 				JSONArray responseData = json.getJSONArray("translations");
 				final String _translatedText = responseData.getJSONObject(0)
 						.getString("translatedText");
@@ -1658,9 +1659,9 @@ public class CommunityBeerView extends Activity {
 				requestProperties.put("X-HTTP-Method-Override", "GET");
 				String response = Util.openUrl(url, "POST", _params,
 						requestProperties);
-				Log.i(_TAG, "Response: " + response);
+				if (Logger.isLogEnabled())  Logger.log("Response: " + response);
 				JSONObject json = new JSONObject(response);
-				Log.i(_TAG, json.toString());
+				if (Logger.isLogEnabled())  Logger.log(json.toString());
 				JSONArray responseData = json.getJSONObject("data")
 						.getJSONArray("translations");
 				for (int i = 0; i < views.size(); i++) {
@@ -1690,13 +1691,13 @@ public class CommunityBeerView extends Activity {
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(_TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 
 			mTranslate.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
 					PorterDuff.Mode.MULTIPLY);
 			mTranslate.setText(R.string.translated_label);
 
-			Log.i(_TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -1712,7 +1713,7 @@ public class CommunityBeerView extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(_TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String url = (String) args[0];
 			try {
 				Util.getResult(url);
@@ -1737,13 +1738,13 @@ public class CommunityBeerView extends Activity {
 				mTracker.dispatch();
 			}
 
-			Log.i(_TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(_TAG, "onPostExecute starting");
-			Log.i(_TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -1768,7 +1769,7 @@ public class CommunityBeerView extends Activity {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "onPageStarted::" + url);
+				if (Logger.isLogEnabled())  Logger.log("onPageStarted::" + url);
 			}
 			super.onPageStarted(view, url, favicon);
 		}
@@ -1776,7 +1777,7 @@ public class CommunityBeerView extends Activity {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "onPageFinished::" + url);
+				if (Logger.isLogEnabled())  Logger.log("onPageFinished::" + url);
 			}
 			super.onPageFinished(view, url);
 		}
@@ -1785,7 +1786,7 @@ public class CommunityBeerView extends Activity {
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "onReceivedError::" + failingUrl + "::" + errorCode
+				if (Logger.isLogEnabled())  Logger.log("onReceivedError::" + failingUrl + "::" + errorCode
 						+ "::" + description);
 			}
 			super.onReceivedError(view, errorCode, description, failingUrl);
@@ -1794,7 +1795,7 @@ public class CommunityBeerView extends Activity {
 		@Override
 		public void onLoadResource(WebView view, String url) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "onLoadResource::" + url);
+				if (Logger.isLogEnabled())  Logger.log("onLoadResource::" + url);
 			}
 			super.onLoadResource(view, url);
 		}
@@ -1812,7 +1813,7 @@ public class CommunityBeerView extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(String... args) {
-			Log.i(_TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			try {
 				// execute only if not present
 				final String url = AppConfig.FACEBOOK_LIKE_URL_BASE
@@ -1845,15 +1846,15 @@ public class CommunityBeerView extends Activity {
 				mTracker.dispatch();
 			}
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "doInBackground finished");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			Log.i(_TAG, "onPostExecute starting");
-			Log.i(_TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}

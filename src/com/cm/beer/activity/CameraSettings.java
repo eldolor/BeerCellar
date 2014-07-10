@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class CameraSettings extends Activity {
@@ -60,64 +61,64 @@ public class CameraSettings extends Activity {
 				+ this.getClass().getName();
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
-		Log.i(TAG, "onCreate:Google Tracker Instantiated");
+		if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 
 		Bundle extras = getIntent().getExtras();
 		mFlashModeValues = extras != null ? extras
 				.getStringArray("FOCUS_MODE_VALUES") : null;
-		Log.i(TAG, "onCreate: mFlashModeValues:"
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mFlashModeValues:"
 				+ ((mFlashModeValues != null) ? mFlashModeValues.toString()
 						: null));
 		mCurrentFlashMode = extras != null ? extras
 				.getString("CURRENT_FLASH_MODE") : null;
-		Log.i(TAG, "onCreate: mCurrentFlashMode:" + mCurrentFlashMode);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mCurrentFlashMode:" + mCurrentFlashMode);
 		mSceneModeValues = extras != null ? extras
 				.getStringArray("SCENE_MODE_VALUES") : null;
-		Log.i(TAG, "onCreate: mSceneModeValues:"
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mSceneModeValues:"
 				+ ((mSceneModeValues != null) ? mSceneModeValues.toString()
 						: null));
 		mCurrentSceneMode = extras != null ? extras
 				.getString("CURRENT_SCENE_MODE") : null;
-		Log.i(TAG, "onCreate: mCurrentSceneMode:" + mCurrentSceneMode);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mCurrentSceneMode:" + mCurrentSceneMode);
 		mWhiteBalanceValues = extras != null ? extras
 				.getStringArray("WHITE_BALANCE_VALUES") : null;
-		Log.i(TAG, "onCreate: mWhiteBalanceValues:"
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mWhiteBalanceValues:"
 				+ ((mWhiteBalanceValues != null) ? mWhiteBalanceValues
 						.toString() : null));
 		mCurrentWhiteBalance = extras != null ? extras
 				.getString("CURRENT_WHITE_BALANCE") : null;
-		Log.i(TAG, "onCreate: mCurrentWhiteBalance:" + mCurrentWhiteBalance);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mCurrentWhiteBalance:" + mCurrentWhiteBalance);
 		mColorEffectValues = extras != null ? extras
 				.getStringArray("COLOR_EFFECT_VALUES") : null;
-		Log.i(TAG, "onCreate: mColorEffectValues:"
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mColorEffectValues:"
 				+ ((mColorEffectValues != null) ? mColorEffectValues.toString()
 						: null));
 		mCurrentColorEffect = extras != null ? extras
 				.getString("CURRENT_COLOR_EFFECT") : null;
-		Log.i(TAG, "onCreate: mCurrentColorEffect:" + mCurrentColorEffect);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mCurrentColorEffect:" + mCurrentColorEffect);
 		mAntibandingValues = extras != null ? extras
 				.getStringArray("ANTIBANDING_VALUES") : null;
-		Log.i(TAG, "onCreate: mAntibandingValues:"
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mAntibandingValues:"
 				+ ((mAntibandingValues != null) ? mAntibandingValues.toString()
 						: null));
 		mCurrentAntibanding = extras != null ? extras
 				.getString("CURRENT_ANTIBANDING") : null;
-		Log.i(TAG, "onCreate: mCurrentAntibanding:" + mCurrentAntibanding);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mCurrentAntibanding:" + mCurrentAntibanding);
 		mFocusModeValues = extras != null ? extras
 				.getStringArray("FOCUS_MODE_VALUES") : null;
-		Log.i(TAG, "onCreate: mFocusModeValues:"
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mFocusModeValues:"
 				+ ((mFocusModeValues != null) ? mFocusModeValues.toString()
 						: null));
 		mCurrentFocusMode = extras != null ? extras
 				.getString("CURRENT_FOCUS_MODE") : null;
-		Log.i(TAG, "onCreate: mCurrentFocusMode:" + mCurrentFocusMode);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mCurrentFocusMode:" + mCurrentFocusMode);
 
 		setContentView(R.layout.camera_settings);
 		display();
@@ -131,18 +132,18 @@ public class CameraSettings extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
 
 	private void display() {
-		Log.i(TAG, "display");
+		if (Logger.isLogEnabled())  Logger.log("display");
 
 		mDone = (Button) findViewById(R.id.done);
 		mDone.getBackground().setColorFilter(AppConfig.BUTTON_COLOR,
@@ -164,7 +165,7 @@ public class CameraSettings extends Activity {
 		mSelectWhiteBalance = (TextView) findViewById(R.id.select_white_balance);
 		mSelectWhiteBalance.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(TAG, "Select White Balance");
+				if (Logger.isLogEnabled())  Logger.log("Select White Balance");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
 				dialog.setIcon(android.R.drawable.ic_dialog_alert);
@@ -176,7 +177,7 @@ public class CameraSettings extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								mCurrentWhiteBalance = mWhiteBalanceValues[which];
-								Log.i(TAG, "Selected: "
+								if (Logger.isLogEnabled())  Logger.log("Selected: "
 										+ mWhiteBalanceValues[which]);
 
 								mCurrentWhiteBalanceTV
@@ -214,7 +215,7 @@ public class CameraSettings extends Activity {
 		mSelectAntibanding = (TextView) findViewById(R.id.select_antibanding);
 		mSelectAntibanding.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(TAG, "Select Antibanding");
+				if (Logger.isLogEnabled())  Logger.log("Select Antibanding");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
 				dialog.setIcon(android.R.drawable.ic_dialog_alert);
@@ -226,7 +227,7 @@ public class CameraSettings extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								mCurrentAntibanding = mAntibandingValues[which];
-								Log.i(TAG, "Selected: "
+								if (Logger.isLogEnabled())  Logger.log("Selected: "
 										+ mAntibandingValues[which]);
 
 								mCurrentAntibandingTV
@@ -263,7 +264,7 @@ public class CameraSettings extends Activity {
 		mSelectColorEffect = (TextView) findViewById(R.id.select_color_effect);
 		mSelectColorEffect.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(TAG, "Select Color Effect");
+				if (Logger.isLogEnabled())  Logger.log("Select Color Effect");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
 				dialog.setIcon(android.R.drawable.ic_dialog_alert);
@@ -275,7 +276,7 @@ public class CameraSettings extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								mCurrentColorEffect = mColorEffectValues[which];
-								Log.i(TAG, "Selected: "
+								if (Logger.isLogEnabled())  Logger.log("Selected: "
 										+ mColorEffectValues[which]);
 
 								mCurrentColorEffectTV
@@ -312,7 +313,7 @@ public class CameraSettings extends Activity {
 		mSelectFlashMode = (TextView) findViewById(R.id.select_flash_mode);
 		mSelectFlashMode.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(TAG, "Select Flash Mode");
+				if (Logger.isLogEnabled())  Logger.log("Select Flash Mode");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
 				dialog.setIcon(android.R.drawable.ic_dialog_alert);
@@ -324,7 +325,7 @@ public class CameraSettings extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								mCurrentFlashMode = mFlashModeValues[which];
-								Log.i(TAG, "Selected: "
+								if (Logger.isLogEnabled())  Logger.log("Selected: "
 										+ mFlashModeValues[which]);
 
 								mCurrentFlashModeTV.setVisibility(View.VISIBLE);
@@ -360,7 +361,7 @@ public class CameraSettings extends Activity {
 		mSelectFocusMode = (TextView) findViewById(R.id.select_focus_mode);
 		mSelectFocusMode.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(TAG, "Select Focus Mode");
+				if (Logger.isLogEnabled())  Logger.log("Select Focus Mode");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
 				dialog.setIcon(android.R.drawable.ic_dialog_alert);
@@ -372,7 +373,7 @@ public class CameraSettings extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								mCurrentFocusMode = mFocusModeValues[which];
-								Log.i(TAG, "Selected: "
+								if (Logger.isLogEnabled())  Logger.log("Selected: "
 										+ mFocusModeValues[which]);
 
 								mCurrentFocusModeTV.setVisibility(View.VISIBLE);
@@ -408,7 +409,7 @@ public class CameraSettings extends Activity {
 		mSelectSceneMode = (TextView) findViewById(R.id.select_scene_mode);
 		mSelectSceneMode.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(TAG, "Select Scene Mode");
+				if (Logger.isLogEnabled())  Logger.log("Select Scene Mode");
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
 				dialog.setIcon(android.R.drawable.ic_dialog_alert);
@@ -420,7 +421,7 @@ public class CameraSettings extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								mCurrentSceneMode = mSceneModeValues[which];
-								Log.i(TAG, "Selected: "
+								if (Logger.isLogEnabled())  Logger.log("Selected: "
 										+ mSceneModeValues[which]);
 
 								mCurrentSceneModeTV.setVisibility(View.VISIBLE);

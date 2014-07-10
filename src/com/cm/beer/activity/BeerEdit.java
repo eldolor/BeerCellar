@@ -43,6 +43,7 @@ import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.util.BitmapScaler;
 import com.cm.beer.util.GpsLocation;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -121,7 +122,7 @@ public class BeerEdit extends Activity implements
 				+ this.getClass().getName();
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
@@ -129,7 +130,7 @@ public class BeerEdit extends Activity implements
 		// Start the tracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		mDbHelper = new NotesDbAdapter(this);
@@ -149,14 +150,14 @@ public class BeerEdit extends Activity implements
 			mIsNew = true;
 		}
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate::_id="
+			if (Logger.isLogEnabled())  Logger.log("onCreate::_id="
 					+ ((mRowId != null) ? mRowId.longValue() : null));
 		}
 		if (mRowId == 0L) {
 			Log.w(TAG, "onCreate::ID is ZERO!!!");
 			this.finish();
 		}
-		Log.i(TAG, "onCreate: mRowId: " + mRowId);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mRowId: " + mRowId);
 		setContentView(R.layout.beer_edit);
 		display();
 		populateFields();
@@ -170,12 +171,12 @@ public class BeerEdit extends Activity implements
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -211,7 +212,7 @@ public class BeerEdit extends Activity implements
 	@Override
 	public void finish() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "finish");
+			if (Logger.isLogEnabled())  Logger.log("finish");
 		}
 		// database closed in share with community async task
 		if (mDbHelper != null) {
@@ -229,7 +230,7 @@ public class BeerEdit extends Activity implements
 	@Override
 	protected void onPause() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onPause");
+			if (Logger.isLogEnabled())  Logger.log("onPause");
 		}
 		super.onPause();
 		// saveState();
@@ -243,11 +244,11 @@ public class BeerEdit extends Activity implements
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(ACTIVE_DIALOG);
 		}
@@ -264,7 +265,7 @@ public class BeerEdit extends Activity implements
 	 */
 	private void saveIntermediateState() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "saveIntermediateState");
+			if (Logger.isLogEnabled())  Logger.log("saveIntermediateState");
 		}
 		Note note = new Note();
 		note.id = mRowId;
@@ -305,7 +306,7 @@ public class BeerEdit extends Activity implements
 	 */
 	private void saveState() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "saveState");
+			if (Logger.isLogEnabled())  Logger.log("saveState");
 		}
 		Note note = new Note();
 		note.id = mRowId;
@@ -346,14 +347,14 @@ public class BeerEdit extends Activity implements
 
 			mDbHelper.createNote(note);
 			mIsNew = false;
-			Log.i(TAG, "INSERTED " + note.beer + "::" + note.alcohol + "::"
+			if (Logger.isLogEnabled())  Logger.log("INSERTED " + note.beer + "::" + note.alcohol + "::"
 					+ note.style + "::" + note.brewery + "::" + note.state
 					+ "::" + note.country + "::" + note.rating + "::"
 					+ note.notes + "::" + note.share + "::" + note.latitude
 					+ "::" + note.longitude);
 
 			if (note.share.equals("Y")) {
-				Log.i(TAG, "is_new => upload_photo, intercept, action_insert");
+				if (Logger.isLogEnabled())  Logger.log("is_new => upload_photo, intercept, action_insert");
 				Intent intent = new Intent(BeerEdit.this.getApplication(),
 						ShareWithCommunity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -371,11 +372,11 @@ public class BeerEdit extends Activity implements
 				mTracker.trackEvent("BeerEdit", "NewBeer",
 						"DoNotShareWithCommunitySelected", 0);
 				mTracker.dispatch();
-				Log.i(TAG, "is_new => do_not_share");
+				if (Logger.isLogEnabled())  Logger.log("is_new => do_not_share");
 			}
 
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "record added");
+				if (Logger.isLogEnabled())  Logger.log("record added");
 			}
 		} else {
 			mTracker.trackEvent("BeerEdit", "Beer", "Updated", 0);
@@ -397,7 +398,7 @@ public class BeerEdit extends Activity implements
 				note.longitude = mLongitude;
 			}
 			mDbHelper.updateNote(note);
-			Log.i(TAG, "UPDATED " + note.beer + "::" + note.alcohol + "::"
+			if (Logger.isLogEnabled())  Logger.log("UPDATED " + note.beer + "::" + note.alcohol + "::"
 					+ note.style + "::" + note.brewery + "::" + note.state
 					+ "::" + note.country + "::" + note.rating + "::"
 					+ note.notes + "::" + note.share + "::" + note.latitude
@@ -423,7 +424,7 @@ public class BeerEdit extends Activity implements
 				startActivityForResult(intent,
 						SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
 
-				Log.i(TAG, "Intent Share With Community Started");
+				if (Logger.isLogEnabled())  Logger.log("Intent Share With Community Started");
 
 			} else if ((!this.mWasShared) && (note.share.equals("Y"))) {
 				Log
@@ -446,7 +447,7 @@ public class BeerEdit extends Activity implements
 				startActivityForResult(intent,
 						SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
 
-				Log.i(TAG, "Intent Share With Community Started");
+				if (Logger.isLogEnabled())  Logger.log("Intent Share With Community Started");
 
 				// } else if ((note.share.equals("Y")) && (this.mPictureTaken))
 				// {
@@ -464,7 +465,7 @@ public class BeerEdit extends Activity implements
 				// startActivityForResult(intent,
 				// SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
 				//
-				// Log.i(TAG, "Intent Share With Community Started");
+				// if (Logger.isLogEnabled())  Logger.log("Intent Share With Community Started");
 
 			} else if (note.share.equals("Y")) {
 				Log
@@ -483,7 +484,7 @@ public class BeerEdit extends Activity implements
 				intent.putExtra("ACTION", AppConfig.ACTION_UPDATE);
 				startActivityForResult(intent,
 						SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
-				Log.i(TAG, "Intent Share With Community Started");
+				if (Logger.isLogEnabled())  Logger.log("Intent Share With Community Started");
 			}
 		}
 
@@ -497,10 +498,10 @@ public class BeerEdit extends Activity implements
 		mDelete.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
-				Log.i(TAG, "delete");
+				if (Logger.isLogEnabled())  Logger.log("delete");
 
 				mWasShared = isSharedWithCommunity();
-				Log.i(TAG, "handleDelete(): Beer Shared = "
+				if (Logger.isLogEnabled())  Logger.log("handleDelete(): Beer Shared = "
 						+ ((mWasShared) ? "Y" : "N"));
 
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
@@ -523,7 +524,7 @@ public class BeerEdit extends Activity implements
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which, boolean isChecked) {
-									Log.i(TAG, "which=" + which + " isChecked="
+									if (Logger.isLogEnabled())  Logger.log("which=" + which + " isChecked="
 											+ ((isChecked) ? "Y" : "N"));
 									switch (which) {
 									case 0:
@@ -615,7 +616,7 @@ public class BeerEdit extends Activity implements
 	 * Removes the beer from the community
 	 */
 	private void removeFromCommunity() {
-		Log.i(TAG, "remove from community");
+		if (Logger.isLogEnabled())  Logger.log("remove from community");
 		mTracker.trackEvent("BeerEdit", "Beer", "RemoveFromCommunity", 0);
 		mTracker.dispatch();
 		Log
@@ -631,7 +632,7 @@ public class BeerEdit extends Activity implements
 				AppConfig.SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT);
 		startActivityForResult(intent,
 				SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
-		Log.i(TAG, "Intent Share With Community Started");
+		if (Logger.isLogEnabled())  Logger.log("Intent Share With Community Started");
 
 	}
 
@@ -640,15 +641,15 @@ public class BeerEdit extends Activity implements
 	 */
 	private void delete() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "delete");
+			if (Logger.isLogEnabled())  Logger.log("delete");
 		}
 		if (mRowId != null) {
 			mDbHelper.deleteNote(mRowId);
-			Log.i(TAG, "record deleted");
+			if (Logger.isLogEnabled())  Logger.log("record deleted");
 			mTracker.trackEvent("BeerEdit", "Beer", "Deleted", 0);
 			mTracker.dispatch();
 		} else {
-			Log.i(TAG, "no record to delete");
+			if (Logger.isLogEnabled())  Logger.log("no record to delete");
 		}
 
 	}
@@ -658,7 +659,7 @@ public class BeerEdit extends Activity implements
 	 */
 	protected void display() {
 
-		Log.i(TAG, "display");
+		if (Logger.isLogEnabled())  Logger.log("display");
 
 		/****************************************/
 		mCamera = (ImageView) findViewById(R.id.camera);
@@ -829,19 +830,19 @@ public class BeerEdit extends Activity implements
 			public void onClick(View v) {
 				// Perform action on clicks
 
-				Log.i(TAG, "save");
+				if (Logger.isLogEnabled())  Logger.log("save");
 				// save the state
 				saveIntermediateState();
 
-				Log.i(TAG, "save: Rating=" + mRating.getRating());
-				Log.i(TAG, "save: Characteristics=" + mCharacteristicsJson);
+				if (Logger.isLogEnabled())  Logger.log("save: Rating=" + mRating.getRating());
+				if (Logger.isLogEnabled())  Logger.log("save: Characteristics=" + mCharacteristicsJson);
 				boolean interruptRating = false;
 				boolean interruptCharacteristics = false;
 				ArrayList<String> interruptKeys = new ArrayList<String>();
 				ArrayList<String> titles = new ArrayList<String>();
 				ArrayList<String> messages = new ArrayList<String>();
 				if (mRating.getRating() == 0.0f) {
-					Log.i(TAG, "save: Adding Rating Interrupt");
+					if (Logger.isLogEnabled())  Logger.log("save: Adding Rating Interrupt");
 					interruptRating = true;
 					interruptKeys.add("RATING");
 					titles
@@ -851,7 +852,7 @@ public class BeerEdit extends Activity implements
 				}
 				if (mCharacteristicsJson == null
 						|| mCharacteristicsJson.equals("")) {
-					Log.i(TAG, "save: Adding Characteristics Interrupt");
+					if (Logger.isLogEnabled())  Logger.log("save: Adding Characteristics Interrupt");
 					interruptCharacteristics = true;
 					interruptKeys.add("CHARACTERISTICS");
 					titles
@@ -859,7 +860,7 @@ public class BeerEdit extends Activity implements
 					messages
 							.add(getString(R.string.beer_edit_interrupt_characteristics_dialog_message));
 				}
-				Log.i(TAG, "save: InterruptKeys=" + interruptKeys.size());
+				if (Logger.isLogEnabled())  Logger.log("save: InterruptKeys=" + interruptKeys.size());
 				// check
 				if (interruptRating || interruptCharacteristics) {
 					Intent intent = new Intent(mMainActivity.getApplication(),
@@ -887,7 +888,7 @@ public class BeerEdit extends Activity implements
 			public void onClick(View v) {
 				// Perform action on clicks
 
-				Log.i(TAG, "cancel");
+				if (Logger.isLogEnabled())  Logger.log("cancel");
 
 				showDialog(AppConfig.DIALOG_LOADING_ID);
 				setResult(RESULT_OK);
@@ -906,7 +907,7 @@ public class BeerEdit extends Activity implements
 		mCharacteristicsButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// Perform action on clicks
-				Log.i(TAG, "characterstics");
+				if (Logger.isLogEnabled())  Logger.log("characterstics");
 				saveIntermediateState();
 				Intent intent = new Intent(mMainActivity.getApplication(),
 						Characteristics.class);
@@ -1030,7 +1031,7 @@ public class BeerEdit extends Activity implements
 			mThumbnailView.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View view) {
 
-					Log.i(TAG, "View Image");
+					if (Logger.isLogEnabled())  Logger.log("View Image");
 
 					showDialog(AppConfig.DIALOG_LOADING_ID);
 					Intent intent = new Intent(BeerEdit.this.getApplication(),
@@ -1059,7 +1060,7 @@ public class BeerEdit extends Activity implements
 			if (resultCode == RESULT_OK) {
 				this.mPictureTaken = (extras != null) ? extras
 						.getBoolean("PICTURE_TAKEN") : false;
-				Log.i(TAG, "onActivityResult:Picture Taken="
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:Picture Taken="
 						+ ((this.mPictureTaken) ? "Y" : "N"));
 				setThumbnailViewOnClickListener();
 			}
@@ -1093,7 +1094,7 @@ public class BeerEdit extends Activity implements
 				if (chars != null && (chars.startsWith("{"))) {
 					try {
 						mCharacteristicsJson = new JSONObject(chars);
-						Log.i(TAG, "onActivityResult:CHARACTERISTICS: "
+						if (Logger.isLogEnabled())  Logger.log("onActivityResult:CHARACTERISTICS: "
 								+ mCharacteristicsJson.toString());
 						setCharacteristicsTable();
 					} catch (JSONException e) {
@@ -1104,7 +1105,7 @@ public class BeerEdit extends Activity implements
 		} else if (requestCode == AppConfig.SELECT_IMAGE_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				this.mPictureTaken = true;
-				Log.i(TAG, "onActivityResult: SELECT_IMAGE_REQUEST_CODE");
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult: SELECT_IMAGE_REQUEST_CODE");
 				setThumbnailViewOnClickListener();
 			}
 
@@ -1120,7 +1121,7 @@ public class BeerEdit extends Activity implements
 	@Override
 	protected Dialog onCreateDialog(int id) {
 
-		Log.i(TAG, "onCreateDialog");
+		if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		ACTIVE_DIALOG = id;
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_LOADING_ID) {
@@ -1140,7 +1141,7 @@ public class BeerEdit extends Activity implements
 	 */
 	private void populateFields() {
 
-		Log.i(TAG, "populateFields");
+		if (Logger.isLogEnabled())  Logger.log("populateFields");
 
 		if (mRowId != null && (!mIsNew)) {
 			Cursor cursor = mDbHelper.fetchNote(mRowId);

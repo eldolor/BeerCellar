@@ -36,6 +36,7 @@ import com.cm.beer.facebook.BaseRequestListener;
 import com.cm.beer.facebook.SessionStore;
 import com.cm.beer.transfer.CommunityBeer;
 import com.cm.beer.util.DrawableManager;
+import com.cm.beer.util.Logger;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
@@ -79,7 +80,7 @@ public class ShareOnFacebook extends Activity {
 				+ this.getClass().getName();
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.d(TAG, "onCreate: ");
+			if (Logger.isLogEnabled())  Logger.log("onCreate: ");
 		}
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
@@ -87,7 +88,7 @@ public class ShareOnFacebook extends Activity {
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
 				this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		setContentView(R.layout.share_on_facebook);
@@ -117,7 +118,7 @@ public class ShareOnFacebook extends Activity {
 			public void onClick(View v) {
 				try {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.d(TAG, "mPostButton.setOnClickListener");
+						if (Logger.isLogEnabled())  Logger.log("mPostButton.setOnClickListener");
 					}
 					showDialog(AppConfig.DIALOG_POSTING_ID);
 					Bundle parameters = new Bundle();
@@ -168,7 +169,7 @@ public class ShareOnFacebook extends Activity {
 			mDescription = setMyBeerForGraphApi();
 			setThumbnailView(mThumbnail, String.valueOf(mRowId));
 		}
-		Log.i(TAG, "Description: " + mDescription);
+		if (Logger.isLogEnabled())  Logger.log("Description: " + mDescription);
 		String _mDescriptionForDisplay = mDescription.replace("#", ", ");
 		_mDescriptionForDisplay = (_mDescriptionForDisplay.length() > 150) ? (_mDescriptionForDisplay
 				.substring(0, 150)) + "..."
@@ -186,12 +187,12 @@ public class ShareOnFacebook extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -204,7 +205,7 @@ public class ShareOnFacebook extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateOptionsMenu");
+			if (Logger.isLogEnabled())  Logger.log("onCreateOptionsMenu");
 		}
 		super.onCreateOptionsMenu(menu);
 		int position = 0;
@@ -223,7 +224,7 @@ public class ShareOnFacebook extends Activity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onMenuItemSelected");
+			if (Logger.isLogEnabled())  Logger.log("onMenuItemSelected");
 		}
 		switch (item.getItemId()) {
 		case SEND_ERROR_REPORT_ID:
@@ -242,7 +243,7 @@ public class ShareOnFacebook extends Activity {
 	 */
 	private void sendErrorReport() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "Send Error Report");
+			if (Logger.isLogEnabled())  Logger.log("Send Error Report");
 		}
 		Intent intent = new Intent(ShareOnFacebook.this.getApplication(),
 				CollectAndSendLog.class);
@@ -272,11 +273,11 @@ public class ShareOnFacebook extends Activity {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(ACTIVE_DIALOG);
 		}
@@ -291,7 +292,7 @@ public class ShareOnFacebook extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_POSTING_ID) {
@@ -487,7 +488,7 @@ public class ShareOnFacebook extends Activity {
 	private String getCharacteristics(String characteristicsJson)
 			throws JSONException {
 		StringBuffer _characteristics = new StringBuffer();
-		Log.i(TAG, "Characteristics Json: "
+		if (Logger.isLogEnabled())  Logger.log("Characteristics Json: "
 				+ characteristicsJson);
 
 		if (characteristicsJson != null && (!characteristicsJson.equals(""))
@@ -558,7 +559,7 @@ public class ShareOnFacebook extends Activity {
 			}
 
 		}
-		Log.i(TAG, "Characteristics: " + _characteristics.toString());
+		if (Logger.isLogEnabled())  Logger.log("Characteristics: " + _characteristics.toString());
 		return _characteristics.toString();
 
 	}
@@ -568,7 +569,7 @@ public class ShareOnFacebook extends Activity {
 	 */
 	private void setThumbnailView(ImageView thumbnailView, String mRowId) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "setThumbnailView()");
+			if (Logger.isLogEnabled())  Logger.log("setThumbnailView()");
 		}
 		File thumbnail = null;
 		File thumbnailsDir = new File(AppConfig.PICTURES_THUMBNAILS_DIR);
@@ -583,7 +584,7 @@ public class ShareOnFacebook extends Activity {
 								.openStream());
 						thumbnailView.setImageBitmap(image);
 						if (AppConfig.LOGGING_ENABLED) {
-							Log.i(TAG, "setThumbnailView():Setting "
+							if (Logger.isLogEnabled())  Logger.log("setThumbnailView():Setting "
 									+ thumbnail.getPath() + " for " + mRowId);
 						}
 					} catch (MalformedURLException e) {
@@ -596,7 +597,7 @@ public class ShareOnFacebook extends Activity {
 				}
 			} else {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "setThumbnailView(): Thumbnail not found for "
+					if (Logger.isLogEnabled())  Logger.log("setThumbnailView(): Thumbnail not found for "
 							+ mRowId);
 				}
 				// if not then bind the default icon
@@ -609,7 +610,7 @@ public class ShareOnFacebook extends Activity {
 			}
 		} else {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "setThumbnailView():"
+				if (Logger.isLogEnabled())  Logger.log("setThumbnailView():"
 						+ AppConfig.PICTURES_THUMBNAILS_DIR + " not found");
 			}
 		}
@@ -636,7 +637,7 @@ public class ShareOnFacebook extends Activity {
 
 			if ((mDialog != null) && (mDialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "WallPostRequestListener:onComplete");
+					if (Logger.isLogEnabled())  Logger.log("WallPostRequestListener:onComplete");
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}
@@ -656,13 +657,13 @@ public class ShareOnFacebook extends Activity {
 						"WallPostRequestListener:onComplete "
 								+ response.toString());
 			}
-			Log.d(TAG, "Got response: " + response);
+			if (Logger.isLogEnabled())  Logger.log("Got response: " + response);
 			final String postId;
 
 			try {
 				JSONObject json = Util.parseJson(response);
 				postId = json.getString("id");
-				Log.d(TAG, "Post Id:" + postId);
+				if (Logger.isLogEnabled())  Logger.log("Post Id:" + postId);
 			} catch (JSONException e) {
 				Log.e(TAG, "JSON Error in response");
 			} catch (FacebookError e) {
@@ -673,7 +674,7 @@ public class ShareOnFacebook extends Activity {
 			}
 			if ((mDialog != null) && (mDialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "WallPostRequestListener:onComplete");
+					if (Logger.isLogEnabled())  Logger.log("WallPostRequestListener:onComplete");
 				}
 				removeDialog(ACTIVE_DIALOG);
 				setResult(AppConfig.FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE);
@@ -729,7 +730,7 @@ public class ShareOnFacebook extends Activity {
 									.replace(" ", "_") : ""), e);
 			if ((mDialog != null) && (mDialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "onFacebookError: handleError");
+					if (Logger.isLogEnabled())  Logger.log("onFacebookError: handleError");
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}
@@ -749,7 +750,7 @@ public class ShareOnFacebook extends Activity {
 						"GetWallPostRequestListener: onComplete "
 								+ response.toString());
 			}
-			Log.d(TAG, "Got response: " + response);
+			if (Logger.isLogEnabled())  Logger.log("Got response: " + response);
 			String message = "<empty>";
 
 			try {
@@ -774,7 +775,7 @@ public class ShareOnFacebook extends Activity {
 
 			if ((mDialog != null) && (mDialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "GetWallPostRequestListener: onComplete");
+					if (Logger.isLogEnabled())  Logger.log("GetWallPostRequestListener: onComplete");
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}
@@ -804,7 +805,7 @@ public class ShareOnFacebook extends Activity {
 		public void onFacebookError(FacebookError e, Object state) {
 			if ((mDialog != null) && (mDialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "GetWallPostRequestListener: onFacebookError");
+					if (Logger.isLogEnabled())  Logger.log("GetWallPostRequestListener: onFacebookError");
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}

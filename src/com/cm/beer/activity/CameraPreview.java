@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.util.BitmapScaler;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Reflect;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -93,7 +94,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
@@ -101,7 +102,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		// Start the tracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		// mRowId = savedInstanceState != null ? savedInstanceState
@@ -114,7 +115,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 					: null;
 		}
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate::_id="
+			if (Logger.isLogEnabled())  Logger.log("onCreate::_id="
 					+ ((mRowId != null) ? mRowId.longValue() : null));
 		}
 
@@ -147,7 +148,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		};
 		mOrientationEventListener.enable();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate: enabled orientation listener");
+			if (Logger.isLogEnabled())  Logger.log("onCreate: enabled orientation listener");
 		}
 
 	}
@@ -169,27 +170,27 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 				Bundle extras = getIntent().getExtras();
 				mCurrentFlashMode = extras != null ? extras
 						.getString("CURRENT_FLASH_MODE") : null;
-				Log.i(TAG, "onActivityResult():mCurrentFlashMode:"
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult():mCurrentFlashMode:"
 						+ mCurrentFlashMode);
 				mCurrentSceneMode = extras != null ? extras
 						.getString("CURRENT_SCENE_MODE") : null;
-				Log.i(TAG, "onActivityResult():mCurrentSceneMode:"
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult():mCurrentSceneMode:"
 						+ mCurrentSceneMode);
 				mCurrentWhiteBalance = extras != null ? extras
 						.getString("CURRENT_WHITE_BALANCE") : null;
-				Log.i(TAG, "onActivityResult():mCurrentWhiteBalance:"
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult():mCurrentWhiteBalance:"
 						+ mCurrentWhiteBalance);
 				mCurrentColorEffect = extras != null ? extras
 						.getString("CURRENT_COLOR_EFFECT") : null;
-				Log.i(TAG, "onActivityResult():mCurrentColorEffect:"
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult():mCurrentColorEffect:"
 						+ mCurrentColorEffect);
 				mCurrentAntibanding = extras != null ? extras
 						.getString("CURRENT_ANTIBANDING") : null;
-				Log.i(TAG, "onActivityResult():mCurrentAntibanding:"
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult():mCurrentAntibanding:"
 						+ mCurrentAntibanding);
 				mCurrentFocusMode = extras != null ? extras
 						.getString("CURRENT_FOCUS_MODE") : null;
-				Log.i(TAG, "onActivityResult():mCurrentFocusMode:"
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult():mCurrentFocusMode:"
 						+ mCurrentFocusMode);
 			}
 		}
@@ -203,12 +204,12 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -216,7 +217,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "Camera.PictureCallback");
+				if (Logger.isLogEnabled())  Logger.log("Camera.PictureCallback");
 			}
 			new SavePhotoTask().execute(data);
 			camera.startPreview();
@@ -250,7 +251,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String _text = null;
 		switch (id) {
@@ -280,12 +281,12 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	@Override
 	public void finish() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "finish");
+			if (Logger.isLogEnabled())  Logger.log("finish");
 		}
 		if (mOrientationEventListener != null) {
 			mOrientationEventListener.disable();
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "finish: disabled orientation listener");
+				if (Logger.isLogEnabled())  Logger.log("finish: disabled orientation listener");
 			}
 		}
 		super.finish();
@@ -299,7 +300,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	@Override
 	protected void onPause() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onPause");
+			if (Logger.isLogEnabled())  Logger.log("onPause");
 		}
 		super.onPause();
 	}
@@ -312,7 +313,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		super.onResume();
 	}
@@ -325,7 +326,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onKeyDown");
+			if (Logger.isLogEnabled())  Logger.log("onKeyDown");
 		}
 		if (keyCode == KeyEvent.KEYCODE_CAMERA
 				|| keyCode == KeyEvent.KEYCODE_SEARCH) {
@@ -344,21 +345,21 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			// acquire a lock on the camera
 			isCameraLocked = true;
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "pictureTaken::Camera Locked!!");
+				if (Logger.isLogEnabled())  Logger.log("pictureTaken::Camera Locked!!");
 			}
 			mCamera.autoFocus(new Camera.AutoFocusCallback() {
 				Camera.ShutterCallback shutterCallback = new Camera.ShutterCallback() {
 					public void onShutter() {
 						// Play your sound here.
 						if (AppConfig.LOGGING_ENABLED) {
-							Log.i(TAG, "Camera.ShutterCallback");
+							if (Logger.isLogEnabled())  Logger.log("Camera.ShutterCallback");
 						}
 					}
 				};
 
 				public void onAutoFocus(boolean success, Camera camera) {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.i(TAG, "onAutoFocus");
+						if (Logger.isLogEnabled())  Logger.log("onAutoFocus");
 					}
 					mPictureOrientation = mOrientation;
 					Log.i(TAG,
@@ -373,7 +374,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			return true;
 		} else {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "pictureTaken::Could NOT acquire Lock on Camera");
+				if (Logger.isLogEnabled())  Logger.log("pictureTaken::Could NOT acquire Lock on Camera");
 			}
 		}
 		return false;
@@ -388,7 +389,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	 */
 	public void surfaceCreated(SurfaceHolder holder) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "surfaceCreated");
+			if (Logger.isLogEnabled())  Logger.log("surfaceCreated");
 		}
 		mCamera = Camera.open();
 
@@ -443,7 +444,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	 */
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "surfaceDestroyed");
+			if (Logger.isLogEnabled())  Logger.log("surfaceDestroyed");
 		}
 		mCamera.stopPreview();
 		mCamera.release();
@@ -451,7 +452,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		mPreviewRunning = false;
 		if (mStorageMonitor != null) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "surfaceDestroyed:stopWatchingExternalStorage()");
+				if (Logger.isLogEnabled())  Logger.log("surfaceDestroyed:stopWatchingExternalStorage()");
 			}
 			mStorageMonitor.stopWatchingExternalStorage();
 		}
@@ -465,7 +466,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 	 * , int, int, int)
 	 */
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-		Log.i(TAG, "surfaceChanged");
+		if (Logger.isLogEnabled())  Logger.log("surfaceChanged");
 		if (mPreviewRunning) {
 			mCamera.stopPreview();
 		}
@@ -486,7 +487,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		p.setPictureFormat(PixelFormat.JPEG);
 
 		Size origSize = p.getPictureSize();
-		Log.i(TAG, "surfaceChanged:Original Picture width:" + origSize.width
+		if (Logger.isLogEnabled())  Logger.log("surfaceChanged:Original Picture width:" + origSize.width
 				+ " height:" + origSize.height);
 
 		mMainActivity.setCameraAdvancedParameters(p);
@@ -507,10 +508,10 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		try {
 			if (mCurrentFlashMode != null) {
 				Reflect.setFlashMode(p, mCurrentFlashMode);
-				Log.i(TAG, "Flash Mode set to " + mCurrentFlashMode);
+				if (Logger.isLogEnabled())  Logger.log("Flash Mode set to " + mCurrentFlashMode);
 			} else {
 				Reflect.setFlashMode(p, "auto");
-				Log.i(TAG, "Default Flash Mode set to auto");
+				if (Logger.isLogEnabled())  Logger.log("Default Flash Mode set to auto");
 			}
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -525,7 +526,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		try {
 			if (mCurrentSceneMode != null) {
 				Reflect.setSceneMode(p, mCurrentSceneMode);
-				Log.i(TAG, "Scene Mode set to " + mCurrentSceneMode);
+				if (Logger.isLogEnabled())  Logger.log("Scene Mode set to " + mCurrentSceneMode);
 			}
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -540,7 +541,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		try {
 			if (mCurrentAntibanding != null) {
 				Reflect.setAntibanding(p, mCurrentAntibanding);
-				Log.i(TAG, "Antibanding set to " + mCurrentAntibanding);
+				if (Logger.isLogEnabled())  Logger.log("Antibanding set to " + mCurrentAntibanding);
 			}
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -555,7 +556,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		try {
 			if (mCurrentColorEffect != null) {
 				Reflect.setColorEffect(p, mCurrentColorEffect);
-				Log.i(TAG, "Color Effect set to " + mCurrentColorEffect);
+				if (Logger.isLogEnabled())  Logger.log("Color Effect set to " + mCurrentColorEffect);
 			}
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -570,7 +571,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		try {
 			if (mCurrentFocusMode != null) {
 				Reflect.setFocusMode(p, mCurrentFocusMode);
-				Log.i(TAG, "Focus Mode set to " + mCurrentFocusMode);
+				if (Logger.isLogEnabled())  Logger.log("Focus Mode set to " + mCurrentFocusMode);
 			}
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -585,7 +586,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		try {
 			if (mCurrentWhiteBalance != null) {
 				Reflect.setWhiteBalance(p, mCurrentWhiteBalance);
-				Log.i(TAG, "White Balance set to " + mCurrentWhiteBalance);
+				if (Logger.isLogEnabled())  Logger.log("White Balance set to " + mCurrentWhiteBalance);
 			}
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -623,7 +624,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			if (list != null) {
 				mFlashModeValues = (String[]) list.toArray();
 			} else {
-				Log.i(TAG, "Camera does not support FLASH MODES");
+				if (Logger.isLogEnabled())  Logger.log("Camera does not support FLASH MODES");
 			}
 			mCurrentFlashMode = Reflect.getFlashMode(p);
 		} catch (Throwable e) {
@@ -637,7 +638,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			if (list != null) {
 				mSceneModeValues = (String[]) list.toArray();
 			} else {
-				Log.i(TAG, "Camera does not support SCENE MODES");
+				if (Logger.isLogEnabled())  Logger.log("Camera does not support SCENE MODES");
 			}
 			mCurrentSceneMode = Reflect.getSceneMode(p);
 		} catch (Throwable e) {
@@ -651,7 +652,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			if (list != null) {
 				mAntibandingValues = (String[]) list.toArray();
 			} else {
-				Log.i(TAG, "Camera does not support ANTIBANDING");
+				if (Logger.isLogEnabled())  Logger.log("Camera does not support ANTIBANDING");
 			}
 			mCurrentAntibanding = Reflect.getAntibanding(p);
 		} catch (Throwable e) {
@@ -665,7 +666,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			if (list != null) {
 				mColorEffectValues = (String[]) list.toArray();
 			} else {
-				Log.i(TAG, "Camera does not support COLOR EFFECTS");
+				if (Logger.isLogEnabled())  Logger.log("Camera does not support COLOR EFFECTS");
 			}
 			mCurrentColorEffect = Reflect.getColorEffect(p);
 		} catch (Throwable e) {
@@ -679,7 +680,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			if (list != null) {
 				mFocusModeValues = (String[]) list.toArray();
 			} else {
-				Log.i(TAG, "Camera does not support FOCUS MODES");
+				if (Logger.isLogEnabled())  Logger.log("Camera does not support FOCUS MODES");
 			}
 			mCurrentFocusMode = Reflect.getFocusMode(p);
 		} catch (Throwable e) {
@@ -693,7 +694,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			if (list != null) {
 				mWhiteBalanceValues = (String[]) list.toArray();
 			} else {
-				Log.i(TAG, "Camera does not support WHITE BALANCE");
+				if (Logger.isLogEnabled())  Logger.log("Camera does not support WHITE BALANCE");
 			}
 			mCurrentWhiteBalance = Reflect.getWhiteBalance(p);
 		} catch (Throwable e) {
@@ -723,7 +724,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			int result = RESULT_OK;
 
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground");
 			}
 			FileOutputStream pictureFos = null;
 			File baseDir = null;
@@ -747,7 +748,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 
 				if (photo != null && photo.exists()) {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.i(TAG, "doInBackground::deleting "
+						if (Logger.isLogEnabled())  Logger.log("doInBackground::deleting "
 								+ photo.getPath());
 					}
 					photo.delete();
@@ -771,7 +772,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 				System.gc();
 
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "doInBackground::created file "
+					if (Logger.isLogEnabled())  Logger.log("doInBackground::created file "
 							+ photo.getPath());
 				}
 
@@ -785,7 +786,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 
 				if (thumbnail != null && thumbnail.exists()) {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.i(TAG, "doInBackground::deleting "
+						if (Logger.isLogEnabled())  Logger.log("doInBackground::deleting "
 								+ thumbnail.getPath());
 					}
 					thumbnail.delete();
@@ -803,7 +804,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 				System.gc();
 
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "doInBackground::created file "
+					if (Logger.isLogEnabled())  Logger.log("doInBackground::created file "
 							+ thumbnail.getPath());
 				}
 			} catch (Exception e) {
@@ -849,7 +850,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 			// release the lock on the camera
 			isCameraLocked = false;
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "SavePhotoTask::doInBackground::Camera UNLocked!!");
+				if (Logger.isLogEnabled())  Logger.log("SavePhotoTask::doInBackground::Camera UNLocked!!");
 			}
 			return (result == RESULT_OK) ? new Boolean(true) : new Boolean(
 					false);
@@ -973,19 +974,19 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 				// 1.1 Create new base dir
 				if (baseDir.mkdir()) {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.i(TAG, "doInBackground::Created "
+						if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 								+ baseDir.getPath());
 					}
 					// 1.2 Create new pictures dir
 					if (picturesDir.mkdir()) {
 						if (AppConfig.LOGGING_ENABLED) {
-							Log.i(TAG, "doInBackground::Created "
+							if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 									+ picturesDir.getPath());
 						}
 						// 1.3 Create new thumbnails dir
 						if (thumbnailsDir.mkdir()) {
 							if (AppConfig.LOGGING_ENABLED) {
-								Log.i(TAG, "doInBackground::Created "
+								if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 										+ thumbnailsDir.getPath());
 							}
 
@@ -1020,13 +1021,13 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 					// 2.1.1 create new pictures dir
 					if (picturesDir.mkdir()) {
 						if (AppConfig.LOGGING_ENABLED) {
-							Log.i(TAG, "doInBackground::Created "
+							if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 									+ picturesDir.getPath());
 						}
 						// 2.1.2 create new thumbnails dir
 						if (thumbnailsDir.mkdir()) {
 							if (AppConfig.LOGGING_ENABLED) {
-								Log.i(TAG, "doInBackground::Created "
+								if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 										+ thumbnailsDir.getPath());
 							}
 
@@ -1054,7 +1055,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 						// 2.2.1.1 create new thumbnails dir
 						if (thumbnailsDir.mkdir()) {
 							if (AppConfig.LOGGING_ENABLED) {
-								Log.i(TAG, "doInBackground::Created "
+								if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 										+ thumbnailsDir.getPath());
 							}
 
@@ -1085,7 +1086,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 
 		void updateExternalStorageState() {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "updateExternalStorageState");
+				if (Logger.isLogEnabled())  Logger.log("updateExternalStorageState");
 			}
 			String state = Environment.getExternalStorageState();
 			if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -1103,7 +1104,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 		void handleExternalStorageState(boolean mExternalStorageAvailable,
 				boolean mExternalStorageWriteable) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "handleExternalStorageState");
+				if (Logger.isLogEnabled())  Logger.log("handleExternalStorageState");
 			}
 			if (!mExternalStorageAvailable) {
 				if (AppConfig.LOGGING_ENABLED) {
@@ -1136,12 +1137,12 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 
 		void startWatchingExternalStorage() {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "startWatchingExternalStorage");
+				if (Logger.isLogEnabled())  Logger.log("startWatchingExternalStorage");
 			}
 			mExternalStorageReceiver = new BroadcastReceiver() {
 				@Override
 				public void onReceive(Context context, Intent intent) {
-					Log.i(TAG, "Storage: " + intent.getData());
+					if (Logger.isLogEnabled())  Logger.log("Storage: " + intent.getData());
 					updateExternalStorageState();
 				}
 			};
@@ -1154,7 +1155,7 @@ public class CameraPreview extends Activity implements SurfaceHolder.Callback {
 
 		void stopWatchingExternalStorage() {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "stopWatchingExternalStorage");
+				if (Logger.isLogEnabled())  Logger.log("stopWatchingExternalStorage");
 			}
 			unregisterReceiver(mExternalStorageReceiver);
 		}

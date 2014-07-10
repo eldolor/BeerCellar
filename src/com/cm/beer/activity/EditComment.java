@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -57,7 +58,7 @@ public class EditComment extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 		mTracker = GoogleAnalyticsTracker.getInstance();
@@ -65,7 +66,7 @@ public class EditComment extends Activity {
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
 				this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 		Bundle extras = getIntent().getExtras();
 		mCommentId = extras != null ? extras.getString("COMMENT_ID") : null;
@@ -156,12 +157,12 @@ public class EditComment extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -187,7 +188,7 @@ public class EditComment extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == DIALOG_POST_COMMENT_ID) {
@@ -216,11 +217,11 @@ public class EditComment extends Activity {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(AppConfig.DIALOG_LOADING_ID);
 		}
@@ -238,7 +239,7 @@ public class EditComment extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(_TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 
 			String _userId = (String) args[0];
 			String _userName = (String) args[1];
@@ -258,7 +259,7 @@ public class EditComment extends Activity {
 
 				String _commentStr = comment.toString();
 				_commentStr = URLEncoder.encode(_commentStr, "UTF-8");
-				Log.i(_TAG, _commentStr);
+				if (Logger.isLogEnabled())  Logger.log(_commentStr);
 
 				HashMap<String, String> parameters = new HashMap<String, String>();
 				parameters.put("q", AppConfig.COMMUNITY_UPDATE_COMMENT_Q_VALUE);
@@ -266,7 +267,7 @@ public class EditComment extends Activity {
 
 				// Prepare a request object
 				String _url = AppConfig.COMMUNITY_COMMENTS_URL;
-				Log.i(_TAG, _url);
+				if (Logger.isLogEnabled())  Logger.log(_url);
 				{
 					boolean retry = true;
 					int retryCount = 0;
@@ -298,7 +299,7 @@ public class EditComment extends Activity {
 				}
 
 				// Examine the response status
-				Log.i(_TAG, "Response = " + _response);
+				if (Logger.isLogEnabled())  Logger.log("Response = " + _response);
 
 			} catch (Throwable e) {
 				Log.e(_TAG,
@@ -313,28 +314,28 @@ public class EditComment extends Activity {
 				mTracker.dispatch();
 			}
 
-			Log.i(_TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			Log.i(_TAG, "onPreExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute starting");
 			if (mMainActivity != null) {
 				mMainActivity.showDialog(DIALOG_UPDATE_COMMENT_ID);
 			}
-			Log.i(_TAG, "onPreExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute finished");
 		}
 
 		@Override
 		protected void onPostExecute(Object result) {
-			Log.i(_TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			mDialog.cancel();
 			Intent intent = new Intent();
 			mMainActivity.setResult(RESULT_OK, intent);
 			mMainActivity.finish();
 
-			Log.i(_TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -350,7 +351,7 @@ public class EditComment extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(_TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 
 			String _commentId = (String) args[0];
 			String _response = null;
@@ -363,7 +364,7 @@ public class EditComment extends Activity {
 
 				// Prepare a request object
 				String _url = AppConfig.COMMUNITY_COMMENTS_URL;
-				Log.i(_TAG, _url);
+				if (Logger.isLogEnabled())  Logger.log(_url);
 				{
 					boolean retry = true;
 					int retryCount = 0;
@@ -395,7 +396,7 @@ public class EditComment extends Activity {
 				}
 
 				// Examine the response status
-				Log.i(_TAG, "Response = " + _response);
+				if (Logger.isLogEnabled())  Logger.log("Response = " + _response);
 
 			} catch (Throwable e) {
 				Log.e(_TAG,
@@ -410,28 +411,28 @@ public class EditComment extends Activity {
 				mTracker.dispatch();
 			}
 
-			Log.i(_TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			Log.i(_TAG, "onPreExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute starting");
 			if (mMainActivity != null) {
 				mMainActivity.showDialog(DIALOG_DELETE_COMMENT_ID);
 			}
-			Log.i(_TAG, "onPreExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute finished");
 		}
 
 		@Override
 		protected void onPostExecute(Object result) {
-			Log.i(_TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			mDialog.cancel();
 			Intent intent = new Intent();
 			mMainActivity.setResult(RESULT_OK, intent);
 			mMainActivity.finish();
 
-			Log.i(_TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}

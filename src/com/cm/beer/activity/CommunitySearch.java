@@ -15,8 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 
+import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.Logger;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class CommunitySearch extends Activity implements
@@ -46,14 +48,14 @@ public class CommunitySearch extends Activity implements
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.d(TAG, "onCreate: ");
+			if (Logger.isLogEnabled())  Logger.log("onCreate: ");
 		}
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		setContentView(R.layout.community_beer_search);
@@ -68,12 +70,12 @@ public class CommunitySearch extends Activity implements
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -86,7 +88,7 @@ public class CommunitySearch extends Activity implements
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_SEARCHING_ID) {
@@ -102,7 +104,7 @@ public class CommunitySearch extends Activity implements
 	 */
 	protected void display() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "display");
+			if (Logger.isLogEnabled())  Logger.log("display");
 		}
 		/****************************************/
 		mBeer = (AutoCompleteTextView) findViewById(R.id.beer);
@@ -139,7 +141,7 @@ public class CommunitySearch extends Activity implements
 			public void onClick(View v) {
 				// Perform action on clicks
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "save");
+					if (Logger.isLogEnabled())  Logger.log("save");
 				}
 				search();
 				setResult(RESULT_OK);
@@ -156,7 +158,7 @@ public class CommunitySearch extends Activity implements
 				// Perform action on clicks
 				// showDialog(DIALOG_SAVING_ID);
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "cancel");
+					if (Logger.isLogEnabled())  Logger.log("cancel");
 				}
 				setResult(RESULT_OK);
 				finish();
@@ -168,10 +170,10 @@ public class CommunitySearch extends Activity implements
 	private void search() {
 		// TODO Auto-generated method stub
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "search");
+			if (Logger.isLogEnabled())  Logger.log("search");
 		}
 		Intent intent = new Intent(CommunitySearch.this.getApplication(),
-				CommunityBeers.class);
+				CommunityBeersFragment.class);
 		// search action
 		intent.putExtra("OPTION", AppConfig.COMMUNITY_SEARCH_BEERS);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -184,7 +186,7 @@ public class CommunitySearch extends Activity implements
 					.putExtra(NotesDbAdapter.KEY_BEER, mBeer.getText()
 							.toString());
 			searchCriteria.append(NotesDbAdapter.KEY_BEER);
-			Log.i(TAG, "beer:" + mBeer.getText().toString());
+			if (Logger.isLogEnabled())  Logger.log("beer:" + mBeer.getText().toString());
 		}
 		if (mStyle.getText().toString() != null
 				&& (!mStyle.getText().toString().equals(""))) {
@@ -192,7 +194,7 @@ public class CommunitySearch extends Activity implements
 					.toString());
 			searchCriteria.append(",");
 			searchCriteria.append(NotesDbAdapter.KEY_STYLE);
-			Log.i(TAG, "style:" + mStyle.getText().toString());
+			if (Logger.isLogEnabled())  Logger.log("style:" + mStyle.getText().toString());
 		}
 		if (mBrewery.getText().toString() != null
 				&& (!mBrewery.getText().toString().equals(""))) {
@@ -200,7 +202,7 @@ public class CommunitySearch extends Activity implements
 					.toString());
 			searchCriteria.append(",");
 			searchCriteria.append(NotesDbAdapter.KEY_BREWERY);
-			Log.i(TAG, "brewery:" + mBrewery.getText().toString());
+			if (Logger.isLogEnabled())  Logger.log("brewery:" + mBrewery.getText().toString());
 		}
 		if (mState.getText().toString() != null
 				&& (!mState.getText().toString().equals(""))) {
@@ -208,7 +210,7 @@ public class CommunitySearch extends Activity implements
 					.toString());
 			searchCriteria.append(",");
 			searchCriteria.append(NotesDbAdapter.KEY_STATE);
-			Log.i(TAG, "state:" + mState.getText().toString());
+			if (Logger.isLogEnabled())  Logger.log("state:" + mState.getText().toString());
 		}
 		if (mCountry.getText().toString() != null
 				&& (!mCountry.getText().toString().equals(""))) {
@@ -216,7 +218,7 @@ public class CommunitySearch extends Activity implements
 					.toString());
 			searchCriteria.append(",");
 			searchCriteria.append(NotesDbAdapter.KEY_COUNTRY);
-			Log.i(TAG, "country:" + mCountry.getText().toString());
+			if (Logger.isLogEnabled())  Logger.log("country:" + mCountry.getText().toString());
 		}
 
 		if (mRatingChanged) {
@@ -224,7 +226,7 @@ public class CommunitySearch extends Activity implements
 					.getRating()));
 			searchCriteria.append(",");
 			searchCriteria.append(NotesDbAdapter.KEY_RATING);
-			Log.i(TAG, "rating:" + String.valueOf(mRating.getRating()));
+			if (Logger.isLogEnabled())  Logger.log("rating:" + String.valueOf(mRating.getRating()));
 		}
 		if (mReviewedBy.getText().toString() != null
 				&& (!mReviewedBy.getText().toString().equals(""))) {
@@ -232,12 +234,12 @@ public class CommunitySearch extends Activity implements
 					.toString());
 			searchCriteria.append(",");
 			searchCriteria.append(NotesDbAdapter.KEY_USER_NAME);
-			Log.i(TAG, "username:" + mReviewedBy.getText().toString());
+			if (Logger.isLogEnabled())  Logger.log("username:" + mReviewedBy.getText().toString());
 		}
 
 		String searchCriteriaStr = searchCriteria.toString().replaceAll(",",
 				"_");
-		Log.i(TAG, "Search Criteria:" + searchCriteriaStr);
+		if (Logger.isLogEnabled())  Logger.log("Search Criteria:" + searchCriteriaStr);
 		mTracker
 				.trackEvent("CommunitySearch", "Criteria", searchCriteriaStr, 0);
 		mTracker.dispatch();

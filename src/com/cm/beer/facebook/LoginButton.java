@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.cm.beer.activity.R;
 import com.cm.beer.facebook.SessionEvents.AuthListener;
 import com.cm.beer.facebook.SessionEvents.LogoutListener;
+import com.cm.beer.util.Logger;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -106,7 +107,7 @@ public class LoginButton extends ImageButton {
 		private final String TAG = LoginDialogListener.class.getName();
 
 		public void onComplete(Bundle values) {
-			Log.d(TAG, "onComplete::");
+			if (Logger.isLogEnabled())  Logger.log("onComplete::");
 			SessionEvents.onLoginSuccess();
 		}
 
@@ -124,7 +125,7 @@ public class LoginButton extends ImageButton {
 		}
 
 		public void onCancel() {
-			Log.d(TAG, "onCancel::");
+			if (Logger.isLogEnabled())  Logger.log("onCancel::");
 			SessionEvents.onLoginError("Action Canceled");
 		}
 	}

@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 
 public class CollectAndSendLog extends Activity {
 	String TAG;
@@ -34,11 +35,11 @@ public class CollectAndSendLog extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		setContentView(R.layout.send_error_report);
@@ -46,7 +47,7 @@ public class CollectAndSendLog extends Activity {
 		findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "Cancel");
+					if (Logger.isLogEnabled())  Logger.log("Cancel");
 				}
 				finish();
 			}

@@ -23,11 +23,11 @@ public class ViewMap {
 	 * @Override protected void onCreate(Bundle icicle) { // TODO Auto-generated
 	 * method stub super.onCreate(icicle); // setup TAG TAG =
 	 * this.getString(R.string.app_name) + "::" + this.getClass().getName(); if
-	 * (AppConfig.LOGGING_ENABLED) { Log.i(TAG, "onCreate"); } mMainActivity =
+	 * (AppConfig.LOGGING_ENABLED) { if (Logger.isLogEnabled())  Logger.log("onCreate"); } mMainActivity =
 	 * this; mTracker = GoogleAnalyticsTracker.getInstance(); // Start the
 	 * mTracker with dispatch interval
 	 * mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
-	 * Log.i(TAG, "onCreate:Google Tracker Instantiated");
+	 * if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 	 * 
 	 * mExtras = getIntent().getExtras(); String latitude =
 	 * mExtras.getString("LATITUDE"); String longitude =
@@ -58,7 +58,7 @@ public class ViewMap {
 	 * }
 	 * 
 	 * @Override protected void onDestroy() { if (AppConfig.LOGGING_ENABLED) {
-	 * Log.i(TAG, "onDestroy"); } // Stop the mTracker when it is no longer
+	 * if (Logger.isLogEnabled())  Logger.log("onDestroy"); } // Stop the mTracker when it is no longer
 	 * needed. mTracker.stop(); if (AppConfig.LOGGING_ENABLED) { Log.i(TAG,
 	 * "onCreate:Google Tracker Stopped!"); } super.onDestroy(); }
 	 * 

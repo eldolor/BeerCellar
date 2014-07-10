@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class BeerWebView extends Activity {
@@ -37,7 +37,7 @@ public class BeerWebView extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		activity = this;
 
@@ -45,7 +45,7 @@ public class BeerWebView extends Activity {
 		// Start the tracker with dispatch interval
 		tracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		// Let's display the progress in the activity title bar, like the
@@ -58,7 +58,7 @@ public class BeerWebView extends Activity {
 		String url = (extras != null) ? extras.getString("URL") : null;
 		title = (extras != null) ? extras.getString("TITLE") : null;
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate::" + title + "::" + url);
+			if (Logger.isLogEnabled())  Logger.log("onCreate::" + title + "::" + url);
 		}
 
 		ImageView backButton = (ImageView) this.findViewById(R.id.back_button);
@@ -106,12 +106,12 @@ public class BeerWebView extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		tracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -124,7 +124,7 @@ public class BeerWebView extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		String dialogTitle = null;
@@ -171,7 +171,7 @@ public class BeerWebView extends Activity {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPageStarted::" + url);
+				if (Logger.isLogEnabled())  Logger.log("onPageStarted::" + url);
 			}
 			super.onPageStarted(view, url, favicon);
 		}
@@ -179,7 +179,7 @@ public class BeerWebView extends Activity {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPageFinished::" + url);
+				if (Logger.isLogEnabled())  Logger.log("onPageFinished::" + url);
 			}
 			removeDialog(ACTIVE_DIALOG);
 			super.onPageFinished(view, url);
@@ -189,7 +189,7 @@ public class BeerWebView extends Activity {
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onReceivedError::" + failingUrl + "::" + errorCode
+				if (Logger.isLogEnabled())  Logger.log("onReceivedError::" + failingUrl + "::" + errorCode
 						+ "::" + description);
 			}
 			Toast.makeText(activity, description, Toast.LENGTH_LONG).show();
@@ -203,7 +203,7 @@ public class BeerWebView extends Activity {
 		@Override
 		public void onLoadResource(WebView view, String url) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onLoadResource::" + url);
+				if (Logger.isLogEnabled())  Logger.log("onLoadResource::" + url);
 			}
 			super.onLoadResource(view, url);
 		}

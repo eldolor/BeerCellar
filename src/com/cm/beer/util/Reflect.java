@@ -83,7 +83,7 @@ public class Reflect {
 			Parameters_getSupportedPictureSizes = Camera.Parameters.class
 					.getMethod("getSupportedPictureSizes", new Class[] {});
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSupportedPictureSizes() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSupportedPictureSizes() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -93,7 +93,7 @@ public class Reflect {
 			Parameters_getSupportedPreviewSizes = Camera.Parameters.class
 					.getMethod("getSupportedPreviewSizes", new Class[] {});
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSupportedPreviewSizes() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSupportedPreviewSizes() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -102,7 +102,7 @@ public class Reflect {
 		try {
 			google_adview = R.id.class.getField("google_adview");
 			/* success, this is a newer device */
-			Log.i(TAG, "Field google_adview() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Field google_adview() is available!");
 		} catch (NoSuchFieldException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -112,7 +112,7 @@ public class Reflect {
 		{
 			Service_setForeground = Service.class.getMethod("setForeground",
 					mSetForegroundSignature);
-			Log.i(TAG, "Method setForeground() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method setForeground() is available!");
 		} catch (NoSuchMethodException nsme)
 		{
 			/* failure, must be older device */
@@ -122,11 +122,11 @@ public class Reflect {
 		try {
 			Service_startForeground = Service.class.getMethod(
 					"startForeground", mStartForegroundSignature);
-			Log.i(TAG, "Method startForeground() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method startForeground() is available!");
 			Service_stopForeground = Service.class.getMethod("stopForeground",
 					mStopForegroundSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method stopForeground() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method stopForeground() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -137,14 +137,14 @@ public class Reflect {
 					.getMethod("getSupportedFlashModes",
 							mGetSupportedFlashModesSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSupportedFlashModes() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSupportedFlashModes() is available!");
 			Parameters_setFlashMode = Camera.Parameters.class.getMethod(
 					"setFlashMode", mSetFlashModeSignature);
-			Log.i(TAG, "Method setFlashMode() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method setFlashMode() is available!");
 			Parameters_getFlashMode = Camera.Parameters.class.getMethod(
 					"getFlashMode", mGetFlashModeSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getFlashMode() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getFlashMode() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -155,14 +155,14 @@ public class Reflect {
 					.getMethod("getSupportedSceneModes",
 							mGetSupportedSceneModesSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSupportedSceneModes() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSupportedSceneModes() is available!");
 			Parameters_setSceneMode = Camera.Parameters.class.getMethod(
 					"setSceneMode", mSetSceneModeSignature);
-			Log.i(TAG, "Method setSceneMode() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method setSceneMode() is available!");
 			Parameters_getSceneMode = Camera.Parameters.class.getMethod(
 					"getSceneMode", mGetSceneModeSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSceneMode() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSceneMode() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -174,14 +174,14 @@ public class Reflect {
 					.getMethod("getSupportedAntibanding",
 							mGetSupportedAntibandingSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSupportedAntibanding() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSupportedAntibanding() is available!");
 			Parameters_setAntibanding = Camera.Parameters.class.getMethod(
 					"setAntibanding", mSetAntibandingSignature);
-			Log.i(TAG, "Method setAntibanding() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method setAntibanding() is available!");
 			Parameters_getAntibanding = Camera.Parameters.class.getMethod(
 					"getAntibanding", mGetAntibandingSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getAntibanding() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getAntibanding() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -193,14 +193,14 @@ public class Reflect {
 					.getMethod("getSupportedColorEffects",
 							mGetSupportedColorEffectsSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSupportedColorEffects() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSupportedColorEffects() is available!");
 			Parameters_setColorEffect = Camera.Parameters.class.getMethod(
 					"setColorEffect", mSetColorEffectSignature);
-			Log.i(TAG, "Method setColorEffect() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method setColorEffect() is available!");
 			Parameters_getColorEffect = Camera.Parameters.class.getMethod(
 					"getColorEffect", mGetColorEffectSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getColorEffect() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getColorEffect() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -212,14 +212,14 @@ public class Reflect {
 					.getMethod("getSupportedFocusModes",
 							mGetSupportedFocusModesSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSupportedFocusModes() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSupportedFocusModes() is available!");
 			Parameters_setFocusMode = Camera.Parameters.class.getMethod(
 					"setFocusMode", mSetFocusModeSignature);
-			Log.i(TAG, "Method setFocusMode() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method setFocusMode() is available!");
 			Parameters_getFocusMode = Camera.Parameters.class.getMethod(
 					"getFocusMode", mGetFocusModeSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getFocusMode() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getFocusMode() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -230,14 +230,14 @@ public class Reflect {
 					.getMethod("getSupportedWhiteBalance",
 							mGetSupportedWhiteBalanceSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getSupportedWhiteBalance() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getSupportedWhiteBalance() is available!");
 			Parameters_setWhiteBalance = Camera.Parameters.class.getMethod(
 					"setWhiteBalance", mSetWhiteBalanceSignature);
-			Log.i(TAG, "Method setWhiteBalance() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method setWhiteBalance() is available!");
 			Parameters_getWhiteBalance = Camera.Parameters.class.getMethod(
 					"getWhiteBalance", mGetWhiteBalanceSignature);
 			/* success, this is a newer device */
-			Log.i(TAG, "Method getWhiteBalance() is available!");
+			if (Logger.isLogEnabled())  Logger.log("Method getWhiteBalance() is available!");
 		} catch (NoSuchMethodException nsme) {
 			/* failure, must be older device */
 			Log.w(TAG, nsme);
@@ -255,11 +255,11 @@ public class Reflect {
 	public static List<Size> getSupportedPictureSizes(Camera.Parameters p) {
 		try {
 			if (Parameters_getSupportedPictureSizes != null) {
-				Log.i(TAG, "Method getSupportedPictureSizes() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedPictureSizes() is available!");
 				return (List<Size>) Parameters_getSupportedPictureSizes
 						.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSupportedPictureSizes() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedPictureSizes() is NOT available!");
 				return null;
 			}
 		} catch (InvocationTargetException ite) {
@@ -285,11 +285,11 @@ public class Reflect {
 	public static List<Size> getSupportedPreviewSizes(Camera.Parameters p) {
 		try {
 			if (Parameters_getSupportedPreviewSizes != null) {
-				Log.i(TAG, "Method getSupportedPreviewSizes() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedPreviewSizes() is available!");
 				return (List<Size>) Parameters_getSupportedPreviewSizes
 						.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSupportedPreviewSizes() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedPreviewSizes() is NOT available!");
 				return null;
 			}
 		} catch (InvocationTargetException ite) {
@@ -319,10 +319,10 @@ public class Reflect {
 	public static int getGoogleAdview() {
 		try {
 			if (google_adview != null) {
-				Log.i(TAG, "google_adview found!");
+				if (Logger.isLogEnabled())  Logger.log("google_adview found!");
 				return google_adview.getInt(R.id.class);
 			} else {
-				Log.i(TAG, "google_adview NOT found!");
+				if (Logger.isLogEnabled())  Logger.log("google_adview NOT found!");
 				return 0;
 			}
 		} catch (IllegalAccessException ie) {
@@ -339,16 +339,16 @@ public class Reflect {
 		{
 			if (Service_setForeground != null)
 			{
-				Log.i(TAG, "Method service_setForeground() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method service_setForeground() is available!");
 
 				Object[] _setForegroundArgs = new Object[1];
 				_setForegroundArgs[0] = set;
 				Service_setForeground.invoke(service, _setForegroundArgs);
-				Log.i(TAG, Service_setForeground.getName() + " invoked!");
+				if (Logger.isLogEnabled())  Logger.log(Service_setForeground.getName() + " invoked!");
 				return true;
 			} else
 			{
-				Log.i(TAG, "Method service_setForeground() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method service_setForeground() is NOT available!");
 				return false;
 			}
 		} catch (InvocationTargetException ite)
@@ -388,15 +388,15 @@ public class Reflect {
 			Notification notification, Service service) {
 		try {
 			if (Service_startForeground != null) {
-				Log.i(TAG, "Method service_startForeground() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method service_startForeground() is available!");
 				Object[] _startForegroundArgs = new Object[2];
 				_startForegroundArgs[0] = Integer.valueOf(id);
 				_startForegroundArgs[1] = notification;
 				Service_startForeground.invoke(service, _startForegroundArgs);
-				Log.i(TAG, Service_startForeground.getName() + " invoked!");
+				if (Logger.isLogEnabled())  Logger.log(Service_startForeground.getName() + " invoked!");
 				return true;
 			} else {
-				Log.i(TAG, "Method service_startForeground() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method service_startForeground() is NOT available!");
 				return false;
 			}
 		} catch (InvocationTargetException ite) {
@@ -431,14 +431,14 @@ public class Reflect {
 			boolean removeNotification, Service service) {
 		try {
 			if (Service_stopForeground != null) {
-				Log.i(TAG, "Method service_stopForeground() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method service_stopForeground() is available!");
 				Object[] _stopForegroundArgs = new Object[1];
 				_stopForegroundArgs[0] = Boolean.valueOf(removeNotification);
 				Service_stopForeground.invoke(service, _stopForegroundArgs);
-				Log.i(TAG, Service_stopForeground.getName() + " invoked!");
+				if (Logger.isLogEnabled())  Logger.log(Service_stopForeground.getName() + " invoked!");
 				return true;
 			} else {
-				Log.i(TAG, "Method service_stopForeground() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method service_stopForeground() is NOT available!");
 				return false;
 			}
 		} catch (InvocationTargetException ite) {
@@ -471,11 +471,11 @@ public class Reflect {
 	public static List<String> getSupportedFlashModes(Camera.Parameters p) {
 		try {
 			if (Parameters_getSupportedFlashModes != null) {
-				Log.i(TAG, "Method getSupportedFlashModes() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedFlashModes() is available!");
 				return (List<String>) Parameters_getSupportedFlashModes
 						.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSupportedFlashModes() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedFlashModes() is NOT available!");
 				return null;
 			}
 		} catch (InvocationTargetException ite) {
@@ -506,14 +506,14 @@ public class Reflect {
 	public static final boolean setFlashMode(Camera.Parameters p, String value) {
 		try {
 			if (Parameters_setFlashMode != null) {
-				Log.i(TAG, "Method setFlashMode() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setFlashMode() is available!");
 				Object[] _args = new Object[1];
 				_args[0] = value;
 				Parameters_setFlashMode.invoke(p, _args);
-				Log.i(TAG, "Flash Mode set to " + value);
+				if (Logger.isLogEnabled())  Logger.log("Flash Mode set to " + value);
 				return true;
 			} else {
-				Log.i(TAG, "Method setFlashMode() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setFlashMode() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -544,10 +544,10 @@ public class Reflect {
 		String value = null;
 		try {
 			if (Parameters_getFlashMode != null) {
-				Log.i(TAG, "Method getFlashMode() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getFlashMode() is available!");
 				value = (String) Parameters_getFlashMode.invoke(p);
 			} else {
-				Log.i(TAG, "Method getFlashMode() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getFlashMode() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -579,11 +579,11 @@ public class Reflect {
 	public static List<String> getSupportedSceneModes(Camera.Parameters p) {
 		try {
 			if (Parameters_getSupportedSceneModes != null) {
-				Log.i(TAG, "Method getSupportedSceneModes() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedSceneModes() is available!");
 				return (List<String>) Parameters_getSupportedSceneModes
 						.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSupportedSceneModes() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedSceneModes() is NOT available!");
 				return null;
 			}
 		} catch (InvocationTargetException ite) {
@@ -619,14 +619,14 @@ public class Reflect {
 	public static final boolean setSceneMode(Camera.Parameters p, String value) {
 		try {
 			if (Parameters_setSceneMode != null) {
-				Log.i(TAG, "Method setSceneMode() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setSceneMode() is available!");
 				Object[] _args = new Object[1];
 				_args[0] = value;
 				Parameters_setSceneMode.invoke(p, _args);
-				Log.i(TAG, "Scene Mode set to " + value);
+				if (Logger.isLogEnabled())  Logger.log("Scene Mode set to " + value);
 				return true;
 			} else {
-				Log.i(TAG, "Method setSceneMode() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setSceneMode() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -657,10 +657,10 @@ public class Reflect {
 		String value = null;
 		try {
 			if (Parameters_getSceneMode != null) {
-				Log.i(TAG, "Method getSceneMode() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSceneMode() is available!");
 				value = (String) Parameters_getSceneMode.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSceneMode() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSceneMode() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -692,11 +692,11 @@ public class Reflect {
 	public static List<String> getSupportedAntibanding(Camera.Parameters p) {
 		try {
 			if (Parameters_getSupportedAntibanding != null) {
-				Log.i(TAG, "Method getSupportedAntibanding() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedAntibanding() is available!");
 				return (List<String>) Parameters_getSupportedAntibanding
 						.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSupportedAntibanding() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedAntibanding() is NOT available!");
 				return null;
 			}
 		} catch (InvocationTargetException ite) {
@@ -727,14 +727,14 @@ public class Reflect {
 	public static final boolean setAntibanding(Camera.Parameters p, String value) {
 		try {
 			if (Parameters_setAntibanding != null) {
-				Log.i(TAG, "Method setAntibanding() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setAntibanding() is available!");
 				Object[] _args = new Object[1];
 				_args[0] = value;
 				Parameters_setAntibanding.invoke(p, _args);
-				Log.i(TAG, "Antibanding set to " + value);
+				if (Logger.isLogEnabled())  Logger.log("Antibanding set to " + value);
 				return true;
 			} else {
-				Log.i(TAG, "Method setAntibanding() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setAntibanding() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -765,10 +765,10 @@ public class Reflect {
 		String value = null;
 		try {
 			if (Parameters_getAntibanding != null) {
-				Log.i(TAG, "Method getAntibanding() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getAntibanding() is available!");
 				value = (String) Parameters_getAntibanding.invoke(p);
 			} else {
-				Log.i(TAG, "Method getAntibanding() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getAntibanding() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -800,11 +800,11 @@ public class Reflect {
 	public static List<String> getSupportedColorEffects(Camera.Parameters p) {
 		try {
 			if (Parameters_getSupportedColorEffects != null) {
-				Log.i(TAG, "Method getSupportedColorEffects() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedColorEffects() is available!");
 				return (List<String>) Parameters_getSupportedColorEffects
 						.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSupportedColorEffects() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedColorEffects() is NOT available!");
 				return null;
 			}
 		} catch (InvocationTargetException ite) {
@@ -835,14 +835,14 @@ public class Reflect {
 	public static final boolean setColorEffect(Camera.Parameters p, String value) {
 		try {
 			if (Parameters_setColorEffect != null) {
-				Log.i(TAG, "Method setColorEffect() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setColorEffect() is available!");
 				Object[] _args = new Object[1];
 				_args[0] = value;
 				Parameters_setColorEffect.invoke(p, _args);
-				Log.i(TAG, "Color Effect set to " + value);
+				if (Logger.isLogEnabled())  Logger.log("Color Effect set to " + value);
 				return true;
 			} else {
-				Log.i(TAG, "Method setColorEffect() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setColorEffect() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -873,10 +873,10 @@ public class Reflect {
 		String value = null;
 		try {
 			if (Parameters_getColorEffect != null) {
-				Log.i(TAG, "Method getColorEffect() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getColorEffect() is available!");
 				value = (String) Parameters_getColorEffect.invoke(p);
 			} else {
-				Log.i(TAG, "Method getColorEffect() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getColorEffect() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -908,11 +908,11 @@ public class Reflect {
 	public static List<String> getSupportedFocusModes(Camera.Parameters p) {
 		try {
 			if (Parameters_getSupportedFocusModes != null) {
-				Log.i(TAG, "Method getSupportedFocusModes() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedFocusModes() is available!");
 				return (List<String>) Parameters_getSupportedFocusModes
 						.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSupportedFocusModes() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedFocusModes() is NOT available!");
 				return null;
 			}
 		} catch (InvocationTargetException ite) {
@@ -943,14 +943,14 @@ public class Reflect {
 	public static final boolean setFocusMode(Camera.Parameters p, String value) {
 		try {
 			if (Parameters_setFocusMode != null) {
-				Log.i(TAG, "Method setFocusMode() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setFocusMode() is available!");
 				Object[] _args = new Object[1];
 				_args[0] = value;
 				Parameters_setFocusMode.invoke(p, _args);
-				Log.i(TAG, "Focus Mode set to " + value);
+				if (Logger.isLogEnabled())  Logger.log("Focus Mode set to " + value);
 				return true;
 			} else {
-				Log.i(TAG, "Method setFocusMode() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setFocusMode() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -981,10 +981,10 @@ public class Reflect {
 		String value = null;
 		try {
 			if (Parameters_getFocusMode != null) {
-				Log.i(TAG, "Method getFocusMode() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getFocusMode() is available!");
 				value = (String) Parameters_getFocusMode.invoke(p);
 			} else {
-				Log.i(TAG, "Method getFocusMode() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getFocusMode() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -1016,11 +1016,11 @@ public class Reflect {
 	public static List<String> getSupportedWhiteBalance(Camera.Parameters p) {
 		try {
 			if (Parameters_getSupportedWhiteBalance != null) {
-				Log.i(TAG, "Method getSupportedWhiteBalance() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedWhiteBalance() is available!");
 				return (List<String>) Parameters_getSupportedWhiteBalance
 						.invoke(p);
 			} else {
-				Log.i(TAG, "Method getSupportedWhiteBalance() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getSupportedWhiteBalance() is NOT available!");
 				return null;
 			}
 		} catch (InvocationTargetException ite) {
@@ -1052,14 +1052,14 @@ public class Reflect {
 			String value) {
 		try {
 			if (Parameters_setWhiteBalance != null) {
-				Log.i(TAG, "Method setWhiteBalance() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setWhiteBalance() is available!");
 				Object[] _args = new Object[1];
 				_args[0] = value;
 				Parameters_setWhiteBalance.invoke(p, _args);
-				Log.i(TAG, "White Balance set to " + value);
+				if (Logger.isLogEnabled())  Logger.log("White Balance set to " + value);
 				return true;
 			} else {
-				Log.i(TAG, "Method setWhiteBalance() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method setWhiteBalance() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */
@@ -1090,10 +1090,10 @@ public class Reflect {
 		String value = null;
 		try {
 			if (Parameters_getWhiteBalance != null) {
-				Log.i(TAG, "Method getWhiteBalance() is available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getWhiteBalance() is available!");
 				value = (String) Parameters_getWhiteBalance.invoke(p);
 			} else {
-				Log.i(TAG, "Method getWhiteBalance() is NOT available!");
+				if (Logger.isLogEnabled())  Logger.log("Method getWhiteBalance() is NOT available!");
 			}
 		} catch (InvocationTargetException ite) {
 			/* unpack original exception when possible */

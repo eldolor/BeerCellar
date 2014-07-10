@@ -22,6 +22,7 @@ import android.widget.ImageView;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.util.BitmapScaler;
+import com.cm.beer.util.Logger;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class UploadPhoto extends Activity {
@@ -45,20 +46,20 @@ public class UploadPhoto extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		Bundle extras = getIntent().getExtras();
 		mRowId = extras != null ? extras.getString("ROWID") : null;
 		mFileName = extras != null ? extras.getString("FILENAME") : null;
-		Log.i(TAG, "onCreate: FILENAME: " + mFileName + " mRowId: " + mRowId);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: FILENAME: " + mFileName + " mRowId: " + mRowId);
 		setContentView(R.layout.view_photo);
 		setup();
 	}
@@ -71,7 +72,7 @@ public class UploadPhoto extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == DIALOG_UPLOADING_USER_PHOTO_ID) {
@@ -92,12 +93,12 @@ public class UploadPhoto extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -142,11 +143,11 @@ public class UploadPhoto extends Activity {
 		@Override
 		protected void onPreExecute() {
 			System.gc();
-			Log.i(TAG, "onPreExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute starting");
 			if (mMainActivity != null) {
 				mMainActivity.showDialog(DIALOG_UPLOADING_USER_PHOTO_ID);
 			}
-			Log.i(TAG, "onPreExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute finished");
 		}
 
 		@Override
@@ -154,7 +155,7 @@ public class UploadPhoto extends Activity {
 			int result = RESULT_OK;
 
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "doInBackground");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground");
 			}
 			FileOutputStream pictureFos = null;
 			File baseDir = null;
@@ -178,7 +179,7 @@ public class UploadPhoto extends Activity {
 
 				if (photo != null && photo.exists()) {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.i(_TAG, "doInBackground::deleting "
+						if (Logger.isLogEnabled())  Logger.log("doInBackground::deleting "
 								+ photo.getPath());
 					}
 					photo.delete();
@@ -209,7 +210,7 @@ public class UploadPhoto extends Activity {
 				System.gc();
 
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(_TAG, "doInBackground::created file "
+					if (Logger.isLogEnabled())  Logger.log("doInBackground::created file "
 							+ photo.getPath());
 				}
 				BitmapScaler bitmapScaler = new BitmapScaler(photo,
@@ -220,7 +221,7 @@ public class UploadPhoto extends Activity {
 
 				if (thumbnail != null && thumbnail.exists()) {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.i(_TAG, "doInBackground::deleting "
+						if (Logger.isLogEnabled())  Logger.log("doInBackground::deleting "
 								+ thumbnail.getPath());
 					}
 					thumbnail.delete();
@@ -238,7 +239,7 @@ public class UploadPhoto extends Activity {
 				System.gc();
 
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(_TAG, "doInBackground::created file "
+					if (Logger.isLogEnabled())  Logger.log("doInBackground::created file "
 							+ thumbnail.getPath());
 				}
 			} catch (Exception e) {
@@ -288,12 +289,12 @@ public class UploadPhoto extends Activity {
 		// can use UI thread here
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			mDialog.cancel();
 			Intent intent = new Intent();
 			mMainActivity.setResult(RESULT_OK, intent);
 			mMainActivity.finish();
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 
 		}
 
@@ -311,19 +312,19 @@ public class UploadPhoto extends Activity {
 				// 1.1 Create new base dir
 				if (baseDir.mkdir()) {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.i(_TAG, "doInBackground::Created "
+						if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 								+ baseDir.getPath());
 					}
 					// 1.2 Create new pictures dir
 					if (picturesDir.mkdir()) {
 						if (AppConfig.LOGGING_ENABLED) {
-							Log.i(_TAG, "doInBackground::Created "
+							if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 									+ picturesDir.getPath());
 						}
 						// 1.3 Create new thumbnails dir
 						if (thumbnailsDir.mkdir()) {
 							if (AppConfig.LOGGING_ENABLED) {
-								Log.i(_TAG, "doInBackground::Created "
+								if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 										+ thumbnailsDir.getPath());
 							}
 
@@ -358,13 +359,13 @@ public class UploadPhoto extends Activity {
 					// 2.1.1 create new pictures dir
 					if (picturesDir.mkdir()) {
 						if (AppConfig.LOGGING_ENABLED) {
-							Log.i(_TAG, "doInBackground::Created "
+							if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 									+ picturesDir.getPath());
 						}
 						// 2.1.2 create new thumbnails dir
 						if (thumbnailsDir.mkdir()) {
 							if (AppConfig.LOGGING_ENABLED) {
-								Log.i(_TAG, "doInBackground::Created "
+								if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 										+ thumbnailsDir.getPath());
 							}
 
@@ -392,7 +393,7 @@ public class UploadPhoto extends Activity {
 						// 2.2.1.1 create new thumbnails dir
 						if (thumbnailsDir.mkdir()) {
 							if (AppConfig.LOGGING_ENABLED) {
-								Log.i(_TAG, "doInBackground::Created "
+								if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 										+ thumbnailsDir.getPath());
 							}
 

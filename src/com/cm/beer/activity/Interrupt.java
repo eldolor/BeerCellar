@@ -7,7 +7,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+
+import com.cm.beer.util.Logger;
 
 public class Interrupt extends Activity {
 	String TAG;
@@ -38,7 +39,7 @@ public class Interrupt extends Activity {
 		}
 		// set
 		mDialogsToBeProcessed = mInterruptKeys.size();
-		Log.i(TAG, "mDialogsToBeProcessed: " + mDialogsToBeProcessed);
+		if (Logger.isLogEnabled())  Logger.log("mDialogsToBeProcessed: " + mDialogsToBeProcessed);
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class Interrupt extends Activity {
 
 	private void displayInterrupt(final String interruptKey, String title,
 			String message) {
-		Log.i(TAG, "Display Dialog : " + mDialogsProcessed);
+		if (Logger.isLogEnabled())  Logger.log("Display Dialog : " + mDialogsProcessed);
 
 		AlertDialog.Builder dialog = new AlertDialog.Builder(mMainActivity);
 		dialog.setIcon(android.R.drawable.ic_dialog_alert);

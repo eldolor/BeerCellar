@@ -3,7 +3,6 @@ package com.cm.beer.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.cm.beer.activity.R;
 import com.cm.beer.config.AppConfig;
@@ -22,7 +21,7 @@ public class User {
 				Activity.MODE_PRIVATE);
 		TAG = context.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
-		Log.i(TAG, "onCreate::!");
+		if (Logger.isLogEnabled())  Logger.log("onCreate::!");
 	}
 
 	public String getUserId() {
@@ -54,22 +53,22 @@ public class User {
 	public void setAdditionalUserAttributes(String additionalAttributes) {
 		mPreferences.edit().putString(AppConfig.USER_ADDITIONAL_ATTRIBUTES,
 				additionalAttributes).commit();
-		Log.i(TAG, "setAdditionalUserAttributes::");
+		if (Logger.isLogEnabled())  Logger.log("setAdditionalUserAttributes::");
 
 	}
 
 	public boolean isLoggedIn() {
 		if ((this.getUserId() == null) || (this.getUserId().equals(""))) {
-			Log.i(TAG, "isLoggedIn::false");
+			if (Logger.isLogEnabled())  Logger.log("isLoggedIn::false");
 			return false;
 		} else {
-			Log.i(TAG, "isLoggedIn::true");
+			if (Logger.isLogEnabled())  Logger.log("isLoggedIn::true");
 			return true;
 		}
 	}
 
 	public void onAuthSucceed(String userId, String userName, String userLink, String userType) {
-		Log.i(TAG, "onAuthSucceed::");
+		if (Logger.isLogEnabled())  Logger.log("onAuthSucceed::");
 		mPreferences.edit().putString(AppConfig.USER_ID, userId).commit();
 		mPreferences.edit().putString(AppConfig.USER_NAME, userName).commit();
 		mPreferences.edit().putString(AppConfig.USER_LINK, userLink).commit();
@@ -77,7 +76,7 @@ public class User {
 	}
 
 	public void onLogoutFinish() {
-		Log.i(TAG, "onLogoutFinish::");
+		if (Logger.isLogEnabled())  Logger.log("onLogoutFinish::");
 		mPreferences.edit().remove(AppConfig.USER_ID).commit();
 		mPreferences.edit().remove(AppConfig.USER_NAME).commit();
 		mPreferences.edit().remove(AppConfig.USER_LINK).commit();

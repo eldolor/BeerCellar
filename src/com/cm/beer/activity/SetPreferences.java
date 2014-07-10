@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -54,7 +55,7 @@ public class SetPreferences extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
@@ -63,7 +64,7 @@ public class SetPreferences extends Activity {
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
 				this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		setContentView(R.layout.set_preferences);
@@ -84,7 +85,7 @@ public class SetPreferences extends Activity {
 	 */
 	protected void display() {
 
-		Log.i(TAG, "display");
+		if (Logger.isLogEnabled())  Logger.log("display");
 
 		/****************************************/
 		mReceiveNewNotification = (CheckBox) findViewById(R.id.receive_new_beer_reviews_notification);
@@ -221,7 +222,7 @@ public class SetPreferences extends Activity {
 			public void onClick(View v) {
 				// Perform action on clicks
 
-				Log.i(TAG, "cancel");
+				if (Logger.isLogEnabled())  Logger.log("cancel");
 
 				showDialog(AppConfig.DIALOG_LOADING_ID);
 				setResult(RESULT_OK);
@@ -324,12 +325,12 @@ public class SetPreferences extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -355,7 +356,7 @@ public class SetPreferences extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		mDialog = ProgressDialog.show(SetPreferences.this, null,
 				this.getString(R.string.progress_loading_message), true, true);
@@ -371,11 +372,11 @@ public class SetPreferences extends Activity {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(AppConfig.DIALOG_LOADING_ID);
 		}
@@ -394,14 +395,14 @@ public class SetPreferences extends Activity {
 		 */
 		protected Void doInBackground(String... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 			String userId = (String) args[0];
 
 			try {
 				String url = Util.getEmailSubscriptionStatusUrl(userId);
 
-				Log.i(TAG, "doInBackground:" + url);
+				if (Logger.isLogEnabled())  Logger.log("doInBackground:" + url);
 				String response[] = Util.getResult(url);
 				if ((response[0] != null) && (response[0].startsWith("{"))) {
 					JSONObject json = new JSONObject(response[0]);
@@ -420,7 +421,7 @@ public class SetPreferences extends Activity {
 		@Override
 		protected void onPostExecute(Object result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			}
 
 			mMainActivity.runOnUiThread(new Runnable() {
@@ -431,7 +432,7 @@ public class SetPreferences extends Activity {
 				}
 			});
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 			}
 		}
 
@@ -448,7 +449,7 @@ public class SetPreferences extends Activity {
 		 */
 		protected Void doInBackground(String... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 			String userId = (String) args[0];
 			String emailSubscription = (String) args[1];
@@ -457,9 +458,9 @@ public class SetPreferences extends Activity {
 				String url = Util.updateEmailSubscriptionStatusUrl(userId,
 						emailSubscription);
 
-				Log.i(TAG, "doInBackground:" + url);
+				if (Logger.isLogEnabled())  Logger.log("doInBackground:" + url);
 				String response[] = Util.getResult(url);
-				Log.i(TAG, response[0]);
+				if (Logger.isLogEnabled())  Logger.log(response[0]);
 			} catch (Throwable e) {
 				Log.e(TAG,
 						(e.getMessage() != null) ? e.getMessage().replace(" ",
@@ -471,11 +472,11 @@ public class SetPreferences extends Activity {
 		@Override
 		protected void onPostExecute(Object result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			}
 
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 			}
 		}
 
@@ -492,14 +493,14 @@ public class SetPreferences extends Activity {
 		 */
 		protected Void doInBackground(String... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 			String userId = (String) args[0];
 
 			try {
 				String url = Util.getCommentPostedEmailSubscriptionStatusUrl(userId);
 
-				Log.i(TAG, "doInBackground:" + url);
+				if (Logger.isLogEnabled())  Logger.log("doInBackground:" + url);
 				String response[] = Util.getResult(url);
 				if ((response[0] != null) && (response[0].startsWith("{"))) {
 					JSONObject json = new JSONObject(response[0]);
@@ -518,7 +519,7 @@ public class SetPreferences extends Activity {
 		@Override
 		protected void onPostExecute(Object result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			}
 
 			mMainActivity.runOnUiThread(new Runnable() {
@@ -529,7 +530,7 @@ public class SetPreferences extends Activity {
 				}
 			});
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 			}
 		}
 
@@ -546,7 +547,7 @@ public class SetPreferences extends Activity {
 		 */
 		protected Void doInBackground(String... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 			String userId = (String) args[0];
 			String emailSubscription = (String) args[1];
@@ -556,9 +557,9 @@ public class SetPreferences extends Activity {
 						.updateCommentPostedEmailSubscriptionStatusUrl(userId,
 								emailSubscription);
 
-				Log.i(TAG, "doInBackground:" + url);
+				if (Logger.isLogEnabled())  Logger.log("doInBackground:" + url);
 				String response[] = Util.getResult(url);
-				Log.i(TAG, response[0]);
+				if (Logger.isLogEnabled())  Logger.log(response[0]);
 			} catch (Throwable e) {
 				Log.e(TAG,
 						(e.getMessage() != null) ? e.getMessage().replace(" ",
@@ -570,11 +571,11 @@ public class SetPreferences extends Activity {
 		@Override
 		protected void onPostExecute(Object result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			}
 
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 			}
 		}
 

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.util.BitmapScaler;
+import com.cm.beer.util.Logger;
 
 public class SDCardExplorer extends ListActivity {
 
@@ -49,7 +50,7 @@ public class SDCardExplorer extends ListActivity {
 		Bundle extras = getIntent().getExtras();
 		mRowId = extras != null ? extras.getString("ROWID") : null;
 		mUserId = extras != null ? extras.getString("USERID") : null;
-		Log.i(TAG, "onCreate: mRowId: " + mRowId);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mRowId: " + mRowId);
 		mRequestCode = extras.getInt("REQUESTCODE");
 
 		setContentView(R.layout.sdcard_explorer_list);
@@ -115,10 +116,10 @@ public class SDCardExplorer extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.i(TAG, "onListItemClick: POSITION: " + position + " ID; " + id);
+		if (Logger.isLogEnabled())  Logger.log("onListItemClick: POSITION: " + position + " ID; " + id);
 
 		File file = new File(mPath.get(position));
-		Log.i(TAG, "onListItemClick: File: " + file.getPath());
+		if (Logger.isLogEnabled())  Logger.log("onListItemClick: File: " + file.getPath());
 
 		if (file.isDirectory()) {
 			if (file.canRead())
@@ -140,7 +141,7 @@ public class SDCardExplorer extends ListActivity {
 			}
 		} else if (file.isFile()) {
 			String _fileName = file.getPath();
-			Log.i(TAG, "onListItemClick: FILENAME: " + _fileName);
+			if (Logger.isLogEnabled())  Logger.log("onListItemClick: FILENAME: " + _fileName);
 			if (mRequestCode == AppConfig.SELECT_IMAGE_REQUEST_CODE) {
 				Intent intent = new Intent(getApplicationContext(),
 						UploadPhoto.class);
@@ -204,7 +205,7 @@ public class SDCardExplorer extends ListActivity {
 			ImageView thumbnailView = ((ImageView) convertView
 					.findViewById(R.id.list_thumbnail));
 			String _filename = data.get("thumbnail");
-			Log.i(TAG, "MyAdapter.getView(): Filename: " + _filename);
+			if (Logger.isLogEnabled())  Logger.log("MyAdapter.getView(): Filename: " + _filename);
 			if ((mPath != null) && (!mPath.equals(""))) {
 				File imageFile = new File(_filename);
 				if ((imageFile != null) && (imageFile.exists())) {
@@ -223,7 +224,7 @@ public class SDCardExplorer extends ListActivity {
 					}
 
 				} else {
-					Log.i(TAG, _filename + " does not exist");
+					if (Logger.isLogEnabled())  Logger.log(_filename + " does not exist");
 				}
 			}
 

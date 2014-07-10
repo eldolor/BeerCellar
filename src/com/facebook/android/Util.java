@@ -35,9 +35,10 @@ import org.json.JSONObject;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+
+import com.cm.beer.util.Logger;
 
 /**
  * Utility class supporting the Facebook Object.
@@ -314,7 +315,7 @@ public final class Util {
      */
     public static void logd(String tag, String msg) {
         if (ENABLE_LOG) {
-            Log.d(tag, msg);
+            if (Logger.isLogEnabled())  Logger.log(msg);
         }
     }
 }

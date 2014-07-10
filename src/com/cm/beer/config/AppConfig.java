@@ -3,8 +3,6 @@ package com.cm.beer.config;
 import java.util.Currency;
 import java.util.Locale;
 
-import com.cm.beer.db.NotesDbAdapter;
-
 import android.os.Environment;
 
 public class AppConfig
@@ -202,7 +200,7 @@ public class AppConfig
 	public static final String COMMUNITY_COMMENT_POSTED_EMAIL_SUBSCRIPTION_PARAM = "&commentpostedemailsubscriptionstatus=";
 
 	public static final String COMMUNITY_R_PARAM = "&r=";
-	public static final String COMMUNITY_R_VALUE = "20";
+	public static final String COMMUNITY_R_VALUE = "2";
 	public static final String COMMUNITY_R = AppConfig.COMMUNITY_R_PARAM
 			+ AppConfig.COMMUNITY_R_VALUE;
 	public static final String COMMUNITY_BEERS_FROM_AROUND_THE_WORLD = "BEERS_FROM_AROUND_THE_WORLD";

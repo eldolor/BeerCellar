@@ -22,7 +22,9 @@ import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Reflect;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
@@ -48,7 +50,7 @@ public class NotificationService extends Service {
 	 */
 	public class LocalBinder extends Binder {
 		NotificationService getService() {
-			Log.i(TAG, "LocalBinder:getService()");
+			if (Logger.isLogEnabled())  Logger.log("LocalBinder:getService()");
 			return NotificationService.this;
 		}
 	}
@@ -60,7 +62,7 @@ public class NotificationService extends Service {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		mService = this;
-		Log.i(TAG, "onCreate");
+		if (Logger.isLogEnabled())  Logger.log("onCreate");
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mUser = new User(mService);
 		mTracker = GoogleAnalyticsTracker.getInstance();
@@ -75,11 +77,11 @@ public class NotificationService extends Service {
 				.i(TAG, "onCreate::Right Now is "
 						+ (sdf.format(rightNow.getTime())));
 		rightNow.add(Calendar.DAY_OF_MONTH, -7);
-		Log.i(TAG, "onCreate::A Week Ago was "
+		if (Logger.isLogEnabled())  Logger.log("onCreate::A Week Ago was "
 				+ (sdf.format(rightNow.getTime())));
 		mAWeekAgoMillis = rightNow.getTimeInMillis();
 
-		Log.i(TAG, "onCreate:Google Tracker Instantiated");
+		if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 
 		if (!Reflect.service_startForeground(1, new Notification(), this)) {
 			// Fall back on the old API.
@@ -91,7 +93,7 @@ public class NotificationService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.i(TAG, "onBind");
+		if (Logger.isLogEnabled())  Logger.log("onBind");
 		return mBinder;
 	}
 
@@ -100,7 +102,7 @@ public class NotificationService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Log.i(TAG, "onDestroy");
+		if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		// Cancel all persistent notifications
 		mNM.cancelAll();
 		mNewBeerReviewTimer.cancel();
@@ -114,13 +116,13 @@ public class NotificationService extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		Log.i(TAG, "onStart");
+		if (Logger.isLogEnabled())  Logger.log("onStart");
 		handleCommand(intent);
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.i(TAG, "onStartCommand");
+		if (Logger.isLogEnabled())  Logger.log("onStartCommand");
 		handleCommand(intent);
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
@@ -128,7 +130,7 @@ public class NotificationService extends Service {
 	}
 
 	private void handleCommand(Intent intent) {
-		Log.i(TAG, "handleCommand");
+		if (Logger.isLogEnabled())  Logger.log("handleCommand");
 		// default to true
 		if (!mPreferences
 				.contains(AppConfig.RECEIVE_NEW_BEER_REVIEW_NOTIFICATIONS)) {
@@ -167,12 +169,12 @@ public class NotificationService extends Service {
 	 * @param period
 	 */
 	private void scheduleNewBeerReviewTimerAtFixedRate(long period) {
-		Log.i(TAG, "startService");
+		if (Logger.isLogEnabled())  Logger.log("startService");
 		try {
 			mNewBeerReviewTimer.scheduleAtFixedRate(new TimerTask() {
 
 				public void run() {
-					Log.i(TAG, "TimerTask:run()");
+					if (Logger.isLogEnabled())  Logger.log("TimerTask:run()");
 					String notificationLastChecked = String
 							.valueOf(mPreferences
 									.getLong(
@@ -191,7 +193,7 @@ public class NotificationService extends Service {
 								: _userId);
 						String _url1 = Util.getNewBeerReviewsNotificationUrl(
 								_userId, notificationLastChecked);
-						Log.i(TAG, _url1);
+						if (Logger.isLogEnabled())  Logger.log(_url1);
 						int notificationId1 = R.string.notification_new_beer_reviews;
 						String message1 = getString(R.string.notification_new_beer_reviews);
 						new AsyncGetNewBeerReviewNotification().execute(_url1,
@@ -205,7 +207,7 @@ public class NotificationService extends Service {
 
 			}, 0, period);
 
-			Log.i(TAG, "New Beer Review Timer scheduled at fixed rate: " + period);
+			if (Logger.isLogEnabled())  Logger.log("New Beer Review Timer scheduled at fixed rate: " + period);
 
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -220,12 +222,12 @@ public class NotificationService extends Service {
 	}
 
 	private void scheduleNewBeerReviewFromFollowingTimerAtFixedRate(long period) {
-		Log.i(TAG, "startService");
+		if (Logger.isLogEnabled())  Logger.log("startService");
 		try {
 			mNewBeerReviewFromFollowingTimer.scheduleAtFixedRate(new TimerTask() {
 
 				public void run() {
-					Log.i(TAG, "TimerTask:run()");
+					if (Logger.isLogEnabled())  Logger.log("TimerTask:run()");
 					String notificationLastChecked = String
 							.valueOf(mPreferences
 									.getLong(
@@ -245,7 +247,7 @@ public class NotificationService extends Service {
 									.getNewBeerReviewsFromFollowingNotificationUrl(
 											mUser.getUserId(),
 											notificationLastChecked);
-							Log.i(TAG, _url2);
+							if (Logger.isLogEnabled())  Logger.log(_url2);
 							int notificationId2 = R.string.notification_new_beer_reviews_from_following;
 							String message2 = getString(R.string.notification_new_beer_reviews_from_following);
 							new AsyncGetNewBeerReviewFromFollowingNotification().execute(_url2,
@@ -268,7 +270,7 @@ public class NotificationService extends Service {
 
 			}, 0, period);
 
-			Log.i(TAG, "New Beer Review From Following Timer scheduled at fixed rate: " + period);
+			if (Logger.isLogEnabled())  Logger.log("New Beer Review From Following Timer scheduled at fixed rate: " + period);
 
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -283,12 +285,12 @@ public class NotificationService extends Service {
 	}
 
 	private void scheduleBeerOfTheDayTimerAtFixedRate(long period) {
-		Log.i(TAG, "startService");
+		if (Logger.isLogEnabled())  Logger.log("startService");
 		try {
 			mBeerOfTheDayTimer.scheduleAtFixedRate(new TimerTask() {
 
 				public void run() {
-					Log.i(TAG, "TimerTask:run()");
+					if (Logger.isLogEnabled())  Logger.log("TimerTask:run()");
 					String notificationLastChecked = String
 							.valueOf(mPreferences
 									.getLong(
@@ -307,7 +309,7 @@ public class NotificationService extends Service {
 								: _userId);
 						String _url = Util.getBeerOfTheDayNotificationUrl(
 								_userId, notificationLastChecked);
-						Log.i(TAG, _url);
+						if (Logger.isLogEnabled())  Logger.log(_url);
 						int notificationId = R.string.notification_beer_of_the_day;
 						String message = getString(R.string.notification_beer_of_the_day);
 						new AsyncGetBeerOfTheDayNotification().execute(_url,
@@ -322,7 +324,7 @@ public class NotificationService extends Service {
 
 			}, 0, period);
 
-			Log.i(TAG, "Beer of the Day Timer scheduled at fixed rate: " + period);
+			if (Logger.isLogEnabled())  Logger.log("Beer of the Day Timer scheduled at fixed rate: " + period);
 
 		} catch (Throwable e) {
 			Log.e(TAG, "error: "
@@ -359,7 +361,7 @@ public class NotificationService extends Service {
 				// The PendingIntent to launch our activity if the user selects
 				// this
 				// notification
-				Intent intent = new Intent(this, CommunityBeers.class);
+				Intent intent = new Intent(this, CommunityBeersFragment.class);
 				if (notificationId == R.string.notification_beer_of_the_day) {
 					intent.putExtra("OPTION",
 							AppConfig.COMMUNITY_BEER_OF_THE_DAY);
@@ -410,7 +412,7 @@ public class NotificationService extends Service {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String url = (String) args[0];
 			_mNotificationId = (Integer) args[1];
 			_mMessage = (String) args[2];
@@ -421,13 +423,13 @@ public class NotificationService extends Service {
 					JSONObject json = new JSONObject(response[0]);
 					long _lastChecked = json.getLong("lastChecked");
 
-					Log.i(TAG, "doInBackground lastChecked=" + _lastChecked);
+					if (Logger.isLogEnabled())  Logger.log("doInBackground lastChecked=" + _lastChecked);
 					mPreferences.edit().putLong(
 							AppConfig.NEW_BEER_REVIEW_NOTIFICATION_LAST_CHECKED, _lastChecked)
 							.commit();
 
 					long _checkBackLaterIn = json.getLong("checkBackLaterIn");
-					Log.i(TAG, "doInBackground checkBackLaterIn="
+					if (Logger.isLogEnabled())  Logger.log("doInBackground checkBackLaterIn="
 							+ _checkBackLaterIn);
 
 					long _existingCBLIn = mPreferences.getLong(
@@ -444,7 +446,7 @@ public class NotificationService extends Service {
 					}
 
 					_mJsonArray = json.getJSONArray("beerIdList");
-					Log.i(TAG, _mJsonArray.length() + " new beer reviews");
+					if (Logger.isLogEnabled())  Logger.log(_mJsonArray.length() + " new beer reviews");
 				}
 
 			} catch (Throwable e) {
@@ -458,14 +460,14 @@ public class NotificationService extends Service {
 				mTracker.dispatch();
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			showNotification(_mNotificationId, _mJsonArray, _mMessage);
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -481,7 +483,7 @@ public class NotificationService extends Service {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String url = (String) args[0];
 			_mNotificationId = (Integer) args[1];
 			_mMessage = (String) args[2];
@@ -492,13 +494,13 @@ public class NotificationService extends Service {
 					JSONObject json = new JSONObject(response[0]);
 					long _lastChecked = json.getLong("lastChecked");
 
-					Log.i(TAG, "doInBackground lastChecked=" + _lastChecked);
+					if (Logger.isLogEnabled())  Logger.log("doInBackground lastChecked=" + _lastChecked);
 					mPreferences.edit().putLong(
 							AppConfig.NEW_BEER_REVIEW_FROM_FOLLOWING_NOTIFICATION_LAST_CHECKED, _lastChecked)
 							.commit();
 
 					long _checkBackLaterIn = json.getLong("checkBackLaterIn");
-					Log.i(TAG, "doInBackground checkBackLaterIn="
+					if (Logger.isLogEnabled())  Logger.log("doInBackground checkBackLaterIn="
 							+ _checkBackLaterIn);
 
 					long _existingCBLIn = mPreferences.getLong(
@@ -515,7 +517,7 @@ public class NotificationService extends Service {
 					}
 
 					_mJsonArray = json.getJSONArray("beerIdList");
-					Log.i(TAG, _mJsonArray.length() + " new beer reviews");
+					if (Logger.isLogEnabled())  Logger.log(_mJsonArray.length() + " new beer reviews");
 				}
 
 			} catch (Throwable e) {
@@ -529,14 +531,14 @@ public class NotificationService extends Service {
 				mTracker.dispatch();
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			showNotification(_mNotificationId, _mJsonArray, _mMessage);
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -552,7 +554,7 @@ public class NotificationService extends Service {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String url = (String) args[0];
 			_mNotificationId = (Integer) args[1];
 			_mMessage = (String) args[2];
@@ -563,13 +565,13 @@ public class NotificationService extends Service {
 					JSONObject json = new JSONObject(response[0]);
 					long _lastChecked = json.getLong("lastChecked");
 
-					Log.i(TAG, "doInBackground lastChecked=" + _lastChecked);
+					if (Logger.isLogEnabled())  Logger.log("doInBackground lastChecked=" + _lastChecked);
 					mPreferences.edit().putLong(
 							AppConfig.BEER_OF_THE_DAY_NOTIFICATION_LAST_CHECKED, _lastChecked)
 							.commit();
 
 					long _checkBackLaterIn = json.getLong("checkBackLaterIn");
-					Log.i(TAG, "doInBackground checkBackLaterIn="
+					if (Logger.isLogEnabled())  Logger.log("doInBackground checkBackLaterIn="
 							+ _checkBackLaterIn);
 
 					long _existingCBLIn = mPreferences.getLong(
@@ -586,7 +588,7 @@ public class NotificationService extends Service {
 					}
 
 					_mJsonArray = json.getJSONArray("beerIdList");
-					Log.i(TAG, _mJsonArray.length() + " new beer reviews");
+					if (Logger.isLogEnabled())  Logger.log(_mJsonArray.length() + " new beer reviews");
 				}
 
 			} catch (Throwable e) {
@@ -600,14 +602,14 @@ public class NotificationService extends Service {
 				mTracker.dispatch();
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			showNotification(_mNotificationId, _mJsonArray, _mMessage);
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}

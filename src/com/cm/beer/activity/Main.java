@@ -1,13 +1,6 @@
 package com.cm.beer.activity;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +11,6 @@ import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -26,81 +18,60 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources.NotFoundException;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
+import com.cm.beer.activity.slidingmenu.HomeFragment;
+import com.cm.beer.activity.slidingmenu.NavDrawerItem;
+import com.cm.beer.activity.slidingmenu.NavDrawerListAdapter;
 import com.cm.beer.config.AppConfig;
-import com.cm.beer.db.NotesDbAdapter;
-import com.cm.beer.transfer.CommunityBeer;
-import com.cm.beer.util.ContentManager;
-import com.cm.beer.util.DrawableManager;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
-public class Main extends Activity implements Eula.OnEulaAgreedTo {
+public class Main extends android.support.v7.app.ActionBarActivity implements
+		Eula.OnEulaAgreedTo {
 
-	String TAG;
-	boolean mAlreadyAgreedToEula = false;
-	String mSelectedOption = null;
-	ProgressDialog mSplashDialog;
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
 
-	// ImageView mBeerBBList;
-	// ImageView mHelp;
-	// ImageView mAroundMe;
-	// ImageView mCommunity;
+	// nav drawer title
+	private CharSequence mDrawerTitle;
 
-	Activity mMainActivity;
+	// used to store app title
+	private CharSequence mTitle;
+
+	// slide menu items
+	private String[] mNavMenuTitles;
+
+	private ArrayList<NavDrawerItem> mNavDrawerItems;
+	private NavDrawerListAdapter mAdapter;
+	private GoogleAnalyticsTracker mTracker;
+	private boolean mAlreadyAgreedToEula = false;
+	private static final Handler mHandler = new Handler();
 	private NotificationManager mNM;
-	User mUser;
-
-	static final int ACTIVITY_ABOUT = 0;
-	static final int MENU_GROUP = 0;
-	static final int ABOUT_ID = Menu.FIRST;
-	static final int SEND_ERROR_REPORT_ID = Menu.FIRST + 1;
-	static final int PREFERENCES_ID = Menu.FIRST + 2;
-
-	GoogleAnalyticsTracker mTracker;
-	int mRandom;;
-
-	// private static final String PREFERENCE_DO_NOT_SHOW_DID_YOU_KNOW =
-	// "DO_NOT_SHOW_DID_YOU_KNOW";
-	static final Handler mHandler = new Handler();
-
+	private User mUser;
 	private SharedPreferences mPreferences;
-
-	// NOTE: mCs cannot be null
-	private String mCs = "";
-	// private List<CommunityBeer> mTopRatedBeers = new
-	// ArrayList<CommunityBeer>();
-	// private List<CommunityBeer> mMyBeers = new ArrayList<CommunityBeer>();
-	// private List<CommunityBeer> mBeers = new ArrayList<CommunityBeer>();
-	// private List<CommunityBeer> mTopRatedBeers = new
-	// ArrayList<CommunityBeer>();
-	// private List<CommunityBeer> mTopRatedBeers = new
-	// ArrayList<CommunityBeer>();
-	// private List<CommunityBeer> mTopRatedBeers = new
-	// ArrayList<CommunityBeer>();
-	DrawableManager mDrawableManager;
-	ContentManager mContentManager;
-	LinearLayout mTopRatedBeersGallery;
-	LinearLayout mMyBeersGallery;
-	LinearLayout mWorstRatedBeersGallery;
-	LinearLayout mMostHelpfulBeerReviewsGallery;
-	LinearLayout mFavoriteBeerReviewsGallery;
-	LinearLayout mAroundTheWorldBeersGallery;
+	protected static final int LOGIN_INTERCEPT_FOR_MY_BEERS_REQUEST_CODE = 0;
+	protected static final int LOGIN_INTERCEPT_FOR_FOLLOWING_REQUEST_CODE = 1;
+	protected static final int LOGIN_INTERCEPT_FOR_FOLLOWERS_REQUEST_CODE = 2;
+	protected static final int LOGIN_INTERCEPT_FOR_FAVORITE_BEERS_REQUEST_CODE = 3;
+	protected static final int LOGIN_INTERCEPT_FOR_MY_PROFILE_REQUEST_CODE = 4;
 
 	public void onEulaAgreedTo() {
 		mTracker.trackEvent("Main", "AgreedToEULA", "Y", 0);
@@ -116,104 +87,21 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// setup TAG
-		TAG = this.getString(R.string.app_name) + "::"
-				+ this.getClass().getName();
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
-		}
-		mMainActivity = this;
-		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		mUser = new User(this);
-
-		mPreferences = getSharedPreferences(getString(R.string.app_name),
-				Activity.MODE_PRIVATE);
-
-		/** Start the Notification Service **/
-		Util.evaluateNotificationService(mMainActivity);
-
-		mRandom = Util.getRandomInt(0,
-				(AppConfig.DID_YOU_KNOW_MESSAGES.length - 1));
-
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
 				this);
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
-		}
+		mNM = (NotificationManager) this
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mUser = new User(this);
+		mPreferences = getSharedPreferences(getString(R.string.app_name),
+				Activity.MODE_PRIVATE);
 
-		mDrawableManager = DrawableManager.getInstance();
-		mContentManager = ContentManager.getInstance();
+		/** Start the Notification Service **/
+		Util.evaluateNotificationService(Main.this);
 
-		// Start a new thread that will download all the data
-		setContentView(R.layout.main);
-
-		{
-			mTopRatedBeersGallery = (LinearLayout) findViewById(R.id.top_rated_beers_gallery);
-			// Start a new thread that will download all the data
-			Bundle lExtras = new Bundle();
-			lExtras.putString("OPTION", AppConfig.COMMUNITY_TOP_RATED_BEERS);
-			Boolean _refreshList = new Boolean(false);
-			new AsyncGetCommunityBeers().execute(lExtras, _refreshList);
-		}
-		{
-			mMyBeersGallery = (LinearLayout) findViewById(R.id.my_beers_gallery);
-			// Start a new thread that will download all the data
-			Bundle lExtras = new Bundle();
-			lExtras.putString("OPTION", AppConfig.COMMUNITY_MY_BEER_REVIEWS);
-			Boolean _refreshList = new Boolean(false);
-			new AsyncGetCommunityBeers().execute(lExtras, _refreshList);
-
-		}
-		{
-			mWorstRatedBeersGallery = (LinearLayout) findViewById(R.id.worst_rated_beers_gallery);
-			// Start a new thread that will download all the data
-			Bundle lExtras = new Bundle();
-			lExtras.putString("OPTION", AppConfig.COMMUNITY_WORST_BEERS);
-			Boolean _refreshList = new Boolean(false);
-			new AsyncGetCommunityBeers().execute(lExtras, _refreshList);
-
-		}
-		{
-			mMostHelpfulBeerReviewsGallery = (LinearLayout) findViewById(R.id.most_helpful_beer_reviews_gallery);
-			// Start a new thread that will download all the data
-			Bundle lExtras = new Bundle();
-			lExtras.putString("OPTION",
-					AppConfig.COMMUNITY_MOST_HELPFUL_BEER_REVIEWS);
-			Boolean _refreshList = new Boolean(false);
-			new AsyncGetCommunityBeers().execute(lExtras, _refreshList);
-
-		}
-		{
-			mFavoriteBeerReviewsGallery = (LinearLayout) findViewById(R.id.favorite_beer_reviews_gallery);
-			// Start a new thread that will download all the data
-			Bundle lExtras = new Bundle();
-			lExtras.putString("OPTION",
-					AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS);
-			Boolean _refreshList = new Boolean(false);
-			new AsyncGetCommunityBeers().execute(lExtras, _refreshList);
-
-		}
-		{
-			mAroundTheWorldBeersGallery = (LinearLayout) findViewById(R.id.around_the_world_beers_gallery);
-			// Start a new thread that will download all the data
-			Bundle lExtras = new Bundle();
-			lExtras.putString("OPTION",
-					AppConfig.COMMUNITY_BEERS_FROM_AROUND_THE_WORLD);
-			Boolean _refreshList = new Boolean(false);
-			new AsyncGetCommunityBeers().execute(lExtras, _refreshList);
-
-		}
-
-		mAlreadyAgreedToEula = Eula.show(this);
 		new RateAndReviewTask().execute("");
 		new UpdateCheckTask().execute("");
-		// so that it only runs once in an hour
-		// if ((runDate +
-		// AppConfig.GET_RECOMMENDATIONS_NOTIFICATION_CHECK_INTERVAL) <=
-		// lastRunDate)
-		// {
 		String _userId = (mUser.isLoggedIn()) ? mUser.getUserId() : "";
 		new AsyncGetRecommendationsTask().execute(_userId);
 		// }
@@ -224,20 +112,327 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 				.edit()
 				.putLong(AppConfig.PREFERENCE_APPLICATION_USAGE_COUNT,
 						(usageCount + 1)).commit();
-		Log.i(TAG, "Application Usage Count: " + usageCount);
+		// Normal onCreate
+		setupActivity();
+		mAlreadyAgreedToEula = Eula.show(this);
+
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * android.app.Activity#onConfigurationChanged(android.content.res.Configuration
-	 * )
+	 * @see android.app.Activity#onActivityResult(int, int,
+	 * android.content.Intent)
 	 */
 	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == LOGIN_INTERCEPT_FOR_MY_BEERS_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+				if (Logger.isLogEnabled())
+					Logger.log("onActivityResult:" + mUser.getUserId());
+				getMyBeers(mUser.getUserId());
+			}
+		} else if (requestCode == LOGIN_INTERCEPT_FOR_FAVORITE_BEERS_REQUEST_CODE) {
+			if (resultCode == Activity.RESULT_OK) {
+				if (Logger.isLogEnabled())
+					Logger.log("onActivityResult:" + mUser.getUserId());
+				getFavoriteBeers(mUser.getUserId());
+			}
+		}
+	}
+
+	private void getMyBeers(String userId) {
+		if (Logger.isLogEnabled())
+			Logger.log("getMyBeers");
+		displayView(4, true);
+	}
+
+	private void getFavoriteBeers(String userId) {
+		if (Logger.isLogEnabled())
+			Logger.log("getFavoriteBeers");
+		displayView(5, true);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		setDisplayView();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// toggle nav drawer on selecting action bar app icon/title
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		// Handle action bar actions click
+		switch (item.getItemId()) {
+		// case com.mavin.lockscreen.R.id.action_send_logs:
+		// EasyTracker.getInstance(this).send(
+		// MapBuilder.createEvent(
+		// "home_activity",
+		// "send_logs_menu_item_selected",
+		// RegisteredDevice.getInstance(
+		// getApplicationContext()).getUserId(), null)
+		// .build());
+		// MavinUtils.collectAndSendLogs(HomeActivity.this);
+		// return true;
+		// case com.mavin.lockscreen.R.id.action_send_ad_cache:
+		// EasyTracker.getInstance(this).send(
+		// MapBuilder.createEvent(
+		// "home_activity",
+		// "send_ad_cache_menu_item_selected",
+		// RegisteredDevice.getInstance(
+		// getApplicationContext()).getUserId(), null)
+		// .build());
+		// MavinUtils.sendAdCache(HomeActivity.this);
+		// return true;
+		// case com.mavin.lockscreen.R.id.action_refresh:
+		// EasyTracker.getInstance(this).send(
+		// MapBuilder.createEvent(
+		// "home_activity",
+		// "refresh_ads_menu_item_selected",
+		// RegisteredDevice.getInstance(
+		// getApplicationContext()).getUserId(), null)
+		// .build());
+		// // PSUtils.triggerCampaignDownload(HomeActivity.this);
+		// Toast.makeText(HomeActivity.this, R.string.contacting_server,
+		// Toast.LENGTH_LONG).show();
+		// return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param position
+	 */
+	private void displayView(int position) {
+		this.displayView(position, true);
+	}
+
+	/**
+	 * Displaying fragment view for selected nav drawer list item
+	 * */
+	public void displayView(int position, boolean updateTitle) {
+		// When changing pages, reset the action bar actions since they
+		// are dependent
+		// on which page is currently active.
+		supportInvalidateOptionsMenu();
+
+		// update the main content by replacing fragments
+		android.support.v4.app.Fragment lFragment = null;
+
+		switch (position) {
+		case 0:
+			lFragment = new HomeFragment();
+			break;
+		case 1:
+			lFragment = new CommunityBeersFragment();
+			{
+				Bundle bundle = new Bundle();
+				bundle.putString("OPTION",
+						AppConfig.COMMUNITY_BEERS_FROM_AROUND_THE_WORLD);
+				lFragment.setArguments(bundle);
+			}
+			mTracker.trackEvent("CommunityOptions",
+					"BeersFromAroundTheWorldLoadMore", "Clicked", 0);
+			mTracker.dispatch();
+			break;
+		case 2:
+			lFragment = new CommunityBeersFragment();
+			{
+				Bundle bundle = new Bundle();
+				bundle.putString("OPTION", AppConfig.COMMUNITY_TOP_RATED_BEERS);
+				lFragment.setArguments(bundle);
+			}
+			mTracker.trackEvent("CommunityOptions", "TopRatedBeersLoadMore",
+					"Clicked", 0);
+			mTracker.dispatch();
+			break;
+		case 3:
+			lFragment = new CommunityBeersFragment();
+			{
+				Bundle bundle = new Bundle();
+				bundle.putString("OPTION", AppConfig.COMMUNITY_WORST_BEERS);
+				lFragment.setArguments(bundle);
+			}
+			mTracker.trackEvent("CommunityOptions", "WorstBeersLoadMore",
+					"Clicked", 0);
+			mTracker.dispatch();
+			break;
+		case 4:
+			mTracker.trackEvent("CommunityOptions", "MyBeerReviews", "Clicked",
+					0);
+			mTracker.dispatch();
+			// If user id does not exist
+			if (mUser.isLoggedIn()) {
+				lFragment = new CommunityBeersFragment();
+				{
+					Bundle bundle = new Bundle();
+					bundle.putString("OPTION",
+							AppConfig.COMMUNITY_MY_BEER_REVIEWS);
+					bundle.putString("USERID", mUser.getUserId());
+					lFragment.setArguments(bundle);
+				}
+			} else {
+				Intent lIntent = new Intent(this, LoginIntercept.class);
+				lIntent.putExtra("FACEBOOK_PERMISSIONS",
+						AppConfig.FACEBOOK_PERMISSIONS);
+				startActivityForResult(lIntent,
+						LOGIN_INTERCEPT_FOR_MY_BEERS_REQUEST_CODE);
+			}
+			break;
+		case 5:
+			mTracker.trackEvent("CommunityOptions", "FavoriteBeerReviews",
+					"Clicked", 0);
+			mTracker.dispatch();
+			// If user id does not exist
+			if (mUser.isLoggedIn()) {
+				lFragment = new CommunityBeersFragment();
+				{
+					Bundle bundle = new Bundle();
+					bundle.putString("OPTION",
+							AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS);
+					bundle.putString("USERID", mUser.getUserId());
+					lFragment.setArguments(bundle);
+				}
+			} else {
+				Intent lIntent = new Intent(this, LoginIntercept.class);
+				lIntent.putExtra("FACEBOOK_PERMISSIONS",
+						AppConfig.FACEBOOK_PERMISSIONS);
+				startActivityForResult(lIntent,
+						LOGIN_INTERCEPT_FOR_FAVORITE_BEERS_REQUEST_CODE);
+			}
+			break;
+		default:
+			break;
+		}
+
+		if (lFragment != null) {
+			android.support.v4.app.FragmentManager lFragmentManager = getSupportFragmentManager();
+			android.support.v4.app.FragmentTransaction lFragmentTransaction = lFragmentManager
+					.beginTransaction();
+
+			lFragmentTransaction.replace(R.id.frame_container, lFragment);
+			lFragmentTransaction
+					.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			// Add to backstack
+			// lFragmentTransaction.addToBackStack(lFragment.getClass().getName());
+			lFragmentTransaction.commit();
+
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(position, true);
+			mDrawerList.setSelection(position);
+			if (updateTitle) {
+				setTitle(mNavMenuTitles[position]);
+			}
+			mDrawerLayout.closeDrawer(mDrawerList);
+		} else {
+			// error in creating fragment
+		}
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getSupportActionBar().setTitle(mTitle);
+	}
+
+	/**
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged()...
+	 */
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		if (mDrawerToggle != null)
+			mDrawerToggle.syncState();
+	}
+
+	/**
+	 * 
+	 * @throws NotFoundException
+	 * @throws ExternalStorageNotReadyException
+	 * @throws DeviceNotRegisteredException
+	 */
+	private void setupActivity() throws NotFoundException {
+		setContentView(R.layout.main);
+		setupNavDrawer();
+		getSupportActionBar().setBackgroundDrawable(
+				new ColorDrawable(0xFF998675));
+	}
+
+	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		// DO NOTHING
 		super.onConfigurationChanged(newConfig);
+		// Pass any configuration change to the drawer toggls
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	private void setDisplayView() {
+		displayView(0, false);
+	}
+
+	private void setupNavDrawer() {
+		mTitle = mDrawerTitle = getTitle();
+
+		// load slide menu items
+		mNavMenuTitles = getResources()
+				.getStringArray(R.array.nav_drawer_items);
+
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+
+		mNavDrawerItems = new ArrayList<NavDrawerItem>();
+
+		// adding nav drawer items to array
+		// Special message
+		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[0]));
+		// Browse
+		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[1]));
+		// Favorites
+		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[2]));
+		// User
+		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[3]));
+		// Settings
+		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[4]));
+		// About
+		mNavDrawerItems.add(new NavDrawerItem(mNavMenuTitles[5]));
+
+		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+
+		// setting the nav drawer list adapter
+		mAdapter = new NavDrawerListAdapter(getApplicationContext(),
+				mNavDrawerItems);
+		mDrawerList.setAdapter(mAdapter);
+
+		// enabling action bar app icon and behaving it as toggle button
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.icon, // nav menu toggle icon
+				R.string.app_name, // nav drawer open - description for
+									// accessibility
+				R.string.app_name // nav drawer close - description for
+									// accessibility
+		) {
+			public void onDrawerClosed(View view) {
+				getSupportActionBar().setTitle(mTitle);
+				supportInvalidateOptionsMenu();
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				getSupportActionBar().setTitle(mDrawerTitle);
+				supportInvalidateOptionsMenu();
+			}
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 
 	/*
@@ -247,241 +442,26 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 	 */
 	@Override
 	protected void onDestroy() {
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
-		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
-		}
 		/** Stop the Notification Service **/
-		Util.evaluateNotificationService(mMainActivity);
+		Util.evaluateNotificationService(Main.this);
 
 		super.onDestroy();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateOptionsMenu");
-		}
-		super.onCreateOptionsMenu(menu);
-		int position = 0;
-		menu.add(MENU_GROUP, PREFERENCES_ID, position++, R.string.preferences);
-		menu.add(MENU_GROUP, ABOUT_ID, position++, R.string.menu_about);
-		if (AppConfig.DEFAULT_APPSTORE.equals(AppConfig.GOOGLE_APPSTORE)) {
-			menu.add(MENU_GROUP, SEND_ERROR_REPORT_ID, position++,
-					R.string.menu_send_error_report);
-		}
-		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onMenuItemSelected(int, android.view.MenuItem)
-	 */
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onMenuItemSelected");
-		}
-		switch (item.getItemId()) {
-		case ABOUT_ID:
-			mTracker.trackEvent("Main", "AboutBeer", "Clicked", 0);
-			mTracker.dispatch();
-			aboutBeer();
-			return true;
-		case SEND_ERROR_REPORT_ID:
-			mTracker.trackEvent("Main", "SendErrorReport", "Clicked", 0);
-			mTracker.dispatch();
-			sendErrorReport();
-			return true;
-		case PREFERENCES_ID:
-			mTracker.trackEvent("Main", "Preferences", "Clicked", 0);
-			mTracker.dispatch();
-			preferences();
-			return true;
-		}
-
-		return super.onMenuItemSelected(featureId, item);
-	}
-
+	/******************************************/
 	/**
-	 * 
-	 */
-	private void aboutBeer() {
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "aboutBeer");
+	 * Slide menu item click listener
+	 * */
+	private class SlideMenuClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			// display view for selected nav drawer item
+			displayView(position);
 		}
-		Intent intent = new Intent(Intent.ACTION_VIEW,
-				Uri.parse(AppConfig.APPLICATION_DETAILS_PAGE_WEBSITE_URI));
-
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivity(intent);
-
-	}
-
-	/**
-	 * 
-	 */
-	private void sendErrorReport() {
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "Send Error Report");
-		}
-
-		Intent intent = new Intent(mMainActivity.getApplication(),
-				CollectAndSendLog.class);
-		startActivity(intent);
-
-	}
-
-	/**
-	 * 
-	 */
-	private void preferences() {
-		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "aboutBeer");
-		}
-		Intent intent = new Intent(mMainActivity.getApplication(),
-				SetPreferences.class);
-
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivity(intent);
-
-	}
-
-	/**
-	 * 
-	 * @param activity
-	 */
-	private void showInstructions(Activity activity) {
-		new AlertDialog.Builder(activity).setTitle(R.string.instructions_title)
-				.setIcon(android.R.drawable.ic_dialog_info).setCancelable(true)
-				.setPositiveButton(R.string.done_label, null)
-				.setMessage(readAsset(activity, AppConfig.ASSET_INSTRUCTIONS))
-				.show();
-
-	}
-
-	private CharSequence readAsset(Activity activity, String asset) {
-		BufferedReader in = null;
-		try {
-			in = new BufferedReader(new InputStreamReader(activity.getAssets()
-					.open(asset)));
-			String line;
-			StringBuilder buffer = new StringBuilder();
-			while ((line = in.readLine()) != null)
-				buffer.append(line).append('\n');
-			return buffer;
-		} catch (IOException e) {
-			return "";
-		} finally {
-			closeStream(in);
-		}
-	}
-
-	/**
-	 * Closes the specified stream.
-	 * 
-	 * @param stream
-	 *            The stream to close.
-	 */
-	private void closeStream(Closeable stream) {
-		if (stream != null) {
-			try {
-				stream.close();
-			} catch (IOException e) {
-				Log.e(TAG,
-						(e.getMessage() != null) ? e.getMessage().replace(" ",
-								"_") : "", e);
-			}
-		}
-	}
-
-	private void displayList(String pOption, List<CommunityBeer> pBeers) {
-		Log.i(TAG, "displayList():: option = " + pOption + " " + pBeers.size()
-				+ " beers displayed");
-		LinearLayout lView = evaluateOption(pOption);
-		
-		for (CommunityBeer pBeer : pBeers) {
-			final CommunityBeer lBeer = pBeer;
-			
-			String _urlImage = AppConfig.COMMUNITY_GET_BEERS_URL
-					+ AppConfig.COMMUNITY_GET_IMAGE_Q + lBeer.beerId;
-			LinearLayout layout = new LinearLayout(getApplicationContext());
-			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.WRAP_CONTENT,
-					LinearLayout.LayoutParams.WRAP_CONTENT);
-
-			layoutParams.setMargins(30, 20, 30, 0);
-			layout.setLayoutParams(layoutParams);
-			layout.setGravity(Gravity.CENTER);
-			layout.setOrientation(LinearLayout.VERTICAL);
-
-			ImageView thumbnail = new ImageView(getApplicationContext());
-			thumbnail.setImageResource(R.drawable.bottle);
-			thumbnail.setLayoutParams(new LayoutParams(220, 220));
-			thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			layout.addView(thumbnail);
-
-			TextView textView = new TextView(getApplicationContext());
-			textView.setLayoutParams(new LayoutParams(220, 220));
-			textView.setText(lBeer.beer);
-			layout.addView(textView);
-
-			mDrawableManager.fetchDrawableOnThread(_urlImage, thumbnail);
-
-			layout.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					String _selection = lBeer.beer.replace(" ", "_") + "," + lBeer.beerId;
-					mTracker.trackEvent("CommunityBeers", "Selection", _selection, 0);
-					mTracker.dispatch();
-					Intent intent = new Intent(mMainActivity.getApplication(),
-							CommunityBeerView.class);
-					intent.putExtra("COMMUNITY_BEER", lBeer);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-					startActivity(intent);
-				}
-			});
-			lView.addView(layout);
-		}
-		//handle progress bar
-
-	}
-
-	private LinearLayout evaluateOption(String pOption) {
-		if (pOption.equals(AppConfig.COMMUNITY_BEERS_FROM_AROUND_THE_WORLD)) {
-		} else if (pOption.equals(AppConfig.COMMUNITY_TOP_RATED_BEERS)) {
-			return mTopRatedBeersGallery;
-		} else if (pOption.equals(AppConfig.COMMUNITY_WORST_BEERS)) {
-			return mWorstRatedBeersGallery;
-
-		} else if (pOption.equals(AppConfig.COMMUNITY_BEERS_BY_COUNTRY)) {
-		} else if (pOption.equals(AppConfig.COMMUNITY_BEERS_BY_STATE)) {
-		} else if (pOption.equals(AppConfig.COMMUNITY_SEARCH_BEERS)) {
-		} else if (pOption.equals(AppConfig.COMMUNITY_MY_BEER_REVIEWS)) {
-			return mMyBeersGallery;
-		} else if (pOption
-				.equals(AppConfig.COMMUNITY_MOST_HELPFUL_BEER_REVIEWS)) {
-			return mMostHelpfulBeerReviewsGallery;
-
-		} else if (pOption.equals(AppConfig.COMMUNITY_NEW_BEER_REVIEWS)) {
-		} else if (pOption.equals(AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS)) {
-			return mFavoriteBeerReviewsGallery;
-		} else if (pOption.equals(AppConfig.COMMUNITY_BEER_OF_THE_DAY)) {
-		} else if (pOption.equals(AppConfig.COMMUNITY_COMPARABLE_BEER_REVIEWS)) {
-		} else if (pOption.equals(AppConfig.COMMUNITY_RECOMMENDED_BEER_REVIEWS)) {
-		}
-		return null;
 	}
 
 	/*******************************************************************************/
@@ -495,12 +475,14 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 		 */
 		protected Void doInBackground(String... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())
+					Logger.log("doInBackground starting");
 			}
 			try {
-				String currentVersion = getVersionCode(mMainActivity);
+				String currentVersion = getVersionCode(Main.this);
 				String url = Util.getUpdateCheckUrl(currentVersion);
-				Log.i(_TAG, "doInBackground:" + url);
+				if (Logger.isLogEnabled())
+					Logger.log("doInBackground:" + url);
 				String response[] = Util.getResult(url);
 				if ((response[0] != null) && (response[0].startsWith("{"))) {
 					JSONObject json = new JSONObject(response[0]);
@@ -510,8 +492,8 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 					if (_updateAvailable) {
 						Runnable notification = new Runnable() {
 							public void run() {
-								if (mMainActivity != null) {
-									new AlertDialog.Builder(mMainActivity)
+								if (Main.this != null) {
+									new AlertDialog.Builder(Main.this)
 											.setTitle(
 													R.string.new_version_available_title)
 											.setIcon(
@@ -592,10 +574,12 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 		@Override
 		protected void onPostExecute(Object result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())
+					Logger.log("onPostExecute starting");
 			}
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())
+					Logger.log("onPostExecute finished");
 			}
 		}
 
@@ -613,13 +597,14 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 		 */
 		protected Void doInBackground(String... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())
+					Logger.log("doInBackground starting");
 			}
 
 			Runnable notification = new Runnable() {
 				public void run() {
-					if (mMainActivity != null) {
-						final SharedPreferences preferences = mMainActivity
+					if (Main.this != null) {
+						final SharedPreferences preferences = Main.this
 								.getSharedPreferences(
 										getString(R.string.app_name),
 										Activity.MODE_PRIVATE);
@@ -660,7 +645,7 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 									}
 								}
 
-								final Dialog dialog = new Dialog(mMainActivity,
+								final Dialog dialog = new Dialog(Main.this,
 										android.R.style.Theme_Dialog);
 								dialog.setContentView(R.layout.rate_and_review);
 								dialog.setTitle(R.string.rate_and_review_reminder_title);
@@ -773,10 +758,12 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 		@Override
 		protected void onPostExecute(Object result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())
+					Logger.log("onPostExecute starting");
 			}
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())
+					Logger.log("onPostExecute finished");
 			}
 		}
 
@@ -794,13 +781,15 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 		 * @return null
 		 */
 		protected Void doInBackground(String... args) {
-			Log.i(_TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())
+				Logger.log("doInBackground starting");
 			String userId = (String) args[0];
 			try {
 				String url = com.cm.beer.util.Util
 						.getRecommendationsUrl(userId);
 
-				Log.i(_TAG, "doInBackground:" + url);
+				if (Logger.isLogEnabled())
+					Logger.log("doInBackground:" + url);
 				String response[] = com.cm.beer.util.Util.getResult(url);
 				if ((response[0] != null) && (response[0].startsWith("["))) {
 					_mRecommendationsJsonArray = new JSONArray(response[0]);
@@ -819,14 +808,16 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 				mTracker.dispatch();
 			}
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(_TAG, "doInBackground finished");
+				if (Logger.isLogEnabled())
+					Logger.log("doInBackground finished");
 			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			Log.i(_TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())
+				Logger.log("onPostExecute starting");
 			if (_mRecommendationsJsonArray != null) {
 				int notificationId = R.string.notification_recommended_beer_reviews;
 				CharSequence message = getString(R.string.notification_recommended_beer_reviews);
@@ -838,7 +829,8 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 				// The PendingIntent to launch our activity if the user selects
 				// this
 				// notification
-				Intent intent = new Intent(mMainActivity, CommunityBeers.class);
+				Intent intent = new Intent(Main.this,
+						CommunityBeersFragment.class);
 				intent.putExtra("OPTION",
 						AppConfig.COMMUNITY_RECOMMENDED_BEER_REVIEWS);
 				intent.putExtra("BEERIDS",
@@ -846,12 +838,12 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 				intent.putExtra("NOTIFICATIONID", notificationId);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				PendingIntent contentIntent = PendingIntent.getActivity(
-						mMainActivity, notificationId, intent,
+						Main.this, notificationId, intent,
 						PendingIntent.FLAG_UPDATE_CURRENT);
 
 				// Set the info for the views that show in the notification
 				// panel.
-				notification.setLatestEventInfo(mMainActivity,
+				notification.setLatestEventInfo(Main.this,
 						getText(R.string.app_name), message, contentIntent);
 
 				// Send the notification.
@@ -861,363 +853,15 @@ public class Main extends Activity implements Eula.OnEulaAgreedTo {
 				// cancel.
 				mNM.notify(notificationId, notification);
 			} else {
-				Log.i(_TAG, "No recommendations found!");
+				if (Logger.isLogEnabled())
+					Logger.log("No recommendations found!");
 			}
-			Log.i(_TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())
+				Logger.log("onPostExecute finished");
 		}
 
 	}
 
-	/******************************************************/
-	private class AsyncGetCommunityBeers extends
-			AsyncTask<Object, Void, Object> {
-		List<CommunityBeer> mBeers = new ArrayList<CommunityBeer>();
-		Bundle mExtras;
-
-		/**
-		 * 
-		 * @param args
-		 * @return null
-		 */
-		protected Void doInBackground(Object... args) {
-			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground starting");
-			}
-			mExtras = (Bundle) args[0];
-
-			JSONArray beersJSONArray = null;
-			try {
-
-				String _url = getUrl(mExtras);
-				Log.i(TAG, "doInBackground:URL=" + _url);
-				String response[] = Util.getResult(_url);
-				if ((response[0] != null) && (response[0].startsWith("["))) {
-					beersJSONArray = new JSONArray(response[0]);
-					mCs = response[1];
-				}
-
-				if (beersJSONArray != null) {
-
-					CommunityBeer _beer = null;
-					JSONObject beerJSONObject = null;
-					int beersLength = beersJSONArray.length();
-					for (int i = 0; i < beersLength; i++) {
-						beerJSONObject = beersJSONArray.getJSONObject(i);
-						_beer = new CommunityBeer();
-						_beer.country = beerJSONObject.getString("country");
-						_beer.created = beerJSONObject.getString("created");
-						_beer.notes = beerJSONObject.getString("notes");
-						_beer.picture = beerJSONObject.getString("picture");
-						_beer.price = beerJSONObject.getString("price");
-						_beer.rating = beerJSONObject.getString("rating");
-						_beer.state = beerJSONObject.getString("state");
-						_beer.share = beerJSONObject.getString("share");
-						_beer.style = beerJSONObject.getString("style");
-						_beer.updated = beerJSONObject.getString("updated");
-						_beer.userId = beerJSONObject.getString("userId");
-						_beer.userLink = beerJSONObject.getString("userLink");
-						_beer.userName = beerJSONObject.getString("userName");
-						_beer.beer = beerJSONObject.getString("beer");
-						_beer.beerCreated = beerJSONObject
-								.getString("beerCreated");
-						_beer.beerId = beerJSONObject.getString("beerId");
-						_beer.brewery = beerJSONObject.getString("brewery");
-						_beer.beerUpdated = beerJSONObject
-								.getString("beerUpdated");
-						_beer.alcohol = beerJSONObject.getString("alcohol");
-
-						_beer.timeZone = beerJSONObject.getString("timeZone");
-						_beer.latitude = beerJSONObject.getString("latitude");
-						_beer.longitude = beerJSONObject.getString("longitude");
-
-						/** Added in V2 of the database **/
-						if (beerJSONObject.has("characteristics")) {
-							_beer.characteristics = beerJSONObject
-									.getString("characteristics");
-						}
-						/** Added in V3 of the database **/
-						if (beerJSONObject.has("breweryLink")) {
-							if ((beerJSONObject.getString("breweryLink") != null)
-									&& (!beerJSONObject
-											.getString("breweryLink")
-											.equals(""))
-									&& (!beerJSONObject
-											.getString("breweryLink").equals(
-													"null"))) {
-								_beer.breweryLink = beerJSONObject
-										.getString("breweryLink");
-							}
-						}
-						/** DEPRECATED in V4 of the database **/
-						if (beerJSONObject.has("currency")) {
-							_beer.currency = beerJSONObject
-									.getString("currency");
-						}
-						/** Added in V4 of the database **/
-						if (beerJSONObject.has("currencyCode")) {
-							_beer.currencyCode = beerJSONObject
-									.getString("currencyCode");
-						}
-						/** Added in V4 of the database **/
-						if (beerJSONObject.has("currencySymbol")) {
-							_beer.currencySymbol = beerJSONObject
-									.getString("currencySymbol");
-						}
-
-						mBeers.add(_beer);
-						Log.i(TAG, _beer.beerId + "::" + _beer.beer + "::BL::"
-								+ _beer.breweryLink);
-					}
-				}
-			} catch (Throwable e) {
-				Log.e(TAG,
-						"error: "
-								+ ((e.getMessage() != null) ? e.getMessage()
-										.replace(" ", "_") : ""), e);
-				mTracker.trackEvent(
-						"CommunityBeers",
-						"DownloadError",
-						((e.getMessage() != null) ? e.getMessage().replace(" ",
-								"_") : "").replace(" ", "_"), 0);
-				mTracker.dispatch();
-			}
-
-			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground finished");
-			}
-			return null;
-		}
-
-		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
-			try {
-				Log.i(TAG, "onPostExecute Display List");
-				String option = ((mExtras.getString("OPTION") != null) && (!mExtras
-						.getString("OPTION").equals(""))) ? mExtras
-						.getString("OPTION") : "";
-				Main.this.displayList(option, mBeers);
-			} catch (Throwable e) {
-				Log.e(TAG,
-						"error: "
-								+ ((e.getMessage() != null) ? e.getMessage()
-										.replace(" ", "_") : ""), e);
-			}
-			Log.i(TAG, "onPostExecute finished");
-		}
-
-		/**
-		 * Builds the Yelp Url
-		 * 
-		 * @return
-		 * @throws UnsupportedEncodingException
-		 */
-		private String getUrl(Bundle extras)
-				throws UnsupportedEncodingException {
-			String option = ((extras.getString("OPTION") != null) && (!extras
-					.getString("OPTION").equals(""))) ? extras
-					.getString("OPTION") : "";
-			Log.i(TAG, "OPTION=" + option);
-			String country = ((extras.getString("COUNTRY") != null) && (!extras
-					.getString("COUNTRY").equals(""))) ? extras
-					.getString("COUNTRY") : "";
-			Log.i(TAG, "COUNTRY=" + country);
-			String region = ((extras.getString("REGION") != null) && (!extras
-					.getString("REGION").equals(""))) ? extras
-					.getString("REGION") : "";
-			Log.i(TAG, "REGION=" + region);
-			String userId = ((extras.getString("USERID") != null) && (!extras
-					.getString("USERID").equals(""))) ? extras
-					.getString("USERID") : "";
-			Log.i(TAG, "USERID=" + userId);
-			String beerIds = ((extras.getString("BEERIDS") != null) && (!extras
-					.getString("BEERIDS").equals(""))) ? extras
-					.getString("BEERIDS") : "";
-			Log.i(TAG, "BEERIDS=" + beerIds);
-
-			if (option.equals(AppConfig.COMMUNITY_BEERS_FROM_AROUND_THE_WORLD)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_BEERS_Q
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option.equals(AppConfig.COMMUNITY_TOP_RATED_BEERS)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_TOP_RATED_BEERS_Q
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option.equals(AppConfig.COMMUNITY_WORST_BEERS)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_WORST_BEERS_Q
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option.equals(AppConfig.COMMUNITY_BEERS_BY_COUNTRY)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_BEERS_BY_COUNTRY_Q
-						+ AppConfig.COMMUNITY_GET_BEERS_COUNTRY_PARAM
-						+ URLEncoder.encode(country, "UTF-8")
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option.equals(AppConfig.COMMUNITY_BEERS_BY_STATE)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_BEERS_BY_STATES_Q
-						+ AppConfig.COMMUNITY_GET_BEERS_COUNTRY_PARAM
-						+ URLEncoder.encode(country, "UTF-8")
-						+ AppConfig.COMMUNITY_GET_BEERS_STATE_PARAM
-						+ URLEncoder.encode(region, "UTF-8")
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option.equals(AppConfig.COMMUNITY_SEARCH_BEERS)) {
-				return getSearchUrl(extras);
-			} else if (option.equals(AppConfig.COMMUNITY_MY_BEER_REVIEWS)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_MY_BEERS_Q
-						+ AppConfig.COMMUNITY_USERID_PARAM
-						+ URLEncoder.encode(userId, "UTF-8")
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option
-					.equals(AppConfig.COMMUNITY_MOST_HELPFUL_BEER_REVIEWS)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_MOST_HELPFUL_BEER_REVIEWS_Q
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option.equals(AppConfig.COMMUNITY_NEW_BEER_REVIEWS)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
-						+ AppConfig.COMMUNITY_BEERIDS_PARAM
-						+ URLEncoder.encode(beerIds, "UTF-8")
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option.equals(AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_FAVORITE_BEERS_Q
-						+ AppConfig.COMMUNITY_USERID_PARAM
-						+ URLEncoder.encode(userId, "UTF-8")
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option.equals(AppConfig.COMMUNITY_BEER_OF_THE_DAY)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
-						+ AppConfig.COMMUNITY_BEERIDS_PARAM
-						+ URLEncoder.encode(beerIds, "UTF-8")
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option
-					.equals(AppConfig.COMMUNITY_COMPARABLE_BEER_REVIEWS)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
-						+ AppConfig.COMMUNITY_BEERIDS_PARAM
-						+ URLEncoder.encode(beerIds, "UTF-8")
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			} else if (option
-					.equals(AppConfig.COMMUNITY_RECOMMENDED_BEER_REVIEWS)) {
-				return AppConfig.COMMUNITY_GET_BEERS_URL
-						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
-						+ AppConfig.COMMUNITY_BEERIDS_PARAM
-						+ URLEncoder.encode(beerIds, "UTF-8")
-						+ AppConfig.COMMUNITY_R
-						+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			}
-
-			return "";
-		}
-
-		/**
-		 * 
-		 * @param extras
-		 * @return
-		 * @throws UnsupportedEncodingException
-		 */
-		private String getSearchUrl(Bundle extras)
-				throws UnsupportedEncodingException {
-			StringBuilder searchUri = new StringBuilder();
-
-			String rating = extras.getString(NotesDbAdapter.KEY_RATING);
-			Log.i(TAG, "rating=" + rating);
-
-			String beer = extras.getString(NotesDbAdapter.KEY_BEER);
-			Log.i(TAG, "beer=" + beer);
-
-			String alcohol = extras.getString(NotesDbAdapter.KEY_ALCOHOL);
-			Log.i(TAG, "alcohol=" + alcohol);
-
-			String style = extras.getString(NotesDbAdapter.KEY_STYLE);
-			Log.i(TAG, "style=" + style);
-
-			String brewery = extras.getString(NotesDbAdapter.KEY_BREWERY);
-			Log.i(TAG, "brewery=" + brewery);
-
-			String state = extras.getString(NotesDbAdapter.KEY_STATE);
-			Log.i(TAG, "state=" + state);
-
-			String country = extras.getString(NotesDbAdapter.KEY_COUNTRY);
-			Log.i(TAG, "country=" + country);
-
-			String userName = extras.getString(NotesDbAdapter.KEY_USER_NAME);
-			Log.i(TAG, "username	=" + userName);
-
-			String userId = extras.getString(NotesDbAdapter.KEY_USER_ID);
-			Log.i(TAG, "userid	=" + userId);
-
-			// If all fields are null then return
-			if ((rating == null) && (beer == null) && (alcohol == null)
-					&& (style == null) && (brewery == null) && (state == null)
-					&& (country == null) && (userName == null)
-					&& (userId == null)) {
-				return "";
-			}
-			if (rating != null && (!rating.equals(""))) {
-				searchUri.append("&rating="
-						+ (URLEncoder.encode(rating, "UTF-8")));
-			}
-			if (beer != null && (!beer.equals(""))) {
-				searchUri.append("&beer=" + (URLEncoder.encode(beer, "UTF-8")));
-			}
-			if (alcohol != null && (!alcohol.equals(""))) {
-				searchUri.append("&alcohol="
-						+ (URLEncoder.encode(alcohol, "UTF-8")));
-			}
-			if (style != null && (!style.equals(""))) {
-				searchUri.append("&style="
-						+ (URLEncoder.encode(style, "UTF-8")));
-			}
-			if (brewery != null && (!brewery.equals(""))) {
-				searchUri.append("&brewery="
-						+ (URLEncoder.encode(brewery, "UTF-8")));
-			}
-			if (state != null && (!state.equals(""))) {
-				searchUri.append("&state="
-						+ (URLEncoder.encode(state, "UTF-8")));
-			}
-			if (country != null && (!country.equals(""))) {
-				searchUri.append("&country="
-						+ (URLEncoder.encode(country, "UTF-8")));
-			}
-
-			if (userName != null && (!userName.equals(""))) {
-				searchUri.append("&username="
-						+ (URLEncoder.encode(userName, "UTF-8")));
-			}
-			if (userId != null && (!userId.equals(""))) {
-				searchUri.append("&userid="
-						+ (URLEncoder.encode(userId, "UTF-8")));
-			}
-			User user = new User(mMainActivity);
-			if (user.getUserId() != null) {
-				searchUri.append("&searchuserid="
-						+ (URLEncoder.encode(user.getUserId(), "UTF-8")));
-			}
-			Log.i(TAG, "Search URI => " + searchUri);
-
-			String searchURL = AppConfig.COMMUNITY_GET_BEERS_URL
-					+ AppConfig.COMMUNITY_SEARCH_BEERS_Q + searchUri.toString()
-					+ AppConfig.COMMUNITY_R
-					+ AppConfig.COMMUNITY_GET_BEERS_CS_PARAM + mCs;
-			Log.i(TAG, "Search URL => " + searchURL);
-			// return encoded url
-			return searchURL;
-		}
-
-	}
+	/**************************************************************************************/
 
 }

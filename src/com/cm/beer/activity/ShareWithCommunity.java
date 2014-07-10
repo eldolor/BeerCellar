@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
@@ -41,6 +42,7 @@ import com.cm.beer.facebook.SessionEvents;
 import com.cm.beer.facebook.SessionEvents.AuthListener;
 import com.cm.beer.facebook.SessionEvents.LogoutListener;
 import com.cm.beer.facebook.SessionStore;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
@@ -108,7 +110,7 @@ public class ShareWithCommunity extends Activity
 
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.d(TAG, "onCreate: ");
+			if (Logger.isLogEnabled())  Logger.log("onCreate: ");
 		}
 		mMainActivity = this;
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -119,7 +121,7 @@ public class ShareWithCommunity extends Activity
 				this);
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 		mUser = new User(this);
 		mDbHelper = new NotesDbAdapter(this);
@@ -141,14 +143,14 @@ public class ShareWithCommunity extends Activity
 		mIntercept = extras != null ? extras.getString("INTERCEPT")
 				: AppConfig.SHARE_WITH_COMMUNITY_INTERCEPT;
 
-		Log.i(TAG, "onCreate::mRowId=" + mRowId + " mAction=" + mAction
+		if (Logger.isLogEnabled())  Logger.log("onCreate::mRowId=" + mRowId + " mAction=" + mAction
 				+ " mUploadPhoto=" + ((mUploadPhoto) ? "true" : "false")
 				+ " mIntercept=" + mIntercept);
 
 		// check for action missing.
 		if (mAction == null)
 		{
-			Log.d(TAG, "onCreate::Received No Action. Ending Activity!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate::Received No Action. Ending Activity!");
 			finish();
 		}
 		// Fetch the note
@@ -177,7 +179,7 @@ public class ShareWithCommunity extends Activity
 			if (mIntercept
 					.equalsIgnoreCase(AppConfig.SHARE_WITH_COMMUNITY_DO_NOT_INTERCEPT))
 			{
-				Log.d(TAG, "onCreate::Instructed not to Intercept!");
+				if (Logger.isLogEnabled())  Logger.log("onCreate::Instructed not to Intercept!");
 				new AsyncShareWithCommunity().execute(mAction, mUploadPhoto,
 						mNote);
 				mMainActivity.finish();
@@ -194,7 +196,7 @@ public class ShareWithCommunity extends Activity
 					mMainActivity.finish();
 				} else
 				{
-					Log.d(TAG, "onCreate::Intercepting!");
+					if (Logger.isLogEnabled())  Logger.log("onCreate::Intercepting!");
 					setContentView(R.layout.share_with_community);
 					mLoginButton = (LoginButton) findViewById(R.id.login);
 					mText = (TextView) ShareWithCommunity.this
@@ -264,7 +266,7 @@ public class ShareWithCommunity extends Activity
 							mTracker.trackEvent("ShareWithCommunity",
 									"ShareAnonymously", "Clicked", 0);
 							mTracker.dispatch();
-							Log.i(TAG, "mPostAnonymously:onClick:userId:"
+							if (Logger.isLogEnabled())  Logger.log("mPostAnonymously:onClick:userId:"
 									+ mNote.userId);
 							// update user info to anonymous
 							mNote = updateUser(mDbHelper, " ", " ", " ");
@@ -281,7 +283,7 @@ public class ShareWithCommunity extends Activity
 						{
 							if (AppConfig.LOGGING_ENABLED)
 							{
-								Log.d(TAG, "mDoNotShare.setOnClickListener");
+								if (Logger.isLogEnabled())  Logger.log("mDoNotShare.setOnClickListener");
 							}
 							mTracker.trackEvent("ShareWithCommunity",
 									"DoNotShare", "Clicked", 0);
@@ -326,7 +328,7 @@ public class ShareWithCommunity extends Activity
 		     * activity's onActivityResult() function or Facebook authentication will
 		     * not function properly!
 		     */
-			Log.d(TAG, "authorizeCallback");
+			if (Logger.isLogEnabled())  Logger.log("authorizeCallback");
 			mFacebook.authorizeCallback(requestCode, resultCode, intent);
 		}
 	}
@@ -380,13 +382,13 @@ public class ShareWithCommunity extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -401,7 +403,7 @@ public class ShareWithCommunity extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "finish");
+			if (Logger.isLogEnabled())  Logger.log("finish");
 		}
 		// database closed in share with community async task
 		if (mDbHelper != null)
@@ -422,7 +424,7 @@ public class ShareWithCommunity extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onCreateOptionsMenu");
+			if (Logger.isLogEnabled())  Logger.log("onCreateOptionsMenu");
 		}
 		super.onCreateOptionsMenu(menu);
 		int position = 0;
@@ -444,7 +446,7 @@ public class ShareWithCommunity extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onMenuItemSelected");
+			if (Logger.isLogEnabled())  Logger.log("onMenuItemSelected");
 		}
 		switch (item.getItemId())
 		{
@@ -466,7 +468,7 @@ public class ShareWithCommunity extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "Send Error Report");
+			if (Logger.isLogEnabled())  Logger.log("Send Error Report");
 		}
 		Intent intent = new Intent(ShareWithCommunity.this.getApplication(),
 				CollectAndSendLog.class);
@@ -499,13 +501,13 @@ public class ShareWithCommunity extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((dialog != null) && (dialog.isShowing()))
 		{
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(ACTIVE_DIALOG);
 		}
@@ -522,7 +524,7 @@ public class ShareWithCommunity extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_POSTING_ID)
@@ -544,7 +546,7 @@ public class ShareWithCommunity extends Activity
 		{
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.d(TAG, "VVWAuthListener: onAuthSucceed");
+				if (Logger.isLogEnabled())  Logger.log("VVWAuthListener: onAuthSucceed");
 			}
 			mTracker.trackEvent("ShareWithCommunity", "FacebookLogin", "Y", 0);
 			mTracker.dispatch();
@@ -559,7 +561,7 @@ public class ShareWithCommunity extends Activity
 		{
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.d(TAG, "VVWAuthListener: onAuthFail");
+				if (Logger.isLogEnabled())  Logger.log("VVWAuthListener: onAuthFail");
 			}
 			mText.setText("Login Failed: " + error);
 		}
@@ -572,7 +574,7 @@ public class ShareWithCommunity extends Activity
 		{
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.d(TAG, "VVWLogoutListener: onLogoutBegin");
+				if (Logger.isLogEnabled())  Logger.log("VVWLogoutListener: onLogoutBegin");
 			}
 			Toast.makeText(ShareWithCommunity.this,
 					R.string.on_facebook_logout_begin, Toast.LENGTH_SHORT)
@@ -585,7 +587,7 @@ public class ShareWithCommunity extends Activity
 		{
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.d(TAG, "VVWLogoutListener: onLogoutFinish");
+				if (Logger.isLogEnabled())  Logger.log("VVWLogoutListener: onLogoutFinish");
 			}
 			mTracker.trackEvent("ShareWithCommunity", "FacebookLogout", "Y", 0);
 			mTracker.dispatch();
@@ -607,7 +609,7 @@ public class ShareWithCommunity extends Activity
 									.replace(" ", "_") : ""), e);
 			if ((dialog != null) && (dialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "onFacebookError: handleError");
+					if (Logger.isLogEnabled())  Logger.log("onFacebookError: handleError");
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}
@@ -616,10 +618,10 @@ public class ShareWithCommunity extends Activity
 		@Override
 		public void onComplete(String response, Object state) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.d(TAG, "GetUserProfileRequestListener: onComplete "
+				if (Logger.isLogEnabled())  Logger.log("GetUserProfileRequestListener: onComplete "
 						+ response.toString());
 			}
-			Log.d(TAG, "Got response: " + response);
+			if (Logger.isLogEnabled())  Logger.log("Got response: " + response);
 
 			try {
 				JSONObject json = Util.parseJson(response);
@@ -644,7 +646,7 @@ public class ShareWithCommunity extends Activity
 						mNote);
 				try {
 					String email = json.getString("email");
-					Log.i(TAG, "User email: " + email);
+					if (Logger.isLogEnabled())  Logger.log("User email: " + email);
 					JSONObject additionalAttributes = new JSONObject();
 					additionalAttributes.put("email", email);
 					mUser.setAdditionalUserAttributes(additionalAttributes
@@ -669,7 +671,7 @@ public class ShareWithCommunity extends Activity
 
 			if ((dialog != null) && (dialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "GetUserProfileRequestListener: onComplete");
+					if (Logger.isLogEnabled())  Logger.log("GetUserProfileRequestListener: onComplete");
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}
@@ -703,7 +705,7 @@ public class ShareWithCommunity extends Activity
 		public void onFacebookError(FacebookError e, Object state) {
 			if ((dialog != null) && (dialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "GetWallPostRequestListener: onFacebookError");
+					if (Logger.isLogEnabled())  Logger.log("GetWallPostRequestListener: onFacebookError");
 				}
 				removeDialog(ACTIVE_DIALOG);
 			}
@@ -736,7 +738,7 @@ public class ShareWithCommunity extends Activity
 
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 			try
 			{
@@ -745,14 +747,14 @@ public class ShareWithCommunity extends Activity
 				boolean _uploadPhoto = (Boolean) params[1];
 				Note note = (Note) params[2];
 				_mNewBeerId = String.valueOf(note.id);
-				Log.i(TAG, "AsyncShareWithCommunity:doInBackground:userId:"
+				if (Logger.isLogEnabled())  Logger.log("AsyncShareWithCommunity:doInBackground:userId:"
 						+ mNote.userId);
 
-				Log.i(TAG, "q:" + _q + "::" + "row id:" + note.id);
+				if (Logger.isLogEnabled())  Logger.log("q:" + _q + "::" + "row id:" + note.id);
 				JSONObject _beerJson = com.cm.beer.util.Util.toBeerJson(note);
 				String beerJsonStr = _beerJson.toString();
 				beerJsonStr = URLEncoder.encode(beerJsonStr, "UTF-8");
-				Log.i(TAG, beerJsonStr);
+				if (Logger.isLogEnabled())  Logger.log(beerJsonStr);
 
 				HashMap<String, String> parameters = new HashMap<String, String>();
 				parameters.put("q", _q);
@@ -765,7 +767,7 @@ public class ShareWithCommunity extends Activity
 				}
 				// Prepare a request object
 				String _url = AppConfig.COMMUNITY_BEER_UPLOAD_URL;
-				Log.i(TAG, _url);
+				if (Logger.isLogEnabled())  Logger.log(_url);
 				{
 					boolean retry = true;
 					int retryCount = 0;
@@ -791,7 +793,7 @@ public class ShareWithCommunity extends Activity
 									+ retryCount);
 						}
 					}
-					Log.d(TAG, "Final Retry Count = " + retryCount);
+					if (Logger.isLogEnabled())  Logger.log("Final Retry Count = " + retryCount);
 					if (retryCount > 0)
 					{
 						mTracker.trackEvent("ShareWithCommunity", "ShareBeer",
@@ -801,11 +803,11 @@ public class ShareWithCommunity extends Activity
 				}
 
 				// Examine the response status
-				Log.i(TAG, "Response = " + response);
+				if (Logger.isLogEnabled())  Logger.log("Response = " + response);
 				// if response == ACTION_INSERT => Send complete update
 				if (response.equalsIgnoreCase(AppConfig.ACTION_INSERT))
 				{
-					Log.i(TAG, "Server has requested "
+					if (Logger.isLogEnabled())  Logger.log("Server has requested "
 							+ AppConfig.ACTION_INSERT);
 					parameters.put("q", AppConfig.ACTION_INSERT);
 					setPhoto(parameters, note.id);
@@ -820,7 +822,7 @@ public class ShareWithCommunity extends Activity
 								String _response = com.cm.beer.util.Util
 										.openUrl(_url, "POST", parameters);
 								// Examine the response status
-								Log.i(TAG, "Response = " + _response);
+								if (Logger.isLogEnabled())  Logger.log("Response = " + _response);
 								// Upload successful
 								retry = false;
 							} catch (Throwable e)
@@ -835,7 +837,7 @@ public class ShareWithCommunity extends Activity
 										+ retryCount);
 							}
 						}
-						Log.d(TAG, "Final Retry Count = " + retryCount);
+						if (Logger.isLogEnabled())  Logger.log("Final Retry Count = " + retryCount);
 						if (retryCount > 0)
 						{
 							mTracker.trackEvent("ShareWithCommunity",
@@ -860,7 +862,7 @@ public class ShareWithCommunity extends Activity
 			}
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "doInBackground finished");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			}
 			return null;
 		}
@@ -889,11 +891,11 @@ public class ShareWithCommunity extends Activity
 		@Override
 		protected void onPostExecute(Void result)
 		{
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			// get comparables
 			new AsyncGetComparablesTask().execute(_mNewBeerId);
 
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -910,13 +912,13 @@ public class ShareWithCommunity extends Activity
 		 */
 		protected Void doInBackground(String... args)
 		{
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String beerId = (String) args[0];
 			try
 			{
 				String url = com.cm.beer.util.Util.getComparablesUrl(beerId);
 
-				Log.i(TAG, "doInBackground:" + url);
+				if (Logger.isLogEnabled())  Logger.log("doInBackground:" + url);
 				String response[] = com.cm.beer.util.Util.getResult(url);
 				if ((response[0] != null) && (response[0].startsWith("[")))
 				{
@@ -938,7 +940,7 @@ public class ShareWithCommunity extends Activity
 			}
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "doInBackground finished");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			}
 			return null;
 		}
@@ -946,7 +948,7 @@ public class ShareWithCommunity extends Activity
 		@Override
 		protected void onPostExecute(Void result)
 		{
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			if (_mComparablesJsonArray != null)
 			{
 				int notificationId = R.string.notification_comparable_beer_reviews;
@@ -959,7 +961,7 @@ public class ShareWithCommunity extends Activity
 				// The PendingIntent to launch our activity if the user selects
 				// this
 				// notification
-				Intent intent = new Intent(mMainActivity, CommunityBeers.class);
+				Intent intent = new Intent(mMainActivity, CommunityBeersFragment.class);
 				intent.putExtra("OPTION",
 						AppConfig.COMMUNITY_COMPARABLE_BEER_REVIEWS);
 				intent.putExtra("BEERIDS", _mComparablesJsonArray.toString());
@@ -982,9 +984,9 @@ public class ShareWithCommunity extends Activity
 				mNM.notify(notificationId, notification);
 			} else
 			{
-				Log.i(TAG, "No comparables found!");
+				if (Logger.isLogEnabled())  Logger.log("No comparables found!");
 			}
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -1004,7 +1006,7 @@ public class ShareWithCommunity extends Activity
 
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 			try
 			{
@@ -1021,14 +1023,14 @@ public class ShareWithCommunity extends Activity
 
 				String userJsonStr = URLEncoder
 						.encode(json.toString(), "UTF-8");
-				Log.i(TAG, userJsonStr);
+				if (Logger.isLogEnabled())  Logger.log(userJsonStr);
 
 				HashMap<String, String> parameters = new HashMap<String, String>();
 				parameters.put("userProfile", userJsonStr);
 
 				// Prepare a request object
 				String _url = com.cm.beer.util.Util.getUploadUserProfileUrl();
-				Log.i(TAG, _url);
+				if (Logger.isLogEnabled())  Logger.log(_url);
 				{
 					boolean retry = true;
 					int retryCount = 0;
@@ -1054,7 +1056,7 @@ public class ShareWithCommunity extends Activity
 									+ retryCount);
 						}
 					}
-					Log.d(TAG, "Final Retry Count = " + retryCount);
+					if (Logger.isLogEnabled())  Logger.log("Final Retry Count = " + retryCount);
 					if (retryCount > 0)
 					{
 						mTracker.trackEvent("ShareWithCommunity",
@@ -1064,7 +1066,7 @@ public class ShareWithCommunity extends Activity
 				}
 
 				// Examine the response status
-				Log.i(TAG, "Response = " + response);
+				if (Logger.isLogEnabled())  Logger.log("Response = " + response);
 
 			} catch (Throwable e)
 			{
@@ -1081,7 +1083,7 @@ public class ShareWithCommunity extends Activity
 			}
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "doInBackground finished");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			}
 			return null;
 		}
@@ -1091,11 +1093,11 @@ public class ShareWithCommunity extends Activity
 		{
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			}
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 			}
 		}
 

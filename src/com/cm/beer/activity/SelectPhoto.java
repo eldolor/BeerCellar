@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 
 public class SelectPhoto extends Activity {
 	/** Called when the activity is first created. */
@@ -47,9 +48,9 @@ public class SelectPhoto extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 		mRowId = extras != null ? extras.getString("ROWID") : null;
-		Log.i(TAG, "onCreate: mRowId: " + mRowId);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mRowId: " + mRowId);
 		mStorage = extras != null ? extras.getString("STORAGE") : "EXTERNAL";
-		Log.i(TAG, "onCreate: mStorage: " + mStorage);
+		if (Logger.isLogEnabled())  Logger.log("onCreate: mStorage: " + mStorage);
 		sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri
 				.parse("file://" + Environment.getExternalStorageDirectory())));
 		// new MediaScannerConnection(this, null).scanFile(Environment
@@ -79,7 +80,7 @@ public class SelectPhoto extends Activity {
 		} else {
 			uri = MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI;
 		}
-		Log.i(TAG, "initImageGrid: Storage Uri: " + uri.toString());
+		if (Logger.isLogEnabled())  Logger.log("initImageGrid: Storage Uri: " + uri.toString());
 		mImageCursor = managedQuery(uri, img, null, null,
 				MediaStore.Images.Thumbnails.IMAGE_ID + "");
 		mImageColumnIndex = mImageCursor
@@ -105,7 +106,7 @@ public class SelectPhoto extends Activity {
 				} else {
 					_uri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
 				}
-				Log.i(TAG, "onItemClick: Storage Uri: " + _uri.toString());
+				if (Logger.isLogEnabled())  Logger.log("onItemClick: Storage Uri: " + _uri.toString());
 				Cursor mActualimagecursor = managedQuery(_uri, proj, null,
 						null, null);
 				mActualImageColumnIndex = mActualimagecursor
@@ -114,13 +115,13 @@ public class SelectPhoto extends Activity {
 				String _fileName = mActualimagecursor
 						.getString(mActualImageColumnIndex);
 				System.gc();
-				Log.i(TAG, "onItemClick: FILENAME: " + _fileName);
+				if (Logger.isLogEnabled())  Logger.log("onItemClick: FILENAME: " + _fileName);
 
 				Intent intent = new Intent(getApplicationContext(),
 						UploadPhoto.class);
 				intent.putExtra("ROWID", mRowId);
 				intent.putExtra("FILENAME", _fileName);
-				Log.i(TAG, "mImageGrid.setOnItemClickListener: FILENAME: "
+				if (Logger.isLogEnabled())  Logger.log("mImageGrid.setOnItemClickListener: FILENAME: "
 						+ _fileName);
 				startActivityForResult(intent, SELECT_IMAGE_REQUEST_CODE);
 			}
@@ -162,7 +163,7 @@ public class SelectPhoto extends Activity {
 			int id = mImageCursor.getInt(mImageColumnIndex);
 			Uri _uri = Uri.withAppendedPath(
 					MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + id);
-			Log.i(TAG, "ImageAdapter.getView(): FILENAME: " + _uri.toString());
+			if (Logger.isLogEnabled())  Logger.log("ImageAdapter.getView(): FILENAME: " + _uri.toString());
 			i.setImageURI(_uri);
 			i.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			i.setLayoutParams(new GridView.LayoutParams(92, 92));
@@ -178,7 +179,7 @@ public class SelectPhoto extends Activity {
 	 */
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Log.i(TAG, "onCreateDialog");
+		if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_LOADING_ID) {
 			dialogMessage = this.getString(R.string.progress_loading_message);
@@ -212,11 +213,11 @@ public class SelectPhoto extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-			Log.i(TAG, "onPreExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute starting");
 			if (mMainActivity != null) {
 				mMainActivity.showDialog(AppConfig.DIALOG_LOADING_ID);
 			}
-			Log.i(TAG, "onPreExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute finished");
 		}
 
 		/**
@@ -226,7 +227,7 @@ public class SelectPhoto extends Activity {
 		 */
 		@Override
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			try {
 				mMainActivity.runOnUiThread(new Runnable() {
 					public void run() {
@@ -240,15 +241,15 @@ public class SelectPhoto extends Activity {
 								" ", "_") : ""), e);
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			mDialog.cancel();
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}

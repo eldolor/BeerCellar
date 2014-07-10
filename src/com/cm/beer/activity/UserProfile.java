@@ -27,10 +27,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.util.ContentManager;
 import com.cm.beer.util.DrawableManager;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -96,7 +98,7 @@ public class UserProfile extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 		mDrawableManager = DrawableManager.getInstance();
@@ -104,19 +106,19 @@ public class UserProfile extends Activity {
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
-		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
+		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
+				this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 		Bundle extras = getIntent().getExtras();
 		mUserId = extras != null ? extras.getString("USERID") : null;
 
 		mUser = new User(this);
-		
+
 		new AsyncGetUserProfile().execute(mUserId);
 	}
 
-	
 	private void display() throws JSONException {
 		setContentView(R.layout.user_profile);
 
@@ -167,7 +169,7 @@ public class UserProfile extends Activity {
 	 * 
 	 */
 	private void populateFields() throws JSONException {
-		Log.i(TAG, "populateFields");
+		if (Logger.isLogEnabled())  Logger.log("populateFields");
 		boolean _displayUserPrompt = false;
 
 		mReviewerId = (mUserProfileJson.has("userId")) ? mUserProfileJson
@@ -179,7 +181,7 @@ public class UserProfile extends Activity {
 
 		boolean _hasPhoto = ((mUserProfileJson.has("hasPhoto")) && (mUserProfileJson
 				.getString("hasPhoto").equalsIgnoreCase("Y"))) ? true : false;
-		Log.i(TAG, "populateFields:hasPhoto: " + ((_hasPhoto) ? "Y" : "N"));
+		if (Logger.isLogEnabled())  Logger.log("populateFields:hasPhoto: " + ((_hasPhoto) ? "Y" : "N"));
 		if (_hasPhoto) {
 			Drawable _drawable = mDrawableManager.fetchDrawable(Util
 					.getUserPhotoUrl(mReviewerId));
@@ -201,7 +203,8 @@ public class UserProfile extends Activity {
 					Intent intent = new Intent(mMainActivity.getApplication(),
 							SDCardExplorer.class);
 					intent.putExtra("USERID", mReviewerId);
-					intent.putExtra("REQUESTCODE", AppConfig.UPDATE_USER_PHOTO_REQUEST);
+					intent.putExtra("REQUESTCODE",
+							AppConfig.UPDATE_USER_PHOTO_REQUEST);
 					startActivityForResult(intent,
 							AppConfig.UPDATE_USER_PHOTO_REQUEST);
 
@@ -232,9 +235,9 @@ public class UserProfile extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					Log.i(TAG, "getAllReviews");
+					if (Logger.isLogEnabled())  Logger.log("getAllReviews");
 					Intent intent = new Intent(mMainActivity.getApplication(),
-							CommunityBeers.class);
+							CommunityBeersFragment.class);
 					intent.putExtra("OPTION", AppConfig.COMMUNITY_SEARCH_BEERS);
 					intent.putExtra(NotesDbAdapter.KEY_USER_ID, mReviewerId);
 					startActivity(intent);
@@ -282,9 +285,9 @@ public class UserProfile extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Log.i(TAG, "getFavorites");
+				if (Logger.isLogEnabled())  Logger.log("getFavorites");
 				Intent intent = new Intent(mMainActivity.getApplication(),
-						CommunityBeers.class);
+						CommunityBeersFragment.class);
 				intent.putExtra("OPTION",
 						AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS);
 				intent.putExtra("USERID", mReviewerId);
@@ -297,7 +300,7 @@ public class UserProfile extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Log.i(TAG, "getFollowing");
+				if (Logger.isLogEnabled())  Logger.log("getFollowing");
 				Intent intent = new Intent(mMainActivity.getApplication(),
 						CommunityFollow.class);
 				intent.putExtra("OPTION", AppConfig.COMMUNITY_FOLLOWING);
@@ -318,7 +321,7 @@ public class UserProfile extends Activity {
 		mCommunityIcon.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
-				Log.i(TAG, "back to community options menu");
+				if (Logger.isLogEnabled())  Logger.log("back to community options menu");
 
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
@@ -358,22 +361,22 @@ public class UserProfile extends Activity {
 			@Override
 			public void handleMessage(Message message) {
 				String jsonStr = (String) message.obj;
-				Log.i(TAG, "setupFollowReviewer(): " + jsonStr);
+				if (Logger.isLogEnabled())  Logger.log("setupFollowReviewer(): " + jsonStr);
 				if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
 					try {
 						JSONObject mFollowJson = new JSONObject(jsonStr);
 						JSONArray followingList = mFollowJson
 								.getJSONArray("followingList");
-						Log.i(TAG, "Following List Size="
-								+ followingList.length());
+						Log.i(TAG,
+								"Following List Size=" + followingList.length());
 						String _str;
 						for (int i = 0; i < followingList.length(); i++) {
 							_str = followingList.getString(i);
-							Log.i(TAG, "Following " + _str);
+							if (Logger.isLogEnabled())  Logger.log("Following " + _str);
 							if ((_str != null)
 									&& (_str.equalsIgnoreCase(mReviewerId))) {
 								mAlreadyFollowingReviewer = true;
-								Log.i(TAG, "Already Following Receiver!");
+								if (Logger.isLogEnabled())  Logger.log("Already Following Receiver!");
 							}
 						}
 
@@ -394,9 +397,9 @@ public class UserProfile extends Activity {
 					mFollowUser.setText("Follow " + mReviewerName);
 				}
 				mFollowUser.setOnClickListener(new OnClickListener() {
-					String unFollowUrl = Util.getSetUnfollowUrl(mUser
-							.getUserId(), mUser.getUserName(), mUser
-							.getUserLink(), mReviewerId, mReviewerName,
+					String unFollowUrl = Util.getSetUnfollowUrl(
+							mUser.getUserId(), mUser.getUserName(),
+							mUser.getUserLink(), mReviewerId, mReviewerName,
 							mReviewerLink);
 					String followUrl = Util.getSetFollowUrl(mUser.getUserId(),
 							mUser.getUserName(), mUser.getUserLink(),
@@ -404,14 +407,13 @@ public class UserProfile extends Activity {
 
 					@Override
 					public void onClick(View arg0) {
-						Log.i(TAG, "Follow: " + mReviewerName);
+						if (Logger.isLogEnabled())  Logger.log("Follow: " + mReviewerName);
 
 						if (mUser.isLoggedIn()) {
 
 							if (mAlreadyFollowingReviewer) {
-								Log
-										.i(TAG,
-												"Resetting Button from UNFOLLOW to FOLLOW");
+								Log.i(TAG,
+										"Resetting Button from UNFOLLOW to FOLLOW");
 								// change the color and content of the button
 								mFollowUser.getBackground().setColorFilter(
 										AppConfig.BUTTON_COLOR,
@@ -424,9 +426,8 @@ public class UserProfile extends Activity {
 										"UnFollow", "Clicked", 0);
 								mTracker.dispatch();
 							} else {
-								Log
-										.i(TAG,
-												"Resetting Button from FOLLOW to UNFOLLOW");
+								Log.i(TAG,
+										"Resetting Button from FOLLOW to UNFOLLOW");
 								// change the color and content of the button
 								mFollowUser.getBackground().setColorFilter(
 										AppConfig.BUTTON_COLOR_RED,
@@ -459,7 +460,7 @@ public class UserProfile extends Activity {
 
 		// trigger point
 		String _url = Util.getFollowUrl(mUser.getUserId());
-		Log.i(TAG, "Follow Url: " + _url);
+		if (Logger.isLogEnabled())  Logger.log("Follow Url: " + _url);
 		mContentManager.fetchContentOnThread(_url, mFollowReviewerHandler);
 	}
 
@@ -468,7 +469,7 @@ public class UserProfile extends Activity {
 			@Override
 			public void handleMessage(Message message) {
 				String jsonStr = (String) message.obj;
-				Log.i(TAG, jsonStr);
+				if (Logger.isLogEnabled())  Logger.log(jsonStr);
 				if ((jsonStr != null) && (jsonStr.startsWith("{"))) {
 					JSONObject json;
 					try {
@@ -478,7 +479,7 @@ public class UserProfile extends Activity {
 
 						String _reviewCount = "Followers " + followers
 								+ " Following " + following;
-						Log.d(TAG, _reviewCount);
+						if (Logger.isLogEnabled())  Logger.log(_reviewCount);
 						mFollowCount.setText(_reviewCount);
 					} catch (JSONException e) {
 						Log.e(TAG, "error: "
@@ -498,19 +499,21 @@ public class UserProfile extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateOptionsMenu");
+			if (Logger.isLogEnabled())  Logger.log("onCreateOptionsMenu");
 		}
 		super.onCreateOptionsMenu(menu);
 		int menuPosition = 0;
-		if (mReviewerId.equalsIgnoreCase(mUser.getUserId())) {
-			if ((mUser.getUserType() != null)
-					&& (mUser.getUserType()
-							.equals(AppConfig.USER_TYPE_COMMUNITY))) {
-				menu.add(MENU_GROUP, CHANGE_PASSWORD_ID, menuPosition++,
-						R.string.change_password);
+		if ((mUser != null) && (mUser.getUserId() != null)) {
+			if (mReviewerId.equalsIgnoreCase(mUser.getUserId())) {
+				if ((mUser.getUserType() != null)
+						&& (mUser.getUserType()
+								.equals(AppConfig.USER_TYPE_COMMUNITY))) {
+					menu.add(MENU_GROUP, CHANGE_PASSWORD_ID, menuPosition++,
+							R.string.change_password);
+				}
+				menu.add(MENU_GROUP, UPDATE_PROFILE_ID, menuPosition++,
+						R.string.update_profile);
 			}
-			menu.add(MENU_GROUP, UPDATE_PROFILE_ID, menuPosition++,
-					R.string.update_profile);
 		}
 		return true;
 	}
@@ -523,7 +526,7 @@ public class UserProfile extends Activity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onMenuItemSelected");
+			if (Logger.isLogEnabled())  Logger.log("onMenuItemSelected");
 		}
 		switch (item.getItemId()) {
 		case CHANGE_PASSWORD_ID:
@@ -539,7 +542,7 @@ public class UserProfile extends Activity {
 
 	private void changePassword() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "changePassword");
+			if (Logger.isLogEnabled())  Logger.log("changePassword");
 		}
 		Intent i = new Intent(this, CommunityChangePassword.class);
 		i.putExtra("USERID", mUser.getUserId());
@@ -548,7 +551,7 @@ public class UserProfile extends Activity {
 
 	private void updateProfile() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "updateProfile");
+			if (Logger.isLogEnabled())  Logger.log("updateProfile");
 		}
 		Intent i = new Intent(this, UpdateUserProfile.class);
 		i.putExtra("USERID", mUser.getUserId());
@@ -567,12 +570,12 @@ public class UserProfile extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -597,7 +600,7 @@ public class UserProfile extends Activity {
 	 */
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Log.i(TAG, "onCreateDialog");
+		if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_LOADING_ID) {
 			dialogMessage = this.getString(R.string.progress_loading_message);
@@ -621,11 +624,11 @@ public class UserProfile extends Activity {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			// removeDialog(AppConfig.DIALOG_LOADING_ID);
 		}
@@ -644,7 +647,7 @@ public class UserProfile extends Activity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i(TAG, "onActivityResult: requestCode: " + requestCode
+		if (Logger.isLogEnabled())  Logger.log("onActivityResult: requestCode: " + requestCode
 				+ " resultCode: " + resultCode);
 		if (requestCode == LOGIN_INTERCEPT_REQUEST_CODE_FOR_FOLLOW) {
 			if (resultCode == RESULT_OK) {
@@ -652,8 +655,7 @@ public class UserProfile extends Activity {
 						mUser.getUserName(), mUser.getUserLink(), mReviewerId,
 						mReviewerName, mReviewerLink);
 				new AsyncPostFollow().execute(_setFollowUrl);
-				mTracker
-						.trackEvent("CommunityBeerView", "Follow", "Clicked", 0);
+				mTracker.trackEvent("CommunityBeerView", "Follow", "Clicked", 0);
 				mTracker.dispatch();
 				mFollowUser.getBackground().setColorFilter(
 						AppConfig.BUTTON_COLOR_RED, PorterDuff.Mode.MULTIPLY);
@@ -669,7 +671,7 @@ public class UserProfile extends Activity {
 
 		} else if (requestCode == UPDATE_PROFILE_REQUEST) {
 			if (resultCode == RESULT_OK) {
-				Log.i(TAG, "User Profile Updated");
+				if (Logger.isLogEnabled())  Logger.log("User Profile Updated");
 				new AsyncGetUserProfile().execute(mUserId);
 			}
 		}
@@ -685,7 +687,7 @@ public class UserProfile extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String _userId = (String) args[0];
 			try {
 
@@ -696,30 +698,33 @@ public class UserProfile extends Activity {
 				}
 
 			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("UserProfile", "AsyncGetUserProfile", ((e
-						.getMessage() != null) ? e.getMessage().replace(" ",
-						"_") : "").replace(" ", "_"), 0);
+				Log.e(TAG,
+						"error: "
+								+ ((e.getMessage() != null) ? e.getMessage()
+										.replace(" ", "_") : ""), e);
+				mTracker.trackEvent(
+						"UserProfile",
+						"AsyncGetUserProfile",
+						((e.getMessage() != null) ? e.getMessage().replace(" ",
+								"_") : "").replace(" ", "_"), 0);
 				mTracker.dispatch();
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			Log.i(TAG, "onPreExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute starting");
 			if (mMainActivity != null) {
 				mMainActivity.showDialog(AppConfig.DIALOG_LOADING_ID);
 			}
-			Log.i(TAG, "onPreExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute finished");
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			try {
 				if (mUserProfileJson != null) {
 					mMainActivity.display();
@@ -729,39 +734,39 @@ public class UserProfile extends Activity {
 							new ContextThemeWrapper(mMainActivity,
 									android.R.style.Theme_Dialog));
 					dialog.setIcon(android.R.drawable.ic_dialog_alert);
-					dialog
-							.setTitle(R.string.unable_to_download_user_profile_message);
-					dialog
-							.setPositiveButton(
-									R.string.ok_label,
-									new android.content.DialogInterface.OnClickListener() {
+					dialog.setTitle(R.string.unable_to_download_user_profile_message);
+					dialog.setPositiveButton(
+							R.string.ok_label,
+							new android.content.DialogInterface.OnClickListener() {
 
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											Intent intent = new Intent();
-											mMainActivity.setResult(
-													RESULT_CANCELED, intent);
-											mMainActivity.finish();
-										}
-									});
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent intent = new Intent();
+									mMainActivity.setResult(RESULT_CANCELED,
+											intent);
+									mMainActivity.finish();
+								}
+							});
 					dialog.show();
 
 				}
 			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
-				mTracker.trackEvent("UserProfile", "AsyncGetUserProfile", ((e
-						.getMessage() != null) ? e.getMessage().replace(" ",
-						"_") : "").replace(" ", "_"), 0);
+				Log.e(TAG,
+						"error: "
+								+ ((e.getMessage() != null) ? e.getMessage()
+										.replace(" ", "_") : ""), e);
+				mTracker.trackEvent(
+						"UserProfile",
+						"AsyncGetUserProfile",
+						((e.getMessage() != null) ? e.getMessage().replace(" ",
+								"_") : "").replace(" ", "_"), 0);
 				mTracker.dispatch();
 			}
 
 			mDialog.cancel();
 
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}
@@ -775,7 +780,7 @@ public class UserProfile extends Activity {
 		 * @return null
 		 */
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			String url = (String) args[0];
 			try {
 				Util.getResult(url);
@@ -787,15 +792,18 @@ public class UserProfile extends Activity {
 						.getUserId()));
 
 				/** Fetch updated Follow Count **/
-				mContentManager.fetchContentOnThread(Util
-						.getFollowCountUrl(mReviewerId), mFollowCountHandler);
+				mContentManager.fetchContentOnThread(
+						Util.getFollowCountUrl(mReviewerId),
+						mFollowCountHandler);
 				/** Fetch updated Follow for the logged in user **/
-				mContentManager.fetchContentOnThread(Util.getFollowUrl(mUser
-						.getUserId()), mFollowReviewerHandler);
+				mContentManager.fetchContentOnThread(
+						Util.getFollowUrl(mUser.getUserId()),
+						mFollowReviewerHandler);
 			} catch (Throwable e) {
-				Log.e(TAG, "error: "
-						+ ((e.getMessage() != null) ? e.getMessage().replace(
-								" ", "_") : ""), e);
+				Log.e(TAG,
+						"error: "
+								+ ((e.getMessage() != null) ? e.getMessage()
+										.replace(" ", "_") : ""), e);
 				mTracker.trackEvent("CommunityBeerView",
 						"AsyncPostFollowError", ((e.getMessage() != null) ? e
 								.getMessage().replace(" ", "_") : "").replace(
@@ -803,13 +811,13 @@ public class UserProfile extends Activity {
 				mTracker.dispatch();
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}

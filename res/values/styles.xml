@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="BeerCellarTheme" parent="@style/Theme.AppCompat.Light">
+
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:windowBackground">@drawable/gradient</item>
+        <item name="actionBarStyle">@style/BeerCellarActionBar</item>
+        <item name="android:editTextStyle">@style/BeerCellarEditTextTheme</item>
+        <item name="android:textColor">@color/text_default</item>
+    </style>
+
+
+    <style name="BeerCellarEditTextTheme" parent="@android:style/Widget.EditText">
+        <item name="android:shadowColor">@color/textview_default</item>
+        <item name="android:textColor">@color/text_default</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="BeerCellarActionBar" parent="@style/Widget.AppCompat.ActionBar">
+
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/BeerCellarActionBarTitleText</item>
+    </style>
+
+    <!-- ActionBar title text -->
+
+    <style name="BeerCellarActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <!-- The textColor property is backward compatible with the Support Library -->
+    </style>
+
+</resources>

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -20,7 +19,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -51,7 +52,7 @@ public class CommunityOptions extends ListActivity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
@@ -59,7 +60,7 @@ public class CommunityOptions extends ListActivity {
 		// Start the mTracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 		mUser = new User(this);
 
@@ -89,7 +90,7 @@ public class CommunityOptions extends ListActivity {
 	 */
 	@Override
 	protected void onListItemClick(ListView l, View v, int menuPosition, long id) {
-		Log.i(TAG, "onListItemClick");
+		if (Logger.isLogEnabled())  Logger.log("onListItemClick");
 
 		super.onListItemClick(l, v, menuPosition, id);
 		handleMenuItemClicked(menuPosition);
@@ -101,7 +102,7 @@ public class CommunityOptions extends ListActivity {
 	 */
 	private void handleMenuItemClicked(int menuPosition) {
 		String selectedOption = AppConfig.COMMUNITY_OPTIONS[menuPosition];
-		Log.i(TAG, selectedOption);
+		if (Logger.isLogEnabled())  Logger.log(selectedOption);
 		// GET USER ID
 
 		Intent intent = null;
@@ -131,7 +132,7 @@ public class CommunityOptions extends ListActivity {
 					"Clicked", 0);
 			mTracker.dispatch();
 			intent = new Intent(mMainActivity.getApplication(),
-					CommunityBeers.class);
+					CommunityBeersFragment.class);
 			intent.putExtra("OPTION",
 					AppConfig.COMMUNITY_BEERS_FROM_AROUND_THE_WORLD);
 			startActivity(intent);
@@ -141,7 +142,7 @@ public class CommunityOptions extends ListActivity {
 					0);
 			mTracker.dispatch();
 			intent = new Intent(mMainActivity.getApplication(),
-					CommunityBeers.class);
+					CommunityBeersFragment.class);
 			intent.putExtra("OPTION", AppConfig.COMMUNITY_TOP_RATED_BEERS);
 			startActivity(intent);
 			return;
@@ -149,7 +150,7 @@ public class CommunityOptions extends ListActivity {
 			mTracker.trackEvent("CommunityOptions", "WorstBeers", "Clicked", 0);
 			mTracker.dispatch();
 			intent = new Intent(mMainActivity.getApplication(),
-					CommunityBeers.class);
+					CommunityBeersFragment.class);
 			intent.putExtra("OPTION", AppConfig.COMMUNITY_WORST_BEERS);
 			startActivity(intent);
 			return;
@@ -256,7 +257,7 @@ public class CommunityOptions extends ListActivity {
 		mCommunityIcon.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
-				Log.i(TAG, "back to community options menu");
+				if (Logger.isLogEnabled())  Logger.log("back to community options menu");
 
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
@@ -289,9 +290,9 @@ public class CommunityOptions extends ListActivity {
 	}
 
 	private void getMyBeers(String userId) {
-		Log.i(TAG, "getMyBeers");
+		if (Logger.isLogEnabled())  Logger.log("getMyBeers");
 		Intent intent = new Intent(mMainActivity.getApplication(),
-				CommunityBeers.class);
+				CommunityBeersFragment.class);
 		intent.putExtra("OPTION", AppConfig.COMMUNITY_MY_BEER_REVIEWS);
 		intent.putExtra("USERID", userId);
 		startActivity(intent);
@@ -299,9 +300,9 @@ public class CommunityOptions extends ListActivity {
 	}
 
 	private void getFavoriteBeers(String userId) {
-		Log.i(TAG, "getFavoriteBeers");
+		if (Logger.isLogEnabled())  Logger.log("getFavoriteBeers");
 		Intent intent = new Intent(mMainActivity.getApplication(),
-				CommunityBeers.class);
+				CommunityBeersFragment.class);
 		intent.putExtra("OPTION", AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS);
 		intent.putExtra("USERID", userId);
 		startActivity(intent);
@@ -318,7 +319,7 @@ public class CommunityOptions extends ListActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == LOGIN_INTERCEPT_FOR_MY_BEERS_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				Log.i(TAG, "onActivityResult:" + mUser.getUserId());
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:" + mUser.getUserId());
 				getMyBeers(mUser.getUserId());
 			}
 		} else if (requestCode == LOGIN_INTERCEPT_FOR_FOLLOWING_REQUEST_CODE) {
@@ -337,7 +338,7 @@ public class CommunityOptions extends ListActivity {
 			}
 		} else if (requestCode == LOGIN_INTERCEPT_FOR_FAVORITE_BEERS_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				Log.i(TAG, "onActivityResult:" + mUser.getUserId());
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:" + mUser.getUserId());
 				getFavoriteBeers(mUser.getUserId());
 			}
 		} else if (requestCode == LOGIN_INTERCEPT_FOR_MY_PROFILE_REQUEST_CODE) {
@@ -359,12 +360,12 @@ public class CommunityOptions extends ListActivity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -377,7 +378,7 @@ public class CommunityOptions extends ListActivity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		String dialogTitle = null;

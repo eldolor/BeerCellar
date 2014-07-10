@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.util.GpsLocation;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -56,7 +57,7 @@ public class AroundMe extends ListActivity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
@@ -64,7 +65,7 @@ public class AroundMe extends ListActivity {
 		// Start the tracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		// Start a new thread that will download all the data
@@ -101,7 +102,7 @@ public class AroundMe extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateContextMenu");
+			if (Logger.isLogEnabled())  Logger.log("onCreateContextMenu");
 		}
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(MENU_GROUP, CALL_ID, 0, R.string.call);
@@ -116,7 +117,7 @@ public class AroundMe extends ListActivity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onContextItemSelected");
+			if (Logger.isLogEnabled())  Logger.log("onContextItemSelected");
 		}
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -144,7 +145,7 @@ public class AroundMe extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onListItemClick");
+			if (Logger.isLogEnabled())  Logger.log("onListItemClick");
 		}
 		super.onListItemClick(l, v, position, id);
 		Business business = BUSINESSES[(int) id];
@@ -199,12 +200,12 @@ public class AroundMe extends ListActivity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -217,7 +218,7 @@ public class AroundMe extends ListActivity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		String dialogTitle = null;
@@ -278,7 +279,7 @@ public class AroundMe extends ListActivity {
 		 */
 		protected Void doInBackground(String... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 
 			JSONObject locations = null;
@@ -336,7 +337,7 @@ public class AroundMe extends ListActivity {
 										.getString("longitude");
 
 								mMainActivity.BUSINESSES[j++] = business;
-								Log.i(TAG, business.name + "::"
+								if (Logger.isLogEnabled())  Logger.log(business.name + "::"
 										+ business.address1 + "::" + "::"
 										+ business.city + "::"
 										+ business.avgRating);
@@ -356,14 +357,14 @@ public class AroundMe extends ListActivity {
 			}
 
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground finished");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			}
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			}
 
 			if (mMainActivity.mSplashDialog != null) {
@@ -371,7 +372,7 @@ public class AroundMe extends ListActivity {
 				mMainActivity.displayList();
 			}
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 			}
 		}
 

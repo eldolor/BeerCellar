@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.util.BitmapScaler;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -36,14 +37,14 @@ public class ViewImage extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the mTracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		setContentView(R.layout.view_image);
@@ -56,7 +57,7 @@ public class ViewImage extends Activity {
 		}
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate::_id="
+			if (Logger.isLogEnabled())  Logger.log("onCreate::_id="
 					+ ((mRowId != null) ? mRowId.longValue() : null));
 		}
 
@@ -66,7 +67,7 @@ public class ViewImage extends Activity {
 			photo = new File(picturesDir, mRowId + AppConfig.PICTURES_EXTENSION);
 		}
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "VVWListAdapter->bindView():Image file "
+			if (Logger.isLogEnabled())  Logger.log("VVWListAdapter->bindView():Image file "
 					+ photo.getPath());
 		}
 
@@ -74,7 +75,7 @@ public class ViewImage extends Activity {
 			ImageView photoView = (ImageView) findViewById(R.id.beer_picture);
 			if (photoView != null) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "VVWListAdapter->bindView():Binding file "
+					if (Logger.isLogEnabled())  Logger.log("VVWListAdapter->bindView():Binding file "
 							+ photo.getPath());
 				}
 				try {
@@ -110,12 +111,12 @@ public class ViewImage extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -141,7 +142,7 @@ public class ViewImage extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		mDialog = ProgressDialog.show(ViewImage.this, null, this
 				.getString(R.string.progress_loading_message), true, true);
@@ -157,11 +158,11 @@ public class ViewImage extends Activity {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(AppConfig.DIALOG_LOADING_ID);
 		}

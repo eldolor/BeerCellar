@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -100,7 +101,7 @@ public class BeerView extends Activity
 
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
@@ -110,7 +111,7 @@ public class BeerView extends Activity
 				this);
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		mDbHelper = new NotesDbAdapter(this);
@@ -168,13 +169,13 @@ public class BeerView extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -203,7 +204,7 @@ public class BeerView extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "finish");
+			if (Logger.isLogEnabled())  Logger.log("finish");
 		}
 		// database closed in share with community async task
 		if (mDbHelper != null)
@@ -224,13 +225,13 @@ public class BeerView extends Activity
 	{
 		if (AppConfig.LOGGING_ENABLED)
 		{
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((mDialog != null) && (mDialog.isShowing()))
 		{
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(ACTIVE_DIALOG);
 		}
@@ -249,7 +250,7 @@ public class BeerView extends Activity
 	protected void display()
 	{
 
-		Log.i(TAG, "display");
+		if (Logger.isLogEnabled())  Logger.log("display");
 
 		/****************************************/
 		mThumbnailView = (ImageView) findViewById(R.id.thumbnail);
@@ -292,7 +293,7 @@ public class BeerView extends Activity
 			public void onClick(View v)
 			{
 				// Perform action on clicks
-				Log.i(TAG, "edit");
+				if (Logger.isLogEnabled())  Logger.log("edit");
 				Intent intent = new Intent(mMainActivity, BeerEdit.class);
 				intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -329,7 +330,7 @@ public class BeerView extends Activity
 				public void onClick(View view)
 				{
 
-					Log.i(TAG, "View Image");
+					if (Logger.isLogEnabled())  Logger.log("View Image");
 
 					showDialog(AppConfig.DIALOG_LOADING_ID);
 					Intent intent = new Intent(BeerView.this.getApplication(),
@@ -454,7 +455,7 @@ public class BeerView extends Activity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		Log.i(TAG, "onActivityResult");
+		if (Logger.isLogEnabled())  Logger.log("onActivityResult");
 		// if the beer being viewed was deleted then go back to the beer list
 		if (resultCode == AppConfig.BEER_DELETED_RESULT_CODE)
 		{
@@ -467,7 +468,7 @@ public class BeerView extends Activity
 				// pass the rowId along to ShareOnFacebook
 				long rowId = (extras != null) ? extras
 						.getLong(NotesDbAdapter.KEY_ROWID) : 0L;
-				Log.i(TAG, "onActivityResult:Row Id=" + rowId);
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:Row Id=" + rowId);
 				Intent newIntent = new Intent(this, ShareOnFacebook.class);
 				newIntent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
 				startActivityForResult(newIntent, ACTIVITY_SHARE_ON_FACEBOOK);
@@ -489,7 +490,7 @@ public class BeerView extends Activity
 	protected Dialog onCreateDialog(int id)
 	{
 
-		Log.i(TAG, "onCreateDialog");
+		if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_LOADING_ID)
@@ -508,7 +509,7 @@ public class BeerView extends Activity
 	private void populateFields()
 	{
 
-		Log.i(TAG, "populateFields");
+		if (Logger.isLogEnabled())  Logger.log("populateFields");
 		HashSet<String> keywords = new HashSet<String>();
 
 		if (mRowId != null)
@@ -604,7 +605,7 @@ public class BeerView extends Activity
 				try
 				{
 					mCharacteristicsJson = new JSONObject(_characteristics);
-					Log.i(TAG, "populateFields: mCharacteristicsJson: "
+					if (Logger.isLogEnabled())  Logger.log("populateFields: mCharacteristicsJson: "
 							+ mCharacteristicsJson.toString());
 				} catch (JSONException e)
 				{
@@ -657,14 +658,14 @@ public class BeerView extends Activity
 			mShareOnFacebook.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					// Perform action on clicks
-					Log.i(TAG, "share on facebook");
+					if (Logger.isLogEnabled())  Logger.log("share on facebook");
 					//showDialog(AppConfig.DIALOG_LOADING_ID);
 					Intent intent = new Intent(mMainActivity.getApplication(),
 							LoginIntercept.class);
 					intent.putExtra("FACEBOOK_PERMISSIONS",
 							AppConfig.FACEBOOK_PERMISSIONS);
 					intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);
-					Log.i(TAG, "shareOnFacebook:Row Id=" + mRowId);
+					if (Logger.isLogEnabled())  Logger.log("shareOnFacebook:Row Id=" + mRowId);
 					startActivityForResult(
 							intent,
 							AppConfig.FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST);

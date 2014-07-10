@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.transfer.ReviewCount;
 import com.cm.beer.util.ContentManager;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
@@ -73,7 +74,7 @@ public class CommunityFollow extends ListActivity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
@@ -81,7 +82,7 @@ public class CommunityFollow extends ListActivity {
 		// Start the mTracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 		Bundle extras = getIntent().getExtras();
 		mUserId = extras != null ? extras.getString("USERID") : null;
@@ -129,7 +130,7 @@ public class CommunityFollow extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onListItemClick");
+			if (Logger.isLogEnabled())  Logger.log("onListItemClick");
 		}
 
 		super.onListItemClick(l, v, position, id);
@@ -157,12 +158,12 @@ public class CommunityFollow extends ListActivity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		mContentManager.clear();
 		super.onDestroy();
@@ -176,7 +177,7 @@ public class CommunityFollow extends ListActivity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String mDialogMessage = null;
 		String mDialogTitle = null;
@@ -222,7 +223,7 @@ public class CommunityFollow extends ListActivity {
 		mCommunityIcon.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
-				Log.i(TAG, "back to community options menu");
+				if (Logger.isLogEnabled())  Logger.log("back to community options menu");
 
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
@@ -294,7 +295,7 @@ public class CommunityFollow extends ListActivity {
 		 */
 		protected Void doInBackground(Object... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 			Bundle extras = (Bundle) args[0];
 			_mRefreshList = (Boolean) args[1];
@@ -302,7 +303,7 @@ public class CommunityFollow extends ListActivity {
 			try {
 
 				String _url = getUrl(extras);
-				Log.i(TAG, "doInBackground:URL=" + _url);
+				if (Logger.isLogEnabled())  Logger.log("doInBackground:URL=" + _url);
 				String response[] = Util.getResult(_url);
 				if ((response[0] != null) && (response[0].startsWith("["))) {
 					_JSONArray = new JSONArray(response[0]);
@@ -331,7 +332,7 @@ public class CommunityFollow extends ListActivity {
 								.getString("userNameIdx"));
 
 						mMainActivity.mReviewCounts.add(_reviewCount);
-						Log.i(TAG, _reviewCount.getUserName());
+						if (Logger.isLogEnabled())  Logger.log(_reviewCount.getUserName());
 					}
 				} else {
 					_retrievedMoreData = false;
@@ -347,35 +348,35 @@ public class CommunityFollow extends ListActivity {
 			}
 
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground finished");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			}
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 
-			Log.i(TAG, "onPostExecute Refresh List = "
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute Refresh List = "
 					+ ((_mRefreshList) ? "true" : "false")
 					+ " Retrieved More Data = "
 					+ ((_retrievedMoreData) ? "true" : "false"));
 			if (!_mRefreshList) {
-				Log.i(TAG, "onPostExecute Display List");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute Display List");
 				mMainActivity.displayList();
 			} else if (_mRefreshList && _retrievedMoreData) {
-				Log.i(TAG, "onPostExecute Refresh List");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute Refresh List");
 				mAdapter.notifyDataSetChanged();
 				// make spinner invisible
 				((ProgressBar) mFooterView.findViewById(R.id.spinner))
 						.setVisibility(View.INVISIBLE);
 			} else {
-				Log.i(TAG, "onPostExecute Remove Footer View!");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute Remove Footer View!");
 				mReviewCountsView.removeFooterView(mFooterView);
 			}
 			if (mMainActivity.mSplashDialog != null) {
 				mMainActivity.mSplashDialog.cancel();
 			}
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 		/**
@@ -431,7 +432,7 @@ public class CommunityFollow extends ListActivity {
 				List<ReviewCount> reviewCounts) {
 			super(context, textViewResourceId, reviewCounts);
 			this._mReviewCounts = reviewCounts;
-			Log.i(TAG, "ReviewCountAdapter size=" + reviewCounts.size());
+			if (Logger.isLogEnabled())  Logger.log("ReviewCountAdapter size=" + reviewCounts.size());
 		}
 
 		/*
@@ -442,7 +443,7 @@ public class CommunityFollow extends ListActivity {
 		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			Log.i(TAG, "Entering getView:");
+			if (Logger.isLogEnabled())  Logger.log("Entering getView:");
 			View v = convertView;
 			LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.follow_list_row, parent, false);
@@ -450,7 +451,7 @@ public class CommunityFollow extends ListActivity {
 			ReviewCount reviewCount = _mReviewCounts.get(position);
 
 			if (reviewCount != null) {
-				Log.i(TAG, "getView:" + reviewCount.getUserId());
+				if (Logger.isLogEnabled())  Logger.log("getView:" + reviewCount.getUserId());
 				/***********************************************/
 				{
 					final TextView textView = ((TextView) v
@@ -490,7 +491,7 @@ public class CommunityFollow extends ListActivity {
 										String _reviewCount = "Followers "
 												+ followers + " Following "
 												+ following;
-										Log.d(TAG, _reviewCount);
+										if (Logger.isLogEnabled())  Logger.log(_reviewCount);
 										textView.setText(_reviewCount);
 									} catch (JSONException e) {
 										Log

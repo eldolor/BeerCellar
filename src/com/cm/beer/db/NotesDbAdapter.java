@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Util;
 
 /**
@@ -103,29 +104,29 @@ public class NotesDbAdapter
 		{
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
-			Log.i(TAG, "DatabaseHelper");
+			if (Logger.isLogEnabled())  Logger.log("DatabaseHelper");
 
 		}
 
 		@Override
 		public void onCreate(SQLiteDatabase db)
 		{
-			Log.i(TAG, "DatabaseHelper::onCreate");
+			if (Logger.isLogEnabled())  Logger.log("DatabaseHelper::onCreate");
 			db.execSQL(DATABASE_CREATE);
-			Log.i(TAG, "DatabaseHelper::onCreate: Database " + DATABASE_TABLE
+			if (Logger.isLogEnabled())  Logger.log("DatabaseHelper::onCreate: Database " + DATABASE_TABLE
 					+ " created");
 			db.execSQL(INSERT_SEED_DATA_SQL, AppConfig.SEED_DATA);
-			Log.i(TAG, "DatabaseHelper::onCreate: Seed Data Inserted");
+			if (Logger.isLogEnabled())  Logger.log("DatabaseHelper::onCreate: Seed Data Inserted");
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 		{
-			Log.i(TAG, "DatabaseHelper::onUpgrade");
+			if (Logger.isLogEnabled())  Logger.log("DatabaseHelper::onUpgrade");
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion);
 			db.execSQL(DATABASE_CREATE);
-			Log.i(TAG, "DatabaseHelper::onUpgrade: Database " + DATABASE_TABLE
+			if (Logger.isLogEnabled())  Logger.log("DatabaseHelper::onUpgrade: Database " + DATABASE_TABLE
 					+ " created");
 			if (oldVersion == 1)
 			{
@@ -137,7 +138,7 @@ public class NotesDbAdapter
 			{
 				Util.onUpgradeToV4FromV3(db);
 			}
-			Log.i(TAG, "DatabaseHelper::onUpgrade: Data imported");
+			if (Logger.isLogEnabled())  Logger.log("DatabaseHelper::onUpgrade: Data imported");
 		}
 
 	}
@@ -151,7 +152,7 @@ public class NotesDbAdapter
 	 */
 	public NotesDbAdapter(Context ctx)
 	{
-		Log.i(TAG, "NotesDbAdapter");
+		if (Logger.isLogEnabled())  Logger.log("NotesDbAdapter");
 		this.mCtx = ctx;
 	}
 
@@ -168,7 +169,7 @@ public class NotesDbAdapter
 	public NotesDbAdapter open() throws SQLException
 	{
 
-		Log.i(TAG, "open");
+		if (Logger.isLogEnabled())  Logger.log("open");
 
 		mDbHelper = new DatabaseHelper(mCtx);
 		mDb = mDbHelper.getWritableDatabase();
@@ -188,7 +189,7 @@ public class NotesDbAdapter
 	public void close()
 	{
 
-		Log.i(TAG, "close");
+		if (Logger.isLogEnabled())  Logger.log("close");
 
 		if (mDbHelper != null)
 		{
@@ -206,7 +207,7 @@ public class NotesDbAdapter
 	public long createNote(Note note)
 	{
 
-		Log.i(TAG, "createNote");
+		if (Logger.isLogEnabled())  Logger.log("createNote");
 
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_ROWID, note.id);
@@ -252,7 +253,7 @@ public class NotesDbAdapter
 	public boolean deleteNote(long rowId)
 	{
 
-		Log.i(TAG, "deleteNote");
+		if (Logger.isLogEnabled())  Logger.log("deleteNote");
 
 		return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
 	}
@@ -265,7 +266,7 @@ public class NotesDbAdapter
 	public Cursor fetchAllNotes()
 	{
 
-		Log.i(TAG, "fetchAllNotes");
+		if (Logger.isLogEnabled())  Logger.log("fetchAllNotes");
 
 		Cursor cursor = mDb.query(DATABASE_TABLE, new String[]
 		{ KEY_ROWID, KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
@@ -284,7 +285,7 @@ public class NotesDbAdapter
 	public Cursor fetchAllNotes(int page, int rowsPerPage)
 	{
 
-		Log.i(TAG, "fetchAllNotes");
+		if (Logger.isLogEnabled())  Logger.log("fetchAllNotes");
 		String limit = String.valueOf((page * rowsPerPage));
 
 		Cursor cursor = mDb.query(DATABASE_TABLE, new String[]
@@ -313,7 +314,7 @@ public class NotesDbAdapter
 	public Cursor fetchAllNotes(int page, int rowsPerPage, String sortBy)
 	{
 
-		Log.i(TAG, "fetchAllNotes");
+		if (Logger.isLogEnabled())  Logger.log("fetchAllNotes");
 		String limit = String.valueOf((page * rowsPerPage));
 
 		Cursor cursor = mDb.query(DATABASE_TABLE, new String[]
@@ -341,7 +342,7 @@ public class NotesDbAdapter
 	public Cursor fetchAllNotesData()
 	{
 
-		Log.i(TAG, "fetchAllNotesData");
+		if (Logger.isLogEnabled())  Logger.log("fetchAllNotesData");
 
 		return mDb.query(DATABASE_TABLE, new String[]
 		{ KEY_ROWID, KEY_BEER, KEY_ALCOHOL, KEY_PRICE, KEY_STYLE, KEY_BREWERY,
@@ -366,7 +367,7 @@ public class NotesDbAdapter
 	public Cursor fetchNote(long rowId) throws SQLException
 	{
 
-		Log.i(TAG, "fetchNote:id=" + rowId);
+		if (Logger.isLogEnabled())  Logger.log("fetchNote:id=" + rowId);
 
 		Cursor cursor =
 
@@ -399,7 +400,7 @@ public class NotesDbAdapter
 			throws SQLException
 	{
 
-		Log.i(TAG, "fetchNotes:: beer:" + beer + " rating:" + rating
+		if (Logger.isLogEnabled())  Logger.log("fetchNotes:: beer:" + beer + " rating:" + rating
 				+ " price:" + price + " alcohol:" + alcohol + " style:" + style
 				+ " BREWERY:" + BREWERY + " state:" + state + " country:"
 				+ country + " share:" + share);
@@ -473,7 +474,7 @@ public class NotesDbAdapter
 		String sSelectionCriteria = sbSelectionCriteria.substring(0,
 				sbSelectionCriteria.lastIndexOf("and"));
 
-		Log.i(TAG, "selection criteria:" + sSelectionCriteria);
+		if (Logger.isLogEnabled())  Logger.log("selection criteria:" + sSelectionCriteria);
 
 		Cursor cursor = mDb.query(DATABASE_TABLE, new String[]
 		{ KEY_ROWID, KEY_ALCOHOL, KEY_BEER, KEY_RATING, KEY_UPDATED, KEY_STATE,
@@ -502,7 +503,7 @@ public class NotesDbAdapter
 	public boolean updateNote(Note note)
 	{
 
-		Log.i(TAG, "updateNote");
+		if (Logger.isLogEnabled())  Logger.log("updateNote");
 
 		ContentValues args = new ContentValues();
 		/*

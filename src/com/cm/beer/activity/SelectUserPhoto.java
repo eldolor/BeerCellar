@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 
 public class SelectUserPhoto extends Activity {
 	/** Called when the activity is first created. */
@@ -93,7 +94,7 @@ public class SelectUserPhoto extends Activity {
 						UploadUserPhoto.class);
 				intent.putExtra("USERID", mUserId);
 				intent.putExtra("FILENAME", _fileName);
-				Log.i(TAG, "mImageGrid.setOnItemClickListener: FILENAME: "
+				if (Logger.isLogEnabled())  Logger.log("mImageGrid.setOnItemClickListener: FILENAME: "
 						+ _fileName);
 				startActivityForResult(intent, UPDATE_USER_PHOTO_REQUEST);
 			}
@@ -112,7 +113,7 @@ public class SelectUserPhoto extends Activity {
 		if (requestCode == UPDATE_USER_PHOTO_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				String _fileName = intent.getExtras().getString("FILENAME");
-				Log.i(TAG, "onActivityResult: FILENAME: " + _fileName);
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult: FILENAME: " + _fileName);
 				intent.putExtra("FILENAME", _fileName);
 				mMainActivity.setResult(RESULT_OK, intent);
 				mMainActivity.finish();
@@ -155,7 +156,7 @@ public class SelectUserPhoto extends Activity {
 			int id = mImageCursor.getInt(mImageColumnIndex);
 			Uri _uri = Uri.withAppendedPath(
 					MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + id);
-			Log.i(TAG, "ImageAdapter.getView(): FILENAME: " + _uri.toString());
+			if (Logger.isLogEnabled())  Logger.log("ImageAdapter.getView(): FILENAME: " + _uri.toString());
 			i.setImageURI(_uri);
 			i.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			i.setLayoutParams(new GridView.LayoutParams(92, 92));
@@ -171,7 +172,7 @@ public class SelectUserPhoto extends Activity {
 	 */
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Log.i(TAG, "onCreateDialog");
+		if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_LOADING_ID) {
 			dialogMessage = this.getString(R.string.progress_loading_message);
@@ -188,11 +189,11 @@ public class SelectUserPhoto extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-			Log.i(TAG, "onPreExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute starting");
 			if (mMainActivity != null) {
 				mMainActivity.showDialog(AppConfig.DIALOG_LOADING_ID);
 			}
-			Log.i(TAG, "onPreExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPreExecute finished");
 		}
 
 		/**
@@ -202,7 +203,7 @@ public class SelectUserPhoto extends Activity {
 		 */
 		@Override
 		protected Void doInBackground(Object... args) {
-			Log.i(TAG, "doInBackground starting");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			try {
 				mMainActivity.runOnUiThread(new Runnable() {
 					public void run() {
@@ -216,15 +217,15 @@ public class SelectUserPhoto extends Activity {
 								" ", "_") : ""), e);
 			}
 
-			Log.i(TAG, "doInBackground finished");
+			if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Object result) {
-			Log.i(TAG, "onPostExecute starting");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			mDialog.cancel();
-			Log.i(TAG, "onPostExecute finished");
+			if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 		}
 
 	}

@@ -24,13 +24,13 @@ public class MediaScanner {
 
 					@Override
 					public void onScanCompleted(String path, Uri uri) {
-						Log.i(TAG, "onScanCompleted: path: " + path + " uri: "
+						if (Logger.isLogEnabled())  Logger.log("onScanCompleted: path: " + path + " uri: "
 								+ uri);
 					}
 
 					@Override
 					public void onMediaScannerConnected() {
-						Log.i(TAG, "onMediaScannerConnected");
+						if (Logger.isLogEnabled())  Logger.log("onMediaScannerConnected");
 						try {
 							scanMedia(root);
 						} catch (Throwable e) {
@@ -50,19 +50,19 @@ public class MediaScanner {
 				return ((name.endsWith(".jpg")) || (name.endsWith(".png")));
 			}
 		});
-		Log.i(TAG, "total files: " + sdImageArray.length);
+		if (Logger.isLogEnabled())  Logger.log("total files: " + sdImageArray.length);
 		for (int i = 0; i < sdImageArray.length; i++) {
 			mScanner.scanFile(sdImageArray[i].getAbsolutePath(), null);
 		}
 		
 //		List<File> files = FileListing.getFileListing(root);
-//		Log.i(TAG, "total files: " + files.size());
+//		if (Logger.isLogEnabled())  Logger.log("total files: " + files.size());
 //		String absPath = null;
 //		for (Iterator<File> iterator = files.iterator(); iterator.hasNext();) {
 //			File file = iterator.next();
 //			absPath = file.getAbsolutePath();
 //			if ((absPath.endsWith(".jpg")) || (absPath.endsWith(".png"))) {
-//				Log.i(TAG, "scan file: " + absPath);
+//				if (Logger.isLogEnabled())  Logger.log("scan file: " + absPath);
 //				mScanner.scanFile(absPath, null);
 //			}
 //		}

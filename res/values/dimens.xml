@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Defaults for the Grid View -->
+    <integer name="gridview_columns">3</integer>
+    <dimen name="gridview_border">2dip</dimen>
+    <dimen name="gridview_column_width">125dip</dimen>
+
+</resources>

@@ -44,6 +44,7 @@ import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.util.BitmapScaler;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -108,7 +109,7 @@ public class BeerList extends ListActivity {
 				+ this.getClass().getName();
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 
 		mMainActivity = this;
@@ -118,7 +119,7 @@ public class BeerList extends ListActivity {
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		showDialog(AppConfig.DIALOG_LOADING_ID);
@@ -182,12 +183,12 @@ public class BeerList extends ListActivity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -405,7 +406,7 @@ public class BeerList extends ListActivity {
 	@Override
 	public void finish() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "finish");
+			if (Logger.isLogEnabled())  Logger.log("finish");
 		}
 		if (mDbHelper != null) {
 			// close the Db connection
@@ -422,7 +423,7 @@ public class BeerList extends ListActivity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String dialogMessage = null;
 		if (id == AppConfig.DIALOG_LOADING_ID) {
@@ -445,11 +446,11 @@ public class BeerList extends ListActivity {
 	@Override
 	protected void onResume() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onResume");
+			if (Logger.isLogEnabled())  Logger.log("onResume");
 		}
 		if ((dialog != null) && (dialog.isShowing())) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onResume:active dialog removed");
+				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
 			}
 			removeDialog(ACTIVE_DIALOG);
 		}
@@ -464,7 +465,7 @@ public class BeerList extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateOptionsMenu");
+			if (Logger.isLogEnabled())  Logger.log("onCreateOptionsMenu");
 		}
 		super.onCreateOptionsMenu(menu);
 		int menuPosition = 0;
@@ -487,7 +488,7 @@ public class BeerList extends ListActivity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onMenuItemSelected");
+			if (Logger.isLogEnabled())  Logger.log("onMenuItemSelected");
 		}
 		switch (item.getItemId()) {
 		case INSERT_ID:
@@ -523,7 +524,7 @@ public class BeerList extends ListActivity {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		Log.i(TAG, "onCreateContextMenu");
+		if (Logger.isLogEnabled())  Logger.log("onCreateContextMenu");
 		int menuPosition = 0;
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		Cursor cursor = mDbHelper.fetchNote(info.id);
@@ -564,7 +565,7 @@ public class BeerList extends ListActivity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onContextItemSelected");
+			if (Logger.isLogEnabled())  Logger.log("onContextItemSelected");
 		}
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -600,7 +601,7 @@ public class BeerList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int menuPosition, long id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onListItemClick");
+			if (Logger.isLogEnabled())  Logger.log("onListItemClick");
 		}
 		super.onListItemClick(l, v, menuPosition, id);
 		Intent i = new Intent(this, BeerView.class);
@@ -617,7 +618,7 @@ public class BeerList extends ListActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
-		Log.i(TAG, "onActivityResult; request code = " + requestCode
+		if (Logger.isLogEnabled())  Logger.log("onActivityResult; request code = " + requestCode
 				+ " result code = " + resultCode);
 		Bundle extras = (intent != null) ? intent.getExtras() : null;
 		if (requestCode == FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST) {
@@ -625,7 +626,7 @@ public class BeerList extends ListActivity {
 				// pass the rowId along to ShareOnFacebook
 				long rowId = (extras != null) ? extras
 						.getLong(NotesDbAdapter.KEY_ROWID) : 0L;
-				Log.i(TAG, "onActivityResult:Row Id=" + rowId);
+				if (Logger.isLogEnabled())  Logger.log("onActivityResult:Row Id=" + rowId);
 				Intent newIntent = new Intent(this, ShareOnFacebook.class);
 				newIntent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
 				startActivityForResult(newIntent, ACTIVITY_SHARE_ON_FACEBOOK);
@@ -675,7 +676,7 @@ public class BeerList extends ListActivity {
 	 */
 	private void fillData() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "fillData");
+			if (Logger.isLogEnabled())  Logger.log("fillData");
 		}
 		// default to key_updated
 		String _sortBy = mPreferences.getString("SORT_BY", null);
@@ -684,20 +685,20 @@ public class BeerList extends ListActivity {
 					NotesDbAdapter.KEY_UPDATED + " DESC").commit();
 			_sortBy = NotesDbAdapter.KEY_UPDATED + " DESC";
 		}
-		Log.i(TAG, "fillData::sort by:: " + _sortBy);
+		if (Logger.isLogEnabled())  Logger.log("fillData::sort by:: " + _sortBy);
 		int rowsPerPage = mPreferences.getInt(
 				AppConfig.PREFERENCE_BEER_LIST_ROWS_PER_PAGE,
 				AppConfig.BEER_LIST_ROWS_PER_PAGE);
 
 		Cursor notesCursor = mDbHelper.fetchAllNotes(mPageNumber, rowsPerPage, _sortBy);
 		startManagingCursor(notesCursor);
-		Log.i(TAG, "fillData::mPreviousCursorCount=" + mPreviousCursorCount);
-		Log.i(TAG, "fillData::mCurrentCursorCount=" + notesCursor.getCount());
+		if (Logger.isLogEnabled())  Logger.log("fillData::mPreviousCursorCount=" + mPreviousCursorCount);
+		if (Logger.isLogEnabled())  Logger.log("fillData::mCurrentCursorCount=" + notesCursor.getCount());
 		// current row count returned is less than what it should have returned
 		if ((mLoadMoreBeersAction)
 				&& (notesCursor != null)
 				&& (notesCursor.getCount() < (mPreviousCursorCount + rowsPerPage))) {
-			Log.i(TAG, "fillData::Removing Footer View");
+			if (Logger.isLogEnabled())  Logger.log("fillData::Removing Footer View");
 			mBeerListView.removeFooterView(mFooterView);
 		} else {
 			mPreviousCursorCount = notesCursor.getCount();
@@ -725,7 +726,7 @@ public class BeerList extends ListActivity {
 	 */
 	private void backup() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "backup");
+			if (Logger.isLogEnabled())  Logger.log("backup");
 		}
 		showDialog(AppConfig.DIALOG_LOADING_ID);
 		Intent intent = new Intent(this, ManageData.class);
@@ -735,7 +736,7 @@ public class BeerList extends ListActivity {
 
 	private void search() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "search");
+			if (Logger.isLogEnabled())  Logger.log("search");
 		}
 		showDialog(AppConfig.DIALOG_LOADING_ID);
 		Intent intent = new Intent(this, Search.class);
@@ -745,7 +746,7 @@ public class BeerList extends ListActivity {
 	}
 
 	private void sort() {
-		Log.i(TAG, "sort");
+		if (Logger.isLogEnabled())  Logger.log("sort");
 		final Dialog dialog = new Dialog(mMainActivity,
 				android.R.style.Theme_Dialog);
 		dialog.setContentView(R.layout.sort_list);
@@ -783,7 +784,7 @@ public class BeerList extends ListActivity {
 
 		String _sortByPreference = mPreferences.getString("SORT_BY",
 				NotesDbAdapter.KEY_UPDATED + " DESC");
-		Log.i(TAG, "sort::sort by preference:: " + _sortByPreference);
+		if (Logger.isLogEnabled())  Logger.log("sort::sort by preference:: " + _sortByPreference);
 
 		if (_sortByPreference.equals(NotesDbAdapter.KEY_UPDATED + " DESC")) {
 			byUpdated.setChecked(true);
@@ -803,7 +804,7 @@ public class BeerList extends ListActivity {
 	 */
 	private void sendErrorReport() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "Send Error Report");
+			if (Logger.isLogEnabled())  Logger.log("Send Error Report");
 		}
 		Intent intent = new Intent(BeerList.this.getApplication(),
 				CollectAndSendLog.class);
@@ -818,7 +819,7 @@ public class BeerList extends ListActivity {
 	 */
 	private void shareOnFacebook(long rowId) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "shareOnFacebook");
+			if (Logger.isLogEnabled())  Logger.log("shareOnFacebook");
 		}
 		showDialog(AppConfig.DIALOG_LOADING_ID);
 		// Intent intent = new Intent(this, ShareOnFacebook.class);
@@ -828,7 +829,7 @@ public class BeerList extends ListActivity {
 				LoginIntercept.class);
 		intent.putExtra("FACEBOOK_PERMISSIONS", AppConfig.FACEBOOK_PERMISSIONS);
 		intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
-		Log.i(TAG, "shareOnFacebook:Row Id=" + rowId);
+		if (Logger.isLogEnabled())  Logger.log("shareOnFacebook:Row Id=" + rowId);
 		startActivityForResult(intent,
 				FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST);
 
@@ -840,7 +841,7 @@ public class BeerList extends ListActivity {
 	 */
 	private void shareWithCommunity(long rowId) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "shareOnFacebook");
+			if (Logger.isLogEnabled())  Logger.log("shareOnFacebook");
 		}
 		showDialog(AppConfig.DIALOG_LOADING_ID);
 		{
@@ -861,13 +862,13 @@ public class BeerList extends ListActivity {
 		startActivityForResult(intent,
 				SHARE_WITH_COMMUNITY_ACTIVITY_REQUEST_CODE);
 
-		Log.i(TAG, "Intent Share With Community Started");
+		if (Logger.isLogEnabled())  Logger.log("Intent Share With Community Started");
 
 	}
 
 	private void aboutThisBeer(long rowId) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "aboutThisBeer");
+			if (Logger.isLogEnabled())  Logger.log("aboutThisBeer");
 		}
 		Cursor cursor = mDbHelper.fetchNote(rowId);
 		startManagingCursor(cursor);
@@ -881,7 +882,7 @@ public class BeerList extends ListActivity {
 		mTracker.dispatch();
 
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "aboutThisBeer:URL:" + _url);
+			if (Logger.isLogEnabled())  Logger.log("aboutThisBeer:URL:" + _url);
 		}
 		openBrowser(_url, _beerStyle);
 	}
@@ -897,7 +898,7 @@ public class BeerList extends ListActivity {
 
 	private void addBeer() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "addBeer");
+			if (Logger.isLogEnabled())  Logger.log("addBeer");
 		}
 		Intent i = new Intent(this, BeerEdit.class);
 		startActivityForResult(i, ACTIVITY_CREATE);
@@ -972,7 +973,7 @@ public class BeerList extends ListActivity {
 				ratingBar.setRating(_rating);
 			} else {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "Rating Bar is Null!");
+					if (Logger.isLogEnabled())  Logger.log("Rating Bar is Null!");
 				}
 			}
 

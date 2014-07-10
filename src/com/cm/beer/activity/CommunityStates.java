@@ -27,7 +27,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.util.Logger;
 import com.cm.beer.util.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -52,7 +54,7 @@ public class CommunityStates extends ListActivity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate");
+			if (Logger.isLogEnabled())  Logger.log("onCreate");
 		}
 		mMainActivity = this;
 
@@ -60,7 +62,7 @@ public class CommunityStates extends ListActivity {
 		// Start the mTracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 		mOption = getIntent().getExtras().getString("OPTION");
 
@@ -96,7 +98,7 @@ public class CommunityStates extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onListItemClick");
+			if (Logger.isLogEnabled())  Logger.log("onListItemClick");
 		}
 		super.onListItemClick(l, v, position, id);
 		State _state = mStates.get((int) id);
@@ -104,7 +106,7 @@ public class CommunityStates extends ListActivity {
 		mTracker.trackEvent("CommunityRegions", "Selection", _selection, 0);
 		mTracker.dispatch();
 		Intent intent = new Intent(mMainActivity.getApplication(),
-				CommunityBeers.class);
+				CommunityBeersFragment.class);
 		intent.putExtra("OPTION", mOption);
 		intent.putExtra("COUNTRY", _state.country);
 		intent.putExtra("REGION", _state.state);
@@ -119,12 +121,12 @@ public class CommunityStates extends ListActivity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the mTracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -137,7 +139,7 @@ public class CommunityStates extends ListActivity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateDialog");
+			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
 		}
 		String mDialogMessage = null;
 		String mDialogTitle = null;
@@ -156,7 +158,7 @@ public class CommunityStates extends ListActivity {
 		mCommunityIcon.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
-				Log.i(TAG, "back to community options menu");
+				if (Logger.isLogEnabled())  Logger.log("back to community options menu");
 
 				AlertDialog.Builder dialog = new AlertDialog.Builder(
 						mMainActivity);
@@ -244,7 +246,7 @@ public class CommunityStates extends ListActivity {
 		 */
 		protected Void doInBackground(String... args) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground starting");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
 			}
 			String _url = AppConfig.COMMUNITY_GET_BEERS_URL
 					+ AppConfig.COMMUNITY_GET_STATES_Q;
@@ -269,7 +271,7 @@ public class CommunityStates extends ListActivity {
 						_state.country = jsonObject.getString("country");
 						_state.state = jsonObject.getString("state");
 						mMainActivity.mStates.add(_state);
-						Log.i(TAG, _state.country + "::");
+						if (Logger.isLogEnabled())  Logger.log(_state.country + "::");
 
 					}
 				}
@@ -284,14 +286,14 @@ public class CommunityStates extends ListActivity {
 			}
 
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "doInBackground finished");
+				if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
 			}
 			return null;
 		}
 
 		protected void onPostExecute(Object result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute starting");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
 			}
 
 			if (mMainActivity.mSplashDialog != null) {
@@ -299,7 +301,7 @@ public class CommunityStates extends ListActivity {
 				mMainActivity.mSplashDialog.cancel();
 			}
 			if (AppConfig.LOGGING_ENABLED) {
-				Log.i(TAG, "onPostExecute finished");
+				if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
 			}
 		}
 	}

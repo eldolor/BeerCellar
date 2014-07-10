@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.util.Logger;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class ManageData extends Activity {
@@ -49,14 +50,14 @@ public class ManageData extends Activity {
 		TAG = this.getString(R.string.app_name) + "::"
 				+ this.getClass().getName();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.d(TAG, "onCreate: ");
+			if (Logger.isLogEnabled())  Logger.log("onCreate: ");
 		}
 
 		tracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
 		tracker.start(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID, this);
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
 		this.setContentView(R.layout.manage_data);
@@ -85,7 +86,7 @@ public class ManageData extends Activity {
 		this.restoreDbButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View v) {
 				if (AppConfig.LOGGING_ENABLED) {
-					Log.i(TAG, "Restore Database");
+					if (Logger.isLogEnabled())  Logger.log("Restore Database");
 				}
 				if (ManageData.this.isExternalStorageAvail()) {
 					if (AppConfig.LOGGING_ENABLED) {
@@ -149,12 +150,12 @@ public class ManageData extends Activity {
 	@Override
 	protected void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onDestroy");
+			if (Logger.isLogEnabled())  Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		tracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
 	}
@@ -167,7 +168,7 @@ public class ManageData extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onCreateOptionsMenu");
+			if (Logger.isLogEnabled())  Logger.log("onCreateOptionsMenu");
 		}
 		super.onCreateOptionsMenu(menu);
 		int position = 0;
@@ -186,7 +187,7 @@ public class ManageData extends Activity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "onMenuItemSelected");
+			if (Logger.isLogEnabled())  Logger.log("onMenuItemSelected");
 		}
 		switch (item.getItemId()) {
 		case SEND_ERROR_REPORT_ID:
@@ -202,7 +203,7 @@ public class ManageData extends Activity {
 	 */
 	private void sendErrorReport() {
 		if (AppConfig.LOGGING_ENABLED) {
-			Log.i(TAG, "Send Error Report");
+			if (Logger.isLogEnabled())  Logger.log("Send Error Report");
 		}
 		Intent intent = new Intent(ManageData.this.getApplication(),
 				CollectAndSendLog.class);
@@ -329,13 +330,13 @@ public class ManageData extends Activity {
 				// 1.1 Create new base dir
 				if (baseDir.mkdir()) {
 					if (AppConfig.LOGGING_ENABLED) {
-						Log.i(TAG, "doInBackground::Created "
+						if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 								+ baseDir.getPath());
 					}
 					// 1.2 Create new backup dir
 					if (backupDir.mkdir()) {
 						if (AppConfig.LOGGING_ENABLED) {
-							Log.i(TAG, "doInBackground::Created "
+							if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 									+ backupDir.getPath());
 						}
 					} else {
@@ -361,7 +362,7 @@ public class ManageData extends Activity {
 					// 2.1.1 create new backup dir
 					if (backupDir.mkdir()) {
 						if (AppConfig.LOGGING_ENABLED) {
-							Log.i(TAG, "doInBackground::Created "
+							if (Logger.isLogEnabled())  Logger.log("doInBackground::Created "
 									+ backupDir.getPath());
 						}
 					} else {

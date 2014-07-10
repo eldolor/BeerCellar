@@ -67,17 +67,17 @@ public class FacebookLikeButtonWebView extends WebView {
 				&& (ev.getAction() == MotionEvent.ACTION_UP)) {
 			// invalid facebook session
 			if (!mFb.isSessionValid()) {
-				Log.i(TAG, "onTouchEvent: Invalid Facebook Session!");
+				if (Logger.isLogEnabled())  Logger.log("onTouchEvent: Invalid Facebook Session!");
 				/** Handle User Not Logged In **/
 				// execute SSO on touch event
 				mFb.authorize(mActivity, mPermissions, mActivityCode,
 						new LoginDialogListener());
 			} else {
-				Log.i(TAG, "onTouchEvent: Valid Facebook Session");
+				if (Logger.isLogEnabled())  Logger.log("onTouchEvent: Valid Facebook Session");
 			}
 
 		} else {
-			Log.i(TAG, "onTouchEvent: event not considered");
+			if (Logger.isLogEnabled())  Logger.log("onTouchEvent: event not considered");
 		}
 		return super.onTouchEvent(ev);
 	}
@@ -86,7 +86,7 @@ public class FacebookLikeButtonWebView extends WebView {
 		private final String TAG = LoginDialogListener.class.getName();
 
 		public void onComplete(Bundle values) {
-			Log.d(TAG, "onComplete::");
+			if (Logger.isLogEnabled())  Logger.log("onComplete::");
 			SessionEvents.onLoginSuccess();
 		}
 
@@ -104,7 +104,7 @@ public class FacebookLikeButtonWebView extends WebView {
 		}
 
 		public void onCancel() {
-			Log.d(TAG, "onCancel::");
+			if (Logger.isLogEnabled())  Logger.log("onCancel::");
 			SessionEvents.onLoginError("Action Canceled");
 		}
 	}

@@ -561,7 +561,7 @@
     <string name="community">Community</string>
     <string name="community_beers_from_around_the_world">Beers From Around The World</string>
     <string name="community_top_rated_beers">Top Rated Beers</string>
-    <string name="community_worst_beers">Worst Beers</string>
+    <string name="community_worst_beers">Worst Rated Beers</string>
     <string name="community_beers_by_country">Beers By Country</string>
     <string name="community_beers_by_state">Beers By State/Province/Region</string>
     <string name="community_favorite_beer_reviews">Favorite Beer Reviews</string>
@@ -601,19 +601,19 @@
     <string name="review_helpful_label">Was this review helpful to you?</string>
     <string name="rating_thank_you_message">Thanks for your feedback.</string>
     <!-- Begin:The following are set dynamically within CommunityBeers -->
-    <string name="title_my_beer_reviews">Beer Cellar Community: My Beer Reviews</string>
-    <string name="title_most_helpful_beer_reviews">Beer Cellar Community: Most Helpful Beer Reviews</string>
-    <string name="title_beers_from_around_the_world">Beer Cellar Community: Beers From Around the World</string>
-    <string name="title_top_rated_beers">Beer Cellar Community: Top Rated Beers</string>
-    <string name="title_worst_beers">Beer Cellar Community: Worst Beers</string>
-    <string name="title_beers_by_country">Beer Cellar Community: Beers by Country</string>
-    <string name="title_beers_by_state">Beer Cellar Community: Beers by
+    <string name="title_my_beer_reviews">My Beer Reviews</string>
+    <string name="title_most_helpful_beer_reviews">Most Helpful Beer Reviews</string>
+    <string name="title_beers_from_around_the_world">Beers From Around the World</string>
+    <string name="title_top_rated_beers">Top Rated Beers</string>
+    <string name="title_worst_beers">Worst Beers</string>
+    <string name="title_beers_by_country">Beers by Country</string>
+    <string name="title_beers_by_state">Beers by
 		State/Province/Region</string>
-    <string name="title_search_beers">Beer Cellar Community: Search Beers</string>
-    <string name="title_following">Beer Cellar Community: Following</string>
-    <string name="title_followers">Beer Cellar Community: Followers</string>
-    <string name="title_new_beer_reviews">Beer Cellar Community: New Beer Reviews</string>
-    <string name="title_favorite_beer_reviews">Beer Cellar Community: Favorite Beer Reviews</string>
+    <string name="title_search_beers">Search Beers</string>
+    <string name="title_following">Following</string>
+    <string name="title_followers">Followers</string>
+    <string name="title_new_beer_reviews">New Beer Reviews</string>
+    <string name="title_favorite_beer_reviews">Favorite Beer Reviews</string>
     <!-- Begin:The following are set dynamically within CommunityBeers -->
 
     <string name="community_not_following_anyone_message">You are currently not following any beer reviewers</string>
@@ -630,5 +630,17 @@
     <string name="select_focus_mode_label">Select Focus Mode</string>
     <string name="select_scene_mode_label">Select Scene Mode</string>
     <!-- End Camera Settings -->
+
+
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>Home</item>
+        <item>Beers from Around the World</item>
+        <item>Top Rated Beers</item>
+        <item>Worst Rated Beers</item>
+        <item>My Beers</item>
+        <item>Favorite Beer Reviews</item>
+    </string-array>
 
 </resources>

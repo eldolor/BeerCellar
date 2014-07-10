@@ -85,7 +85,7 @@ public class Util
 
 	public static void setGoogleAdSense(Object... args)
 	{
-		Log.i(TAG, "setGoogleAdSense(): Entering");
+		if (Logger.isLogEnabled())  Logger.log("setGoogleAdSense(): Entering");
 		if (AppConfig.IS_BEER_LITE)
 		{
 			Activity activity = (Activity) args[0];
@@ -99,7 +99,7 @@ public class Util
 				keywords.append(iterator.next());
 				keywords.append(", ");
 			}
-			Log.i(TAG, "setGoogleAdSense(): Keywords: " + keywords.toString());
+			if (Logger.isLogEnabled())  Logger.log("setGoogleAdSense(): Keywords: " + keywords.toString());
 			final com.google.ads.AdView adView = (com.google.ads.AdView) activity
 					.findViewById(R.id.google_adview);
 			if (adView != null)
@@ -125,7 +125,7 @@ public class Util
 					 */
 					public void onDismissScreen(Ad arg0)
 					{
-						Log.i(TAG, "setGoogleAdSense(): onDismissScreen");
+						if (Logger.isLogEnabled())  Logger.log("setGoogleAdSense(): onDismissScreen");
 					}
 
 					/*
@@ -153,7 +153,7 @@ public class Util
 					 */
 					public void onLeaveApplication(Ad arg0)
 					{
-						Log.i(TAG, "setGoogleAdSense(): onLeaveApplication");
+						if (Logger.isLogEnabled())  Logger.log("setGoogleAdSense(): onLeaveApplication");
 					}
 
 					/*
@@ -167,7 +167,7 @@ public class Util
 					 */
 					public void onPresentScreen(Ad arg0)
 					{
-						Log.i(TAG, "setGoogleAdSense(): onPresentScreen");
+						if (Logger.isLogEnabled())  Logger.log("setGoogleAdSense(): onPresentScreen");
 					}
 
 					/*
@@ -178,7 +178,7 @@ public class Util
 					 */
 					public void onReceiveAd(Ad arg0)
 					{
-						Log.i(TAG, "setGoogleAdSense(): onReceiveAd");
+						if (Logger.isLogEnabled())  Logger.log("setGoogleAdSense(): onReceiveAd");
 					}
 				});
 				adView.loadAd(adRequest);
@@ -186,15 +186,15 @@ public class Util
 			}
 		} else
 		{
-			Log.i(TAG, "setGoogleAdSense(): Is not Beer Cellar Lite!");
+			if (Logger.isLogEnabled())  Logger.log("setGoogleAdSense(): Is not Beer Cellar Lite!");
 		}
-		Log.i(TAG, "setGoogleAdSense(): Exiting");
+		if (Logger.isLogEnabled())  Logger.log("setGoogleAdSense(): Exiting");
 
 	}
 
 	public static void loadInterstitialAd(Object... args)
 	{
-		Log.i(TAG, "loadInterstitialAd(): Entering");
+		if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): Entering");
 		if (AppConfig.IS_BEER_LITE)
 		{
 			Activity activity = (Activity) args[0];
@@ -208,7 +208,7 @@ public class Util
 				keywords.append(iterator.next());
 				keywords.append(", ");
 			}
-			Log.i(TAG, "loadInterstitialAd(): Keywords: " + keywords.toString());
+			if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): Keywords: " + keywords.toString());
 			final InterstitialAd interstitial = new InterstitialAd(activity,
 					AppConfig.INTERSTITIAL_UNIT_ID);
 			AdRequest adRequest = new AdRequest();
@@ -231,7 +231,7 @@ public class Util
 				 */
 				public void onDismissScreen(Ad arg0)
 				{
-					Log.i(TAG, "loadInterstitialAd(): onDismissScreen");
+					if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): onDismissScreen");
 				}
 
 				/*
@@ -259,7 +259,7 @@ public class Util
 				 */
 				public void onLeaveApplication(Ad arg0)
 				{
-					Log.i(TAG, "loadInterstitialAd(): onLeaveApplication");
+					if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): onLeaveApplication");
 				}
 
 				/*
@@ -272,7 +272,7 @@ public class Util
 				 */
 				public void onPresentScreen(Ad arg0)
 				{
-					Log.i(TAG, "loadInterstitialAd(): onPresentScreen");
+					if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): onPresentScreen");
 				}
 
 				/*
@@ -282,17 +282,17 @@ public class Util
 				 */
 				public void onReceiveAd(Ad arg0)
 				{
-					Log.i(TAG, "loadInterstitialAd(): onReceiveAd");
+					if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): onReceiveAd");
 					interstitial.show();
 				}
 			});
 			interstitial.loadAd(adRequest);
-			Log.i(TAG, "loadInterstitialAd(): Load Ad!");
+			if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): Load Ad!");
 		} else
 		{
-			Log.i(TAG, "loadInterstitialAd(): Is not Beer Cellar Lite!");
+			if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): Is not Beer Cellar Lite!");
 		}
-		Log.i(TAG, "loadInterstitialAd(): Exiting");
+		if (Logger.isLogEnabled())  Logger.log("loadInterstitialAd(): Exiting");
 
 	}
 
@@ -609,12 +609,12 @@ public class Util
 	{
 
 		String charset = "UTF-8";
-		Log.d(TAG, method + " URL: " + url);
+		if (Logger.isLogEnabled())  Logger.log(method + " URL: " + url);
 
 		if (method.equals("GET"))
 		{
 			String encodedUrl = encodeUrl(params);
-			Log.d(TAG, "Encoded URL:" + encodedUrl);
+			if (Logger.isLogEnabled())  Logger.log("Encoded URL:" + encodedUrl);
 			url = url + "?" + encodedUrl;
 			// } else if (params.containsKey("file")) {
 			// // multipart/form-data: Add access_token to the URL
@@ -652,7 +652,7 @@ public class Util
 			{
 				// use method override
 				String encodedUrl = encodeUrl(params);
-				Log.d(TAG, "Encoded URL:" + encodedUrl);
+				if (Logger.isLogEnabled())  Logger.log("Encoded URL:" + encodedUrl);
 				HttpParam param = new HttpParam();
 				param.name = "method";
 				param.value = method;
@@ -662,9 +662,9 @@ public class Util
 				conn.getOutputStream().write(encodedUrl.getBytes(charset));
 			} else
 			{
-				Log.d(TAG, "Posting multipart/form-data");
+				if (Logger.isLogEnabled())  Logger.log("Posting multipart/form-data");
 
-				Log.d(TAG, method + " URL: " + url);
+				if (Logger.isLogEnabled())  Logger.log(method + " URL: " + url);
 
 				String CRLF = "\r\n";
 				String TWO_HYPHENS = "--";
@@ -698,7 +698,7 @@ public class Util
 
 						if (key.equalsIgnoreCase("file"))
 						{
-							Log.d(TAG, "POSTING: " + key + "=" + value);
+							if (Logger.isLogEnabled())  Logger.log("POSTING: " + key + "=" + value);
 							File photo = new File(value);
 							output.write(("Content-Disposition: form-data; name=\"file\"; filename=\""
 									+ photo.getName() + "\"" + CRLF)
@@ -719,7 +719,7 @@ public class Util
 									byteCount += length;
 								}
 								output.flush();
-								Log.d(TAG, byteCount + " bytes flushed for "
+								if (Logger.isLogEnabled())  Logger.log(byteCount + " bytes flushed for "
 										+ photo.getName());
 							} finally
 							{
@@ -742,7 +742,7 @@ public class Util
 							// the GET String
 							if (!key.equalsIgnoreCase(Facebook.TOKEN))
 							{
-								Log.d(TAG, "POSTING: " + key + "=" + value);
+								if (Logger.isLogEnabled())  Logger.log("POSTING: " + key + "=" + value);
 								output.write(("Content-Disposition: form-data; name=\""
 										+ key + "\"" + CRLF + CRLF)
 										.getBytes(charset));
@@ -886,7 +886,7 @@ public class Util
 			{
 				double latitude = location.getLatitude();
 				double longitude = location.getLongitude();
-				Log.i(TAG, "Setting latitude:" + latitude + " longitude:"
+				if (Logger.isLogEnabled())  Logger.log("Setting latitude:" + latitude + " longitude:"
 						+ longitude);
 				gpsLocation.latitude = latitude;
 				gpsLocation.longitude = longitude;
@@ -997,7 +997,7 @@ public class Util
 								+ " from " + NotesDbAdapter.DATABASE_TABLE_V1
 								+ " to " + NotesDbAdapter.DATABASE_TABLE);
 			}
-			Log.i(TAG, "Records Inserted: " + records);
+			if (Logger.isLogEnabled())  Logger.log("Records Inserted: " + records);
 		} finally
 		{
 			if (cursor != null)
@@ -1121,7 +1121,7 @@ public class Util
 								+ " from " + NotesDbAdapter.DATABASE_TABLE_V2
 								+ " to " + NotesDbAdapter.DATABASE_TABLE);
 			}
-			Log.i(TAG, "Records Inserted: " + records);
+			if (Logger.isLogEnabled())  Logger.log("Records Inserted: " + records);
 		} finally
 		{
 			if (cursor != null)
@@ -1251,7 +1251,7 @@ public class Util
 								+ " from " + NotesDbAdapter.DATABASE_TABLE_V3
 								+ " to " + NotesDbAdapter.DATABASE_TABLE);
 			}
-			Log.i(TAG, "Records Inserted: " + records);
+			if (Logger.isLogEnabled())  Logger.log("Records Inserted: " + records);
 		} finally
 		{
 			if (cursor != null)
@@ -1304,7 +1304,7 @@ public class Util
 
 					String userJsonStr = URLEncoder.encode(json.toString(),
 							"UTF-8");
-					Log.i(TAG, userJsonStr);
+					if (Logger.isLogEnabled())  Logger.log(userJsonStr);
 
 					HashMap<String, String> parameters = new HashMap<String, String>();
 					parameters.put("userprofile", userJsonStr);
@@ -1312,7 +1312,7 @@ public class Util
 					// Prepare a request object
 					String _url = com.cm.beer.util.Util
 							.getUploadUserProfileUrl();
-					Log.i(TAG, _url);
+					if (Logger.isLogEnabled())  Logger.log(_url);
 					{
 						boolean retry = true;
 						int retryCount = 0;
@@ -1325,7 +1325,7 @@ public class Util
 								String response = com.cm.beer.util.Util
 										.openUrl(_url, "POST", parameters);
 								// Examine the response status
-								Log.i(TAG, "Response = " + response);
+								if (Logger.isLogEnabled())  Logger.log("Response = " + response);
 								// Upload successful
 								retry = false;
 							} catch (Throwable e)
@@ -1340,7 +1340,7 @@ public class Util
 										+ retryCount);
 							}
 						}
-						Log.d(TAG, "Final Retry Count = " + retryCount);
+						if (Logger.isLogEnabled())  Logger.log("Final Retry Count = " + retryCount);
 					}
 
 				} catch (Throwable e)
@@ -1432,12 +1432,12 @@ public class Util
 			HttpGet httpget = new HttpGet(url);
 
 			// Execute the request
-			Log.i(TAG, url);
+			//if (Logger.isLogEnabled())  Logger.log(url);
 			_response = httpClient.execute(httpget);
 			// Examine the response status
 			if (AppConfig.LOGGING_ENABLED)
 			{
-				Log.i(TAG, _response.getStatusLine().toString());
+				if (Logger.isLogEnabled())  Logger.log(_response.getStatusLine().toString());
 			}
 
 			// Get hold of the response entity
@@ -1451,11 +1451,11 @@ public class Util
 				// NOTE: cs cannot be null
 				cs = (_response.getLastHeader("cs") != null) ? _response
 						.getLastHeader("cs").getValue() : "";
-				Log.i(TAG, "url: " + url + "::Response cs: " + cs);
+				//if (Logger.isLogEnabled())  Logger.log("url: " + url + "::Response cs: " + cs);
 				// A Simple JSON Response Read
 				_inStream = _entity.getContent();
 				result = Util.convertStreamToString(_inStream, "UTF-8");
-				Log.i(TAG, "url: " + url + "::Response: " + result);
+				//if (Logger.isLogEnabled())  Logger.log("url: " + url + "::Response: " + result);
 			}
 
 		} finally
@@ -2141,15 +2141,15 @@ public class Util
 				|| (preferences.getBoolean(
 						AppConfig.RECEIVE_BEER_OF_THE_DAY_NOTIFICATION, true)))
 		{
-			Log.i(TAG, "Starting Notification Service...");
+			if (Logger.isLogEnabled())  Logger.log("Starting Notification Service...");
 			context.startService(new Intent(context, NotificationService.class));
-			Log.i(TAG, "Notification Service Started!");
+			if (Logger.isLogEnabled())  Logger.log("Notification Service Started!");
 		} else
 		{
 			/** Stop the Notification Service **/
-			Log.i(TAG, "Stopping Notification Service...");
+			if (Logger.isLogEnabled())  Logger.log("Stopping Notification Service...");
 			context.stopService(new Intent(context, NotificationService.class));
-			Log.i(TAG, "Notification Service Stopped!");
+			if (Logger.isLogEnabled())  Logger.log("Notification Service Stopped!");
 		}
 	}
 
