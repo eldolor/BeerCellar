@@ -63,11 +63,11 @@ public class ContentManager {
 	 */
 	public void clear() {
 		if (mLockCache != null) {
-			Log.d(this.getClass().getName(), "Lock Cache Cleared!");
+			if (Logger.isLogEnabled())  Logger.log( "Lock Cache Cleared!");
 			mLockCache.clear();
 		}
 		if (mContentCache != null) {
-			Log.d(this.getClass().getName(), "Content Cache Cleared!");
+			if (Logger.isLogEnabled())  Logger.log( "Content Cache Cleared!");
 			mContentCache.clear();
 		}
 	}
@@ -79,7 +79,7 @@ public class ContentManager {
 	 */
 	public void removeContent(String urlString) {
 		if (mContentCache != null) {
-			Log.d(this.getClass().getName(), "Content Cache Cleared for "
+			if (Logger.isLogEnabled())  Logger.log( "Content Cache Cleared for "
 					+ urlString);
 			mContentCache.remove(urlString);
 		}
@@ -92,32 +92,32 @@ public class ContentManager {
 	 */
 	public String fetchContent(String urlString) {
 		if (mContentCache.containsKey(urlString)) {
-			Log.d(this.getClass().getName(), "Returning Content from Cache:"
+			if (Logger.isLogEnabled())  Logger.log( "Returning Content from Cache:"
 					+ urlString);
 			SoftReference<String> softReference = mContentCache.get(urlString);
 			if ((softReference==null)||(softReference.get() == null)) {
 				mContentCache.remove(urlString);
-				Log.d(this.getClass().getName(), "fetchContent():Soft Reference has been Garbage Collected:"
+				if (Logger.isLogEnabled())  Logger.log( "fetchContent():Soft Reference has been Garbage Collected:"
 						+ urlString);
 			} else {
 				return softReference.get();
 			}
 		}
 
-		Log.d(this.getClass().getName(), "url:" + urlString);
+		if (Logger.isLogEnabled())  Logger.log( "url:" + urlString);
 		try {
 			// prevents multithreaded fetches for the same url
 			mLockCache.put(urlString, urlString);
-			Log.d(this.getClass().getName(), "Begin Downloading:" + urlString);
+			if (Logger.isLogEnabled())  Logger.log( "Begin Downloading:" + urlString);
 			InputStream is = fetch(urlString);
-			Log.d(this.getClass().getName(), "End Downloading:" + urlString);
+			if (Logger.isLogEnabled())  Logger.log( "End Downloading:" + urlString);
 
 			String result = Util.convertStreamToString(is, "UTF-8");
 
 			mContentCache.put(urlString, new SoftReference<String>(result) );
 			mLockCache.remove(urlString);
 
-			Log.d(this.getClass().getName(), result);
+			if (Logger.isLogEnabled())  Logger.log( result);
 
 			return result;
 		} catch (Throwable e) {
@@ -138,11 +138,11 @@ public class ContentManager {
 
 			if ((softReference==null)||(softReference.get() == null)) {
 				mContentCache.remove(urlString);
-				Log.d(this.getClass().getName(), "fetchContentOnThread():Soft Reference has been Garbage Collected:"
+				if (Logger.isLogEnabled())  Logger.log( "fetchContentOnThread():Soft Reference has been Garbage Collected:"
 						+ urlString);
 			} else {
 				String jsonStr = softReference.get();
-				Log.d(this.getClass().getName(), urlString + "=>" + jsonStr);
+				if (Logger.isLogEnabled())  Logger.log( urlString + "=>" + jsonStr);
 				Message message = handler.obtainMessage(1, jsonStr);
 				handler.sendMessage(message);
 				return;
@@ -153,7 +153,7 @@ public class ContentManager {
 			@Override
 			public void run() {
 				while (mLockCache.containsKey(urlString)) {
-					Log.d(this.getClass().getName(),
+					if (Logger.isLogEnabled())  Logger.log(
 							"URI download request in progress:" + urlString);
 					try {
 						Thread.sleep(1000L);
@@ -179,7 +179,7 @@ public class ContentManager {
 			@Override
 			public void run() {
 				while (mLockCache.containsKey(urlString)) {
-					Log.d(this.getClass().getName(),
+					if (Logger.isLogEnabled())  Logger.log(
 							"URI download request in progress:" + urlString);
 					try {
 						Thread.sleep(1000L);

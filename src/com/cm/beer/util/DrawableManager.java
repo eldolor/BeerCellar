@@ -70,7 +70,7 @@ public class DrawableManager {
 	 */
 	public void removeContent(String urlString) {
 		if (mDrawableCache != null) {
-			Log.d(this.getClass().getName(), "Content Cache Cleared for "
+			if (Logger.isLogEnabled())  Logger.log( "Content Cache Cleared for "
 					+ urlString);
 			mDrawableCache.remove(urlString);
 		}
@@ -83,11 +83,11 @@ public class DrawableManager {
 	public void clear() {
 		if (mDrawableCache != null) {
 			mDrawableCache.clear();
-			Log.d(this.getClass().getName(), "Drawable Cache Cleared!");
+			if (Logger.isLogEnabled())  Logger.log( "Drawable Cache Cleared!");
 		}
 		if (mLockCache != null) {
 			mLockCache.clear();
-			Log.d(this.getClass().getName(), "Lock Cache Cleared!");
+			if (Logger.isLogEnabled())  Logger.log( "Lock Cache Cleared!");
 		}
 	}
 
@@ -98,31 +98,31 @@ public class DrawableManager {
 	 */
 	public Drawable fetchDrawable(String urlString) {
 		if (mDrawableCache.containsKey(urlString)) {
-			Log.d(this.getClass().getName(), "Returning Drawable from Cache:"
+			if (Logger.isLogEnabled())  Logger.log( "Returning Drawable from Cache:"
 					+ urlString);
 			SoftReference<Drawable> softReference = mDrawableCache
 					.get(urlString);
 			if ((softReference==null)||(softReference.get() == null)) {
 				mDrawableCache.remove(urlString);
-				Log.d(this.getClass().getName(), "fetchDrawable():Soft Reference has been Garbage Collected:"
+				if (Logger.isLogEnabled())  Logger.log( "fetchDrawable():Soft Reference has been Garbage Collected:"
 						+ urlString);
 			} else {
 				return softReference.get();
 			}
 		}
 
-		Log.d(this.getClass().getName(), "image url:" + urlString);
+		if (Logger.isLogEnabled())  Logger.log( "image url:" + urlString);
 		try {
 			// prevents multithreaded fetches for the same image
 			mLockCache.put(urlString, urlString);
-			Log.d(this.getClass().getName(), "Begin Downloading:" + urlString);
+			if (Logger.isLogEnabled())  Logger.log( "Begin Downloading:" + urlString);
 			InputStream is = fetch(urlString);
-			Log.d(this.getClass().getName(), "End Downloading:" + urlString);
+			if (Logger.isLogEnabled())  Logger.log( "End Downloading:" + urlString);
 			Drawable drawable = Drawable.createFromStream(is, "src");
 			mDrawableCache
 					.put(urlString, new SoftReference<Drawable>(drawable));
 			mLockCache.remove(urlString);
-			Log.d(this.getClass().getName(), "got a thumbnail drawable: "
+			if (Logger.isLogEnabled())  Logger.log( "got a thumbnail drawable: "
 					+ drawable.getBounds() + ", "
 					+ drawable.getIntrinsicHeight() + ","
 					+ drawable.getIntrinsicWidth() + ", "
@@ -145,13 +145,13 @@ public class DrawableManager {
 		byte[] bitmapdata = null;
 		
 		if (mDrawableCache.containsKey(urlString)) {
-			Log.d(this.getClass().getName(), "Returning Drawable from Cache:"
+			if (Logger.isLogEnabled())  Logger.log( "Returning Drawable from Cache:"
 					+ urlString);
 			SoftReference<Drawable> softReference = mDrawableCache
 					.get(urlString);
 			if ((softReference==null)||(softReference.get() == null)) {
 				mDrawableCache.remove(urlString);
-				Log.d(this.getClass().getName(), "fetchDrawable():Soft Reference has been Garbage Collected:"
+				if (Logger.isLogEnabled())  Logger.log( "fetchDrawable():Soft Reference has been Garbage Collected:"
 						+ urlString);
 			} else {
 				Drawable drawable =  softReference.get();
@@ -162,18 +162,18 @@ public class DrawableManager {
 			}
 		}
 
-		Log.d(this.getClass().getName(), "image url:" + urlString);
+		if (Logger.isLogEnabled())  Logger.log( "image url:" + urlString);
 		try {
 			// prevents multithreaded fetches for the same image
 			mLockCache.put(urlString, urlString);
-			Log.d(this.getClass().getName(), "Begin Downloading:" + urlString);
+			if (Logger.isLogEnabled())  Logger.log( "Begin Downloading:" + urlString);
 			InputStream is = fetch(urlString);
-			Log.d(this.getClass().getName(), "End Downloading:" + urlString);
+			if (Logger.isLogEnabled())  Logger.log( "End Downloading:" + urlString);
 			Drawable drawable = Drawable.createFromStream(is, "src");
 			mDrawableCache
 					.put(urlString, new SoftReference<Drawable>(drawable));
 			mLockCache.remove(urlString);
-			Log.d(this.getClass().getName(), "got a thumbnail drawable: "
+			if (Logger.isLogEnabled())  Logger.log( "got a thumbnail drawable: "
 					+ drawable.getBounds() + ", "
 					+ drawable.getIntrinsicHeight() + ","
 					+ drawable.getIntrinsicWidth() + ", "
@@ -200,13 +200,13 @@ public class DrawableManager {
 	public void fetchDrawableOnThread(final String urlString,
 			final ImageView imageView) {
 		if (mDrawableCache.containsKey(urlString)) {
-			Log.d(this.getClass().getName(), "Returning Drawable from Cache:"
+			if (Logger.isLogEnabled())  Logger.log( "Returning Drawable from Cache:"
 					+ urlString);
 			SoftReference<Drawable> softReference = mDrawableCache
 					.get(urlString);
 			if ((softReference==null)||(softReference.get() == null)) {
 				mDrawableCache.remove(urlString);
-				Log.d(this.getClass().getName(), "fetchDrawableOnThread():Soft Reference has been Garbage Collected:"
+				if (Logger.isLogEnabled())  Logger.log( "fetchDrawableOnThread():Soft Reference has been Garbage Collected:"
 						+ urlString);
 			} else {
 				imageView.setImageDrawable(softReference.get());
@@ -226,7 +226,7 @@ public class DrawableManager {
 			@Override
 			public void run() {
 				while (mLockCache.containsKey(urlString)) {
-					Log.d(this.getClass().getName(),
+					if (Logger.isLogEnabled())  Logger.log(
 							"URI download request in progress:" + urlString);
 					try {
 						Thread.sleep(1000L);

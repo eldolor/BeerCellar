@@ -301,14 +301,13 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// Intent intent = new Intent(getActivity().getApplication(),
-				// LoginIntercept.class);
-				// intent.putExtra("FACEBOOK_PERMISSIONS",
-				// AppConfig.FACEBOOK_PERMISSIONS);
-				// startActivityForResult(intent,
-				// LOGIN_INTERCEPT_FOR_MY_BEERS_REQUEST_CODE);
 				Main mainActivity = (Main) getActivity();
-				mainActivity.displayView(4, true);
+				if (pOption.equals(AppConfig.COMMUNITY_MY_BEER_REVIEWS)) {
+					mainActivity.displayView(4, true);
+				} else if (pOption
+						.equals(AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS)) {
+					mainActivity.displayView(5, true);
+				}
 			}
 		});
 		lView.addView(layout);
