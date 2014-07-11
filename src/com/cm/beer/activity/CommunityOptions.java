@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
+import com.cm.beer.activity.slidingmenu.LoginInterceptFragment;
+import com.cm.beer.activity.slidingmenu.UserProfileFragment;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
@@ -115,12 +117,12 @@ public class CommunityOptions extends ListActivity {
 			// If user id does not exist
 			if (mUser.isLoggedIn()) {
 				intent = new Intent(mMainActivity.getApplication(),
-						UserProfile.class);
+						UserProfileFragment.class);
 				intent.putExtra("USERID", mUser.getUserId());
 				startActivity(intent);
 			} else {
 				intent = new Intent(mMainActivity.getApplication(),
-						LoginIntercept.class);
+						LoginInterceptFragment.class);
 				intent.putExtra("FACEBOOK_PERMISSIONS",
 						AppConfig.FACEBOOK_PERMISSIONS);
 				startActivityForResult(intent,
@@ -190,7 +192,7 @@ public class CommunityOptions extends ListActivity {
 				getFavoriteBeers(mUser.getUserId());
 			} else {
 				intent = new Intent(mMainActivity.getApplication(),
-						LoginIntercept.class);
+						LoginInterceptFragment.class);
 				intent.putExtra("FACEBOOK_PERMISSIONS",
 						AppConfig.FACEBOOK_PERMISSIONS);
 				startActivityForResult(intent,
@@ -206,7 +208,7 @@ public class CommunityOptions extends ListActivity {
 				getMyBeers(mUser.getUserId());
 			} else {
 				intent = new Intent(mMainActivity.getApplication(),
-						LoginIntercept.class);
+						LoginInterceptFragment.class);
 				intent.putExtra("FACEBOOK_PERMISSIONS",
 						AppConfig.FACEBOOK_PERMISSIONS);
 				startActivityForResult(intent,
@@ -224,7 +226,7 @@ public class CommunityOptions extends ListActivity {
 				startActivity(intent);
 			} else {
 				intent = new Intent(mMainActivity.getApplication(),
-						LoginIntercept.class);
+						LoginInterceptFragment.class);
 				intent.putExtra("FACEBOOK_PERMISSIONS",
 						AppConfig.FACEBOOK_PERMISSIONS);
 				startActivityForResult(intent,
@@ -242,7 +244,7 @@ public class CommunityOptions extends ListActivity {
 				startActivity(intent);
 			} else {
 				intent = new Intent(mMainActivity.getApplication(),
-						LoginIntercept.class);
+						LoginInterceptFragment.class);
 				intent.putExtra("FACEBOOK_PERMISSIONS",
 						AppConfig.FACEBOOK_PERMISSIONS);
 				startActivityForResult(intent,
@@ -344,7 +346,7 @@ public class CommunityOptions extends ListActivity {
 		} else if (requestCode == LOGIN_INTERCEPT_FOR_MY_PROFILE_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				Intent intent = new Intent(mMainActivity.getApplication(),
-						UserProfile.class);
+						UserProfileFragment.class);
 				intent.putExtra("USERID", mUser.getUserId());
 				startActivity(intent);
 

@@ -3,13 +3,14 @@
     xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
+
     <!-- overlay a translucent dark to transparent gradient on top of the image, to modify the image to make it a little bit darker at the top -->
 
     <View
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/gradient" />
-    
+
     <!-- GoogleAdView -->
 
     <com.google.ads.AdView
@@ -39,7 +40,7 @@
             android:layout_height="fill_parent"
             android:layout_marginTop="10dp"
             android:padding="10dp"
-            android:text="@string/community_search_no_beers"
+            android:text="@string/progress_loading_message"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>

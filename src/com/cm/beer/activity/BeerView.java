@@ -34,6 +34,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cm.beer.activity.slidingmenu.LoginInterceptFragment;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.util.Logger;
@@ -661,7 +662,7 @@ public class BeerView extends Activity
 					if (Logger.isLogEnabled())  Logger.log("share on facebook");
 					//showDialog(AppConfig.DIALOG_LOADING_ID);
 					Intent intent = new Intent(mMainActivity.getApplication(),
-							LoginIntercept.class);
+							LoginInterceptFragment.class);
 					intent.putExtra("FACEBOOK_PERMISSIONS",
 							AppConfig.FACEBOOK_PERMISSIONS);
 					intent.putExtra(NotesDbAdapter.KEY_ROWID, mRowId);

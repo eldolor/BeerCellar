@@ -1,4 +1,4 @@
-package com.cm.beer.activity;
+package com.cm.beer.activity.slidingmenu;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,21 +10,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cm.beer.activity.CommunitySignIn;
+import com.cm.beer.activity.R;
+import com.cm.beer.activity.R.id;
+import com.cm.beer.activity.R.layout;
+import com.cm.beer.activity.R.string;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.facebook.BaseRequestListener;
 import com.cm.beer.facebook.LoginButton;
@@ -40,7 +45,7 @@ import com.facebook.android.FacebookError;
 import com.facebook.android.Util;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
-public class LoginIntercept extends Activity {
+public class LoginInterceptFragment extends android.support.v4.app.Fragment {
 	String TAG;
 	static final int MENU_GROUP = 0;
 	static final int SEND_ERROR_REPORT_ID = Menu.FIRST;
@@ -68,6 +73,7 @@ public class LoginIntercept extends Activity {
 	String mFacebookOnly;
 
 	User mUser;
+	private View mRootView;
 
 	/*
 	 * (non-Javadoc)
@@ -82,11 +88,12 @@ public class LoginIntercept extends Activity {
 				+ this.getClass().getName();
 
 		if (AppConfig.LOGGING_ENABLED) {
-			if (Logger.isLogEnabled())  Logger.log("onCreate: ");
+			if (Logger.isLogEnabled())
+				Logger.log("onCreate: ");
 		}
-		mMainActivity = this;
+		mMainActivity = getActivity();
 		mUser = new User(mMainActivity);
-		mOriginalIntent = getIntent();
+		mOriginalIntent = mMainActivity.getIntent();
 		/**
 		 * Setup an empty array if missing.Facebook code throws an
 		 * arrayoutofbound exception otherwise
@@ -102,76 +109,94 @@ public class LoginIntercept extends Activity {
 		mTracker = GoogleAnalyticsTracker.getInstance();
 		// Start the tracker with dispatch interval
 		mTracker.startNewSession(AppConfig.GOOGLE_ANALYTICS_WEB_PROPERTY_ID,
-				this);
+				mMainActivity);
 		if (AppConfig.LOGGING_ENABLED) {
-			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Instantiated");
+			if (Logger.isLogEnabled())
+				Logger.log("onCreate:Google Tracker Instantiated");
 		}
 
-		if (Logger.isLogEnabled())  Logger.log("onCreate::Intercepting!");
-		setContentView(R.layout.login_intercept);
-		mLoginButton = (LoginButton) findViewById(R.id.login);
-		mCommunityLoginButton = (Button) findViewById(R.id.communityLoginButton);
-		if (mFacebookOnly.equals("N")) {
-			mCommunityLoginButton.getBackground().setColorFilter(
-					AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
-			mCommunityLoginButton.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					if (Logger.isLogEnabled())  Logger.log("mCommunityLoginButton:onClick:userId:");
-					Intent intent = new Intent(mMainActivity,
-							CommunitySignIn.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivityForResult(intent, SIGN_IN_REQUEST);
-				}
-			});
-		} else {
-			findViewById(R.id.shareWithCommunityMessage2).setVisibility(
-					View.GONE);
-			mCommunityLoginButton.setVisibility(View.GONE);
-		}
-
-		if (mFacebookOnly.equals("N")) {
-			mCommunityLoginButton.getBackground().setColorFilter(
-					AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
-			mCommunityLoginButton.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					if (Logger.isLogEnabled())  Logger.log("mCommunityLoginButton:onClick:userId:");
-					Intent intent = new Intent(mMainActivity,
-							CommunitySignIn.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivityForResult(intent, SIGN_IN_REQUEST);
-				}
-			});
-		} else {
-			findViewById(R.id.shareWithCommunityMessage2).setVisibility(
-					View.GONE);
-			mCommunityLoginButton.setVisibility(View.GONE);
-		}
-
-		mText = (TextView) findViewById(R.id.txt);
-
-		mFacebook = new Facebook(AppConfig.FACEBOOK_APP_ID);
-		mAsyncRunner = new AsyncFacebookRunner(mFacebook);
-		SessionStore.restore(mFacebook, this);
-		SessionEvents.addAuthListener(new WineCellarAuthListener());
-		SessionEvents.addLogoutListener(new WineCellarLogoutListener());
-		mLoginButton.init(this,
-				AppConfig.FACEBOOK_AUTHORIZE_ACTIVITY_RESULT_CODE, mFacebook,
-				mFacebookPermissions);
+		if (Logger.isLogEnabled())
+			Logger.log("onCreate::Intercepting!");
 
 	}
 
 	@Override
-	protected void onStart() {
-		if (Logger.isLogEnabled())  Logger.log("onStart");
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+
+		mRootView = inflater.inflate(R.layout.fragment_login_intercept,
+				container, false);
+		mLoginButton = (LoginButton) mRootView.findViewById(R.id.login);
+		mCommunityLoginButton = (Button) mRootView
+				.findViewById(R.id.communityLoginButton);
+		if (mFacebookOnly.equals("N")) {
+			mCommunityLoginButton.getBackground().setColorFilter(
+					AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
+			mCommunityLoginButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					if (Logger.isLogEnabled())
+						Logger.log("mCommunityLoginButton:onClick:userId:");
+					Intent intent = new Intent(mMainActivity,
+							CommunitySignIn.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivityForResult(intent, SIGN_IN_REQUEST);
+				}
+			});
+		} else {
+			mRootView.findViewById(R.id.shareWithCommunityMessage2)
+					.setVisibility(View.GONE);
+			mCommunityLoginButton.setVisibility(View.GONE);
+		}
+
+		if (mFacebookOnly.equals("N")) {
+			mCommunityLoginButton.getBackground().setColorFilter(
+					AppConfig.BUTTON_COLOR, PorterDuff.Mode.MULTIPLY);
+			mCommunityLoginButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					if (Logger.isLogEnabled())
+						Logger.log("mCommunityLoginButton:onClick:userId:");
+					Intent intent = new Intent(mMainActivity,
+							CommunitySignIn.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivityForResult(intent, SIGN_IN_REQUEST);
+				}
+			});
+		} else {
+			mRootView.findViewById(R.id.shareWithCommunityMessage2)
+					.setVisibility(View.GONE);
+			mCommunityLoginButton.setVisibility(View.GONE);
+		}
+
+		mText = (TextView) mRootView.findViewById(R.id.txt);
+
+		mFacebook = new Facebook(AppConfig.FACEBOOK_APP_ID);
+		mAsyncRunner = new AsyncFacebookRunner(mFacebook);
+		SessionStore.restore(mFacebook, mMainActivity);
+		SessionEvents.addAuthListener(new WineCellarAuthListener());
+		SessionEvents.addLogoutListener(new WineCellarLogoutListener());
+		mLoginButton.init(mMainActivity,
+				AppConfig.FACEBOOK_AUTHORIZE_ACTIVITY_RESULT_CODE, mFacebook,
+				mFacebookPermissions);
+		return mRootView;
+	}
+
+	@Override
+	public void onStart() {
+		if (Logger.isLogEnabled())
+			Logger.log("onStart");
 		super.onStart();
 		if (mFacebook.isSessionValid()) {
-			if (Logger.isLogEnabled())  Logger.log("onStart::Intercepting!:Facebook Session Valid!");
-			mFacebook.extendAccessTokenIfNeeded(this, null);
+			if (Logger.isLogEnabled())
+				Logger.log("onStart::Intercepting!:Facebook Session Valid!");
+			mFacebook.extendAccessTokenIfNeeded(mMainActivity, null);
 			// End the activity; pass back the original extras
-			mMainActivity.setResult(RESULT_OK, mOriginalIntent);
-			mMainActivity.finish();
+			mMainActivity.setResult(Activity.RESULT_OK, mOriginalIntent);
+			getActivity().getSupportFragmentManager().beginTransaction()
+					.remove(this).commit();
 		} else {
-			if (Logger.isLogEnabled())  Logger.log("onStart::Intercepting!:Facebook Session is NOT Valid!");
+			if (Logger.isLogEnabled())
+				Logger.log("onStart::Intercepting!:Facebook Session is NOT Valid!");
 		}
 	}
 
@@ -182,14 +207,15 @@ public class LoginIntercept extends Activity {
 	 * android.content.Intent)
 	 */
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
-		if (Logger.isLogEnabled())  Logger.log("onActivityResult");
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		if (Logger.isLogEnabled())
+			Logger.log("onActivityResult");
 		Bundle extras = (intent != null) ? intent.getExtras() : null;
 		if (requestCode == SIGN_IN_REQUEST) {
-			if (resultCode == RESULT_OK) {
-				mMainActivity.setResult(RESULT_OK, intent);
-				mMainActivity.finish();
+			if (resultCode == Activity.RESULT_OK) {
+				mMainActivity.setResult(Activity.RESULT_OK, intent);
+				getActivity().getSupportFragmentManager().beginTransaction()
+						.remove(this).commit();
 			}
 		} else if (requestCode == AppConfig.FACEBOOK_AUTHORIZE_ACTIVITY_RESULT_CODE) {
 			/**
@@ -197,7 +223,8 @@ public class LoginIntercept extends Activity {
 			 * activity's onActivityResult() function or Facebook authentication
 			 * will not function properly!
 			 */
-			if (Logger.isLogEnabled())  Logger.log("authorizeCallback");
+			if (Logger.isLogEnabled())
+				Logger.log("authorizeCallback");
 			mFacebook.authorizeCallback(requestCode, resultCode, intent);
 		}
 	}
@@ -208,68 +235,18 @@ public class LoginIntercept extends Activity {
 	 * @see android.app.Activity#onDestroy()
 	 */
 	@Override
-	protected void onDestroy() {
+	public void onDestroy() {
 		if (AppConfig.LOGGING_ENABLED) {
-			if (Logger.isLogEnabled())  Logger.log("onDestroy");
+			if (Logger.isLogEnabled())
+				Logger.log("onDestroy");
 		}
 		// Stop the tracker when it is no longer needed.
 		mTracker.stop();
 		if (AppConfig.LOGGING_ENABLED) {
-			if (Logger.isLogEnabled())  Logger.log("onCreate:Google Tracker Stopped!");
+			if (Logger.isLogEnabled())
+				Logger.log("onCreate:Google Tracker Stopped!");
 		}
 		super.onDestroy();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.app.Activity#onConfigurationChanged(android.content.res.Configuration
-	 * )
-	 */
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		// DO NOTHING
-		super.onConfigurationChanged(newConfig);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		if (AppConfig.LOGGING_ENABLED) {
-			if (Logger.isLogEnabled())  Logger.log("onResume");
-		}
-		if ((dialog != null) && (dialog.isShowing())) {
-			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("onResume:active dialog removed");
-			}
-			removeDialog(ACTIVE_DIALOG);
-		}
-		super.onResume();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onCreateDialog(int)
-	 */
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		if (AppConfig.LOGGING_ENABLED) {
-			if (Logger.isLogEnabled())  Logger.log("onCreateDialog");
-		}
-		String dialogMessage = null;
-		if (id == AppConfig.DIALOG_POSTING_ID) {
-			dialogMessage = this.getString(R.string.posting_dialog_message);
-			ACTIVE_DIALOG = AppConfig.DIALOG_POSTING_ID;
-		}
-		dialog = ProgressDialog.show(this, null, dialogMessage, true, true);
-		dialog.setCanceledOnTouchOutside(false);
-		return dialog;
 	}
 
 	/************************************************************************************/
@@ -278,7 +255,8 @@ public class LoginIntercept extends Activity {
 
 		public void onAuthSucceed() {
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("VVWAuthListener: onAuthSucceed");
+				if (Logger.isLogEnabled())
+					Logger.log("VVWAuthListener: onAuthSucceed");
 			}
 			mTracker.trackEvent("FacebookLoginIntercept", "FacebookLogin", "Y",
 					0);
@@ -292,7 +270,8 @@ public class LoginIntercept extends Activity {
 
 		public void onAuthFail(String error) {
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("VVWAuthListener: onAuthFail");
+				if (Logger.isLogEnabled())
+					Logger.log("VVWAuthListener: onAuthFail");
 			}
 			if (mText != null) {
 				mText.setText("Login Failed: " + error);
@@ -304,11 +283,11 @@ public class LoginIntercept extends Activity {
 	public class WineCellarLogoutListener implements LogoutListener {
 		public void onLogoutBegin() {
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("VVWLogoutListener: onLogoutBegin");
+				if (Logger.isLogEnabled())
+					Logger.log("VVWLogoutListener: onLogoutBegin");
 			}
-			Toast.makeText(LoginIntercept.this,
-					R.string.on_facebook_logout_begin, Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(mMainActivity, R.string.on_facebook_logout_begin,
+					Toast.LENGTH_SHORT).show();
 			if (mText != null) {
 				mText.setText(R.string.on_facebook_logout_begin);
 			}
@@ -317,12 +296,13 @@ public class LoginIntercept extends Activity {
 
 		public void onLogoutFinish() {
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("VVWLogoutListener: onLogoutFinish");
+				if (Logger.isLogEnabled())
+					Logger.log("VVWLogoutListener: onLogoutFinish");
 			}
 			mTracker.trackEvent("FacebookLoginIntercept", "FacebookLogout",
 					"Y", 0);
 			mTracker.dispatch();
-			Toast.makeText(LoginIntercept.this, R.string.on_facebook_logout,
+			Toast.makeText(mMainActivity, R.string.on_facebook_logout,
 					Toast.LENGTH_LONG).show();
 			if (mText != null) {
 				mText.setText(R.string.on_facebook_logout);
@@ -342,19 +322,22 @@ public class LoginIntercept extends Activity {
 									.replace(" ", "_") : ""), e);
 			if ((dialog != null) && (dialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					if (Logger.isLogEnabled())  Logger.log("onFacebookError: handleError");
+					if (Logger.isLogEnabled())
+						Logger.log("onFacebookError: handleError");
 				}
-				removeDialog(ACTIVE_DIALOG);
+				mMainActivity.removeDialog(ACTIVE_DIALOG);
 			}
 		}
 
 		@Override
 		public void onComplete(String response, Object state) {
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("GetUserProfileRequestListener: onComplete "
-						+ response.toString());
+				if (Logger.isLogEnabled())
+					Logger.log("GetUserProfileRequestListener: onComplete "
+							+ response.toString());
 			}
-			if (Logger.isLogEnabled())  Logger.log("Got response: " + response);
+			if (Logger.isLogEnabled())
+				Logger.log("Got response: " + response);
 
 			try {
 				JSONObject json = Util.parseJson(response);
@@ -373,7 +356,8 @@ public class LoginIntercept extends Activity {
 				});
 				try {
 					String email = json.getString("email");
-					if (Logger.isLogEnabled())  Logger.log("User email: " + email);
+					if (Logger.isLogEnabled())
+						Logger.log("User email: " + email);
 					JSONObject additionalAttributes = new JSONObject();
 					additionalAttributes.put("email", email);
 					mUser.setAdditionalUserAttributes(additionalAttributes
@@ -397,14 +381,16 @@ public class LoginIntercept extends Activity {
 
 			if ((dialog != null) && (dialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					if (Logger.isLogEnabled())  Logger.log("GetUserProfileRequestListener: onComplete");
+					if (Logger.isLogEnabled())
+						Logger.log("GetUserProfileRequestListener: onComplete");
 				}
-				removeDialog(ACTIVE_DIALOG);
+				mMainActivity.removeDialog(ACTIVE_DIALOG);
 			}
 
 			// End the activity; pass back the original extras
-			mMainActivity.setResult(RESULT_OK, mOriginalIntent);
-			mMainActivity.finish();
+			mMainActivity.setResult(Activity.RESULT_OK, mOriginalIntent);
+			getActivity().getSupportFragmentManager().beginTransaction()
+					.remove(LoginInterceptFragment.this).commit();
 		}
 
 		@Override
@@ -432,14 +418,15 @@ public class LoginIntercept extends Activity {
 		public void onFacebookError(FacebookError e, Object state) {
 			if ((dialog != null) && (dialog.isShowing())) {
 				if (AppConfig.LOGGING_ENABLED) {
-					if (Logger.isLogEnabled())  Logger.log("GetWallPostRequestListener: onFacebookError");
+					if (Logger.isLogEnabled())
+						Logger.log("GetWallPostRequestListener: onFacebookError");
 				}
-				removeDialog(ACTIVE_DIALOG);
+				mMainActivity.removeDialog(ACTIVE_DIALOG);
 			}
 			final String text = "Unable to retrieve User Profile from Facebook. "
 					+ ((e.getMessage() != null) ? e.getMessage().replace(" ",
 							"_") : "");
-			LoginIntercept.this.runOnUiThread(new Runnable() {
+			mMainActivity.runOnUiThread(new Runnable() {
 				public void run() {
 					if (mText != null) {
 						mText.setText(text);
@@ -464,7 +451,8 @@ public class LoginIntercept extends Activity {
 			String response = "";
 
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("doInBackground starting");
+				if (Logger.isLogEnabled())
+					Logger.log("doInBackground starting");
 			}
 			try {
 				String userId = (String) params[0];
@@ -480,14 +468,16 @@ public class LoginIntercept extends Activity {
 
 				String userJsonStr = URLEncoder
 						.encode(json.toString(), "UTF-8");
-				if (Logger.isLogEnabled())  Logger.log(userJsonStr);
+				if (Logger.isLogEnabled())
+					Logger.log(userJsonStr);
 
 				HashMap<String, String> parameters = new HashMap<String, String>();
 				parameters.put("userprofile", userJsonStr);
 
 				// Prepare a request object
 				String _url = com.cm.beer.util.Util.getUploadUserProfileUrl();
-				if (Logger.isLogEnabled())  Logger.log(_url);
+				if (Logger.isLogEnabled())
+					Logger.log(_url);
 				{
 					boolean retry = true;
 					int retryCount = 0;
@@ -510,7 +500,8 @@ public class LoginIntercept extends Activity {
 									+ retryCount);
 						}
 					}
-					if (Logger.isLogEnabled())  Logger.log("Final Retry Count = " + retryCount);
+					if (Logger.isLogEnabled())
+						Logger.log("Final Retry Count = " + retryCount);
 					if (retryCount > 0) {
 						mTracker.trackEvent("LoginIntercept",
 								"UploadUserProfile", "RetryCount", retryCount);
@@ -519,7 +510,8 @@ public class LoginIntercept extends Activity {
 				}
 
 				// Examine the response status
-				if (Logger.isLogEnabled())  Logger.log("Response = " + response);
+				if (Logger.isLogEnabled())
+					Logger.log("Response = " + response);
 
 			} catch (Throwable e) {
 				Log.e(TAG,
@@ -534,7 +526,8 @@ public class LoginIntercept extends Activity {
 				mTracker.dispatch();
 			}
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("doInBackground finished");
+				if (Logger.isLogEnabled())
+					Logger.log("doInBackground finished");
 			}
 			return null;
 		}
@@ -542,10 +535,12 @@ public class LoginIntercept extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("onPostExecute starting");
+				if (Logger.isLogEnabled())
+					Logger.log("onPostExecute starting");
 			}
 			if (AppConfig.LOGGING_ENABLED) {
-				if (Logger.isLogEnabled())  Logger.log("onPostExecute finished");
+				if (Logger.isLogEnabled())
+					Logger.log("onPostExecute finished");
 			}
 		}
 

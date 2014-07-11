@@ -22,7 +22,8 @@ public class Note implements Serializable {
 	public String picture = "";
 	public long created;
 	public long updated;
-	public String share = "";
+	//always default it to Y
+	public String share = "Y";
 	public String latitude = "0.0";
 	public String longitude = "0.0";
 	public String userId = "";

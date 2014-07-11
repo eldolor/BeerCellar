@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
+import com.cm.beer.activity.slidingmenu.LoginInterceptFragment;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
@@ -111,7 +112,7 @@ public class SetPreferences extends Activity {
 			public void onClick(View v) {
 				if (!mUser.isLoggedIn()) {
 					Intent intent = new Intent(mMainActivity.getApplication(),
-							LoginIntercept.class);
+							LoginInterceptFragment.class);
 					intent.putExtra("FACEBOOK_PERMISSIONS",
 							AppConfig.FACEBOOK_PERMISSIONS);
 					startActivityForResult(intent,
@@ -129,7 +130,7 @@ public class SetPreferences extends Activity {
 					public void onClick(View v) {
 						if (!mUser.isLoggedIn()) {
 							Intent intent = new Intent(mMainActivity
-									.getApplication(), LoginIntercept.class);
+									.getApplication(), LoginInterceptFragment.class);
 							intent.putExtra("FACEBOOK_PERMISSIONS",
 									AppConfig.FACEBOOK_PERMISSIONS);
 							startActivityForResult(intent,

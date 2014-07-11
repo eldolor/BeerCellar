@@ -200,7 +200,7 @@ public class AppConfig
 	public static final String COMMUNITY_COMMENT_POSTED_EMAIL_SUBSCRIPTION_PARAM = "&commentpostedemailsubscriptionstatus=";
 
 	public static final String COMMUNITY_R_PARAM = "&r=";
-	public static final String COMMUNITY_R_VALUE = "2";
+	public static final String COMMUNITY_R_VALUE = "10";
 	public static final String COMMUNITY_R = AppConfig.COMMUNITY_R_PARAM
 			+ AppConfig.COMMUNITY_R_VALUE;
 	public static final String COMMUNITY_BEERS_FROM_AROUND_THE_WORLD = "BEERS_FROM_AROUND_THE_WORLD";
@@ -424,7 +424,7 @@ public class AppConfig
 			"American Style India Pale Ale", "American Style Lager",
 			"American Style Light Low Calorie Lager",
 			"American Style Low Carbohydrate Light Lager",
-			"American Style Malt Liquor", "American Style Märzen/Oktoberfest",
+			"American Style Malt Liquor", "American Style Mï¿½rzen/Oktoberfest",
 			"American Style Pale Ale", "American Style Pilsener",
 			"American Style Premium Lager", "American Style Sour Ale",
 			"American Style Specialty Lager", "American Style Stout",
@@ -452,19 +452,19 @@ public class AppConfig
 			"English Style Dark Mild Ale", "English Style India Pale Ale",
 			"English Style Mild Ale", "English Style Pale Ale",
 			"English Style Pale Mild Ale", "English Style Summer Ale",
-			"European Style Dark/Münchner Dunkel",
+			"European Style Dark/Mï¿½nchner Dunkel",
 			"European Style Low Alcohol Lager/German Style Leicht Bier",
 			"Experimental Beer", "Extra Special Bitter or Strong Bitter",
 			"Field Beer", "Foreign Style Stout",
-			"French & Belgian Style Saison", "French Style Bière de Garde",
+			"French & Belgian Style Saison", "French Style Biï¿½re de Garde",
 			"Fresh Hop Ale", "Fruit Beer", "Fruit Wheat Beer",
 			"Fruited American Style Sour Ale",
 			"Fruited Wood and Barrel Aged Sour Beer",
-			"German Style Brown Ale/Düsseldorf Style Altbier",
+			"German Style Brown Ale/Dï¿½sseldorf Style Altbier",
 			"German Style Dark Wheat Ale", "German Style Doppelbock",
 			"German Style Eisbock", "German Style Heller Bock/Maibock",
-			"German Style Kölsch/Köln Style Kölsch",
-			"German Style Leichtes Weizen/Weissbier", "German Style Märzen",
+			"German Style Kï¿½lsch/Kï¿½ln Style Kï¿½lsch",
+			"German Style Leichtes Weizen/Weissbier", "German Style Mï¿½rzen",
 			"German Style Oktoberfest/Wiesen Meadow",
 			"German Style Pale Wheat Ale", "German Style Pilsener",
 			"German Style Rye Ale", "German Style Schwarzbier",
@@ -478,7 +478,7 @@ public class AppConfig
 			"International Style Pilsener", "Irish Style Red Ale",
 			"Kellerbier", "Kentucky Common Beer", "Leipzig Style Gose",
 			"Light American Wheat Ale", "Low Alcohol beer", "Malt beer",
-			"Malzbier", "Mbege", "Millet Beer", "Münchner Style Helles",
+			"Malzbier", "Mbege", "Millet Beer", "Mï¿½nchner Style Helles",
 			"Oatmeal Stout", "Old Ale", "Ordinary Bitter", "Oshikundu",
 			"Peated Scotch Ale", "Perry", "Pito", "Pumpkin Beer", "Radler",
 			"Robust Porter", "Roggenbier", "Sahti", "Sake", "Sake Daiginjo",
@@ -574,7 +574,7 @@ public class AppConfig
 			"Britain (United Kingdom), Pounds", "Brunei Darussalam, Dollars",
 			"Cambodia, Riels", "Canada, Dollars", "Cayman Islands, Dollars",
 			"Chile, Pesos", "China, Yuan Renminbi", "Colombia, Pesos",
-			"Costa Rica, Colón", "Croatia, Kuna", "Cuba, Pesos",
+			"Costa Rica, Colï¿½n", "Croatia, Kuna", "Cuba, Pesos",
 			"Cyprus, Euro", "Czech Republic, Koruny", "Denmark, Kroner",
 			"Dominican Republic, Pesos", "East Caribbean, Dollars",
 			"Egypt, Pounds", "El Salvador, Colones",

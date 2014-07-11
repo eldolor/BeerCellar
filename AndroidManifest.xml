@@ -168,7 +168,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CommunityBeerView"
+            android:name="com.cm.beer.activity.slidingmenu.CommunityBeerViewFragment"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_community"
             android:screenOrientation="portrait"
@@ -207,7 +207,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginIntercept"
+            android:name="com.cm.beer.activity.slidingmenu.LoginInterceptFragment"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_login"
             android:screenOrientation="portrait"
@@ -298,7 +298,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserProfile"
+            android:name="com.cm.beer.activity.slidingmenu.UserProfileFragment"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_community"
             android:screenOrientation="portrait"

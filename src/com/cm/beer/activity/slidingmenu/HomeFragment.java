@@ -8,7 +8,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -24,8 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.cm.beer.activity.CommunityBeerView;
-import com.cm.beer.activity.LoginIntercept;
+import com.cm.beer.activity.BeerEdit;
 import com.cm.beer.activity.Main;
 import com.cm.beer.activity.R;
 import com.cm.beer.config.AppConfig;
@@ -59,6 +57,10 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 	LinearLayout mMostHelpfulBeerReviewsGallery;
 	LinearLayout mFavoriteBeerReviewsGallery;
 	LinearLayout mAroundTheWorldBeersGallery;
+
+	View mTopRatedBeersGalleryLoading;
+	View mWorstRatedBeersGalleryLoading;
+	View mAroundTheWorldBeersGalleryLoading;
 
 	private View mRootView;
 
@@ -97,10 +99,19 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 
 		mRootView = inflater.inflate(R.layout.fragment_home, container, false);
+		HomeFragment.this.getActivity().setTitle(
+				getActivity()
+						.getApplication()
+						.getPackageManager()
+						.getApplicationLabel(
+								getActivity().getApplication()
+										.getApplicationInfo()));
 
 		{
 			mTopRatedBeersGallery = (LinearLayout) mRootView
 					.findViewById(R.id.top_rated_beers_gallery);
+			mTopRatedBeersGalleryLoading = (View) mRootView
+					.findViewById(R.id.top_rated_beers_gallery_loading);
 			// Start a new thread that will download all the data
 			Bundle lExtras = new Bundle();
 			lExtras.putString("OPTION", AppConfig.COMMUNITY_TOP_RATED_BEERS);
@@ -113,6 +124,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 			// Start a new thread that will download all the data
 			Bundle lExtras = new Bundle();
 			lExtras.putString("OPTION", AppConfig.COMMUNITY_MY_BEER_REVIEWS);
+			lExtras.putString("USERID", mUser.getUserId());
 			new AsyncGetCommunityBeers().execute(lExtras,
 					Boolean.valueOf(false));
 
@@ -120,6 +132,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 		{
 			mWorstRatedBeersGallery = (LinearLayout) mRootView
 					.findViewById(R.id.worst_rated_beers_gallery);
+			mWorstRatedBeersGalleryLoading = (View) mRootView
+					.findViewById(R.id.worst_rated_beers_gallery_loading);
 			// Start a new thread that will download all the data
 			Bundle lExtras = new Bundle();
 			lExtras.putString("OPTION", AppConfig.COMMUNITY_WORST_BEERS);
@@ -145,6 +159,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 			Bundle lExtras = new Bundle();
 			lExtras.putString("OPTION",
 					AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS);
+			lExtras.putString("USERID", mUser.getUserId());
 			new AsyncGetCommunityBeers().execute(lExtras,
 					Boolean.valueOf(false));
 
@@ -152,6 +167,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 		{
 			mAroundTheWorldBeersGallery = (LinearLayout) mRootView
 					.findViewById(R.id.around_the_world_beers_gallery);
+			mAroundTheWorldBeersGalleryLoading = (View) mRootView
+					.findViewById(R.id.around_the_world_beers_gallery_loading);
 			// Start a new thread that will download all the data
 			Bundle lExtras = new Bundle();
 			lExtras.putString("OPTION",
@@ -189,7 +206,11 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 			Logger.log("displayList():: option = " + pOption + " "
 					+ pBeers.size() + " beers displayed");
 		LinearLayout lView = evaluateGallery(pOption);
-
+		if ((pOption.equals(AppConfig.COMMUNITY_MY_BEER_REVIEWS))
+				&& (mUser.isLoggedIn())) {
+			// add more
+			setAddMoreView(lView);
+		}
 		for (CommunityBeer pBeer : pBeers) {
 			final CommunityBeer lBeer = pBeer;
 
@@ -231,11 +252,26 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 						mTracker.trackEvent("CommunityBeers", "Selection",
 								_selection, 0);
 						mTracker.dispatch();
-						Intent intent = new Intent(getActivity()
-								.getApplication(), CommunityBeerView.class);
-						intent.putExtra("COMMUNITY_BEER", lBeer);
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-						startActivity(intent);
+						android.support.v4.app.Fragment lFragment = new CommunityBeerViewFragment();
+						Bundle lBundle = new Bundle();
+						lBundle.putSerializable("COMMUNITY_BEER", lBeer);
+						lBundle.putString("FRAGMENT_TITLE", lBeer.beer);
+						lFragment.setArguments(lBundle);
+						android.support.v4.app.FragmentManager lFragmentManager = HomeFragment.this
+								.getActivity().getSupportFragmentManager();
+						android.support.v4.app.FragmentTransaction lFragmentTransaction = lFragmentManager
+								.beginTransaction();
+
+						lFragmentTransaction.replace(R.id.frame_container,
+								lFragment);
+						lFragmentTransaction
+								.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+						// Add to backstack
+						lFragmentTransaction.addToBackStack(lFragment
+								.getClass().getName());
+						lFragmentTransaction.commit();
+
+						HomeFragment.this.getActivity().setTitle(lBeer.beer);
 					}
 				});
 
@@ -249,9 +285,19 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 		} else {
 			setLoadMoreView(pOption, lView);
 		}
+
+		// remove loading
+		if (pOption.equals(AppConfig.COMMUNITY_BEERS_FROM_AROUND_THE_WORLD)) {
+			mAroundTheWorldBeersGalleryLoading.setVisibility(View.GONE);
+		} else if (pOption.equals(AppConfig.COMMUNITY_TOP_RATED_BEERS)) {
+			mTopRatedBeersGalleryLoading.setVisibility(View.GONE);
+		} else if (pOption.equals(AppConfig.COMMUNITY_WORST_BEERS)) {
+			mWorstRatedBeersGalleryLoading.setVisibility(View.GONE);
+		}
 	}
 
 	private void setLoadMoreView(final String pOption, LinearLayout lView) {
+
 		LinearLayout layout = new LinearLayout(getActivity()
 				.getApplicationContext());
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -263,10 +309,16 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 		layout.setGravity(Gravity.CENTER);
 		layout.setOrientation(LinearLayout.VERTICAL);
 
+		ImageView thumbnail = new ImageView(getActivity()
+				.getApplicationContext());
+		thumbnail.setImageResource(R.drawable.ic_load_more);
+		thumbnail.setLayoutParams(new LayoutParams(220, 220));
+		thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		layout.addView(thumbnail);
+
 		TextView textView = new TextView(getActivity().getApplicationContext());
 		textView.setLayoutParams(new LayoutParams(220, 220));
-		textView.setGravity(Gravity.CENTER);
-		textView.setText(R.string.community_beer_list_footer_view_label);
+		textView.setText("");
 		layout.addView(textView);
 
 		layout.setOnClickListener(new View.OnClickListener() {
@@ -279,7 +331,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 		lView.addView(layout);
 	}
 
-	private void setLoginView(final String pOption, LinearLayout lView) {
+	private void setAddMoreView(LinearLayout lView) {
 		LinearLayout layout = new LinearLayout(getActivity()
 				.getApplicationContext());
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -291,9 +343,71 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 		layout.setGravity(Gravity.CENTER);
 		layout.setOrientation(LinearLayout.VERTICAL);
 
+		ImageView thumbnail = new ImageView(getActivity()
+				.getApplicationContext());
+		thumbnail.setImageResource(R.drawable.ic_new);
+		thumbnail.setLayoutParams(new LayoutParams(220, 220));
+		thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		layout.addView(thumbnail);
+
 		TextView textView = new TextView(getActivity().getApplicationContext());
 		textView.setLayoutParams(new LayoutParams(220, 220));
-		textView.setGravity(Gravity.CENTER);
+		textView.setText(R.string.menu_insert);
+		layout.addView(textView);
+
+		layout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(getActivity(), BeerEdit.class);
+				startActivity(i);
+			}
+		});
+		lView.addView(layout);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	public void onResume() {
+		if (Logger.isLogEnabled())
+			Logger.log("onResume");
+		super.onResume();
+		HomeFragment.this.getActivity().setTitle(
+				getActivity()
+						.getApplication()
+						.getPackageManager()
+						.getApplicationLabel(
+								getActivity().getApplication()
+										.getApplicationInfo()));
+
+	}
+
+	private void setLoginView(final String pOption, LinearLayout lView) {
+
+		LinearLayout layout = new LinearLayout(getActivity()
+				.getApplicationContext());
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+
+		layoutParams.setMargins(30, 20, 30, 0);
+		layout.setLayoutParams(layoutParams);
+		layout.setGravity(Gravity.CENTER);
+		layout.setOrientation(LinearLayout.VERTICAL);
+
+		ImageView thumbnail = new ImageView(getActivity()
+				.getApplicationContext());
+		thumbnail.setImageResource(R.drawable.ic_login_to_access);
+		thumbnail.setLayoutParams(new LayoutParams(220, 220));
+		thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		layout.addView(thumbnail);
+
+		TextView textView = new TextView(getActivity().getApplicationContext());
+		textView.setLayoutParams(new LayoutParams(220, 220));
 		textView.setText(R.string.title_login);
 		layout.addView(textView);
 

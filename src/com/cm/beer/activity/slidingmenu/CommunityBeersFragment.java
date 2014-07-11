@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,7 +19,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -40,13 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cm.beer.activity.BeerWebView;
-import com.cm.beer.activity.CommunityBeerView;
-import com.cm.beer.activity.LoginIntercept;
 import com.cm.beer.activity.R;
 import com.cm.beer.activity.ShareOnFacebook;
-import com.cm.beer.activity.R.id;
-import com.cm.beer.activity.R.layout;
-import com.cm.beer.activity.R.string;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.NotesDbAdapter;
 import com.cm.beer.transfer.CommunityBeer;
@@ -69,9 +62,9 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 	static final int MENU_GROUP = 0;
 	static final int ABOUT_THIS_BEER_ID = Menu.FIRST;
 	static final int SHOW_LOCATION_ID = Menu.FIRST + 1;
-	static final int SHARE_ON_FACEBOOK_ID = Menu.FIRST + 2;
+	//static final int SHARE_ON_FACEBOOK_ID = Menu.FIRST + 2;
 
-	static final int ACTIVITY_SHARE_ON_FACEBOOK = 2;
+	//static final int ACTIVITY_SHARE_ON_FACEBOOK = 2;
 
 	SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM d, yyyy");
 
@@ -85,6 +78,7 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 	DrawableManager mDrawableManager;
 	ContentManager mContentManager;
 	private View mRootView;
+	private String mFragmentTitle;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -106,7 +100,8 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 				Logger.log("onCreate:Google Tracker Instantiated");
 		}
 		mExtras = this.getArguments();
-
+		mFragmentTitle = mExtras.getString("FRAGMENT_TITLE");
+		
 		// Start a new thread that will download all the data
 		new AsyncGetCommunityBeers().execute(mExtras, Boolean.valueOf(false));
 
@@ -129,7 +124,7 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 	}
 
 	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		displayList();
@@ -208,8 +203,8 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 		int menuPosition = 0;
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		CommunityBeer beer = mBeers.get(info.position);
-		menu.add(MENU_GROUP, SHARE_ON_FACEBOOK_ID, menuPosition++,
-				R.string.menu_share_on_facebook);
+//		menu.add(MENU_GROUP, SHARE_ON_FACEBOOK_ID, menuPosition++,
+//				R.string.menu_share_on_facebook);
 		if (Logger.isLogEnabled())
 			Logger.log("onCreateContextMenu:" + beer.beer + ":" + beer.latitude
 					+ "," + beer.longitude);
@@ -244,12 +239,12 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 		if (Logger.isLogEnabled())
 			Logger.log("onContextItemSelected:" + beer.beer + "::" + beer.style);
 		switch (item.getItemId()) {
-		case SHARE_ON_FACEBOOK_ID:
-			mTracker.trackEvent("CommunityBeers", "ShareOnFacebook", "Clicked",
-					0);
-			mTracker.dispatch();
-			shareOnFacebook(info.id);
-			return true;
+//		case SHARE_ON_FACEBOOK_ID:
+//			mTracker.trackEvent("CommunityBeers", "ShareOnFacebook", "Clicked",
+//					0);
+//			mTracker.dispatch();
+//			shareOnFacebook(info.id);
+//			return true;
 		case ABOUT_THIS_BEER_ID:
 			aboutThisBeer(beer.beer, beer.style);
 			return true;
@@ -275,18 +270,18 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 					+ " result code = " + resultCode);
 		Bundle extras = (intent != null) ? intent.getExtras() : null;
 		if (requestCode == AppConfig.FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST) {
-			if (resultCode == Activity.RESULT_OK) {
-				// pass the rowId along to ShareOnFacebook
-				long rowId = (extras != null) ? extras
-						.getLong(NotesDbAdapter.KEY_ROWID) : 0L;
-				if (Logger.isLogEnabled())
-					Logger.log("onActivityResult:Row Id=" + rowId);
-				CommunityBeer _beer = mBeers.get((int) rowId);
-				Intent newIntent = new Intent(getActivity().getApplication(),
-						ShareOnFacebook.class);
-				newIntent.putExtra("COMMUNITY_BEER", _beer);
-				startActivityForResult(newIntent, ACTIVITY_SHARE_ON_FACEBOOK);
-			}
+//			if (resultCode == Activity.RESULT_OK) {
+//				// pass the rowId along to ShareOnFacebook
+//				long rowId = (extras != null) ? extras
+//						.getLong(NotesDbAdapter.KEY_ROWID) : 0L;
+//				if (Logger.isLogEnabled())
+//					Logger.log("onActivityResult:Row Id=" + rowId);
+//				CommunityBeer _beer = mBeers.get((int) rowId);
+//				Intent newIntent = new Intent(getActivity().getApplication(),
+//						ShareOnFacebook.class);
+//				newIntent.putExtra("COMMUNITY_BEER", _beer);
+//				startActivityForResult(newIntent, ACTIVITY_SHARE_ON_FACEBOOK);
+//			}
 		} else {
 			// fillData();
 			if (resultCode == AppConfig.FACEBOOK_WALL_POST_SUCCESSFUL_RESULT_CODE) {
@@ -298,25 +293,25 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 
 	}
 
-	private void shareOnFacebook(long rowId) {
-		if (AppConfig.LOGGING_ENABLED) {
-			if (Logger.isLogEnabled())
-				Logger.log("shareOnFacebook");
-		}
-		getActivity().showDialog(AppConfig.DIALOG_LOADING_ID);
-		// Intent intent = new Intent(getActivity().getApplication(),
-		// ShareOnFacebook.class);
-		// intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
-		// startActivityForResult(intent, ACTIVITY_SHARE);
-		Intent intent = new Intent(getActivity().getApplication(),
-				LoginIntercept.class);
-		intent.putExtra("FACEBOOK_PERMISSIONS", AppConfig.FACEBOOK_PERMISSIONS);
-		intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
-		if (Logger.isLogEnabled())
-			Logger.log("shareOnFacebook:Row Id=" + rowId);
-		startActivityForResult(intent,
-				AppConfig.FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST);
-	}
+//	private void shareOnFacebook(long rowId) {
+//		if (AppConfig.LOGGING_ENABLED) {
+//			if (Logger.isLogEnabled())
+//				Logger.log("shareOnFacebook");
+//		}
+//		getActivity().showDialog(AppConfig.DIALOG_LOADING_ID);
+//		// Intent intent = new Intent(getActivity().getApplication(),
+//		// ShareOnFacebook.class);
+//		// intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
+//		// startActivityForResult(intent, ACTIVITY_SHARE);
+//		Intent intent = new Intent(getActivity().getApplication(),
+//				LoginInterceptFragment.class);
+//		intent.putExtra("FACEBOOK_PERMISSIONS", AppConfig.FACEBOOK_PERMISSIONS);
+//		intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
+//		if (Logger.isLogEnabled())
+//			Logger.log("shareOnFacebook:Row Id=" + rowId);
+//		startActivityForResult(intent,
+//				AppConfig.FACEBOOK_LOGIN_INTERCEPT_REQUEST_CODE_FOR_WALL_POST);
+//	}
 
 	/**
 	 * 
@@ -391,18 +386,39 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 		}
 
 		super.onListItemClick(l, v, position, id);
-		CommunityBeer _beer = mBeers.get((int) id);
+		CommunityBeer lBeer = mBeers.get((int) id);
 
-		String _selection = _beer.beer.replace(" ", "_") + "," + _beer.beerId;
+		String _selection = lBeer.beer.replace(" ", "_") + "," + lBeer.beerId;
 		mTracker.trackEvent("CommunityBeers", "Selection", _selection, 0);
 		mTracker.dispatch();
-		Intent intent = new Intent(getActivity().getApplication(),
-				CommunityBeerView.class);
-		intent.putExtra("COMMUNITY_BEER", _beer);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		startActivity(intent);
+
+		android.support.v4.app.Fragment lFragment = new CommunityBeerViewFragment();
+		Bundle lBundle = new Bundle();
+		lBundle.putSerializable("COMMUNITY_BEER", lBeer);
+		lBundle.putString("FRAGMENT_TITLE", lBeer.beer);
+		lFragment.setArguments(lBundle);
+		
+		android.support.v4.app.FragmentManager lFragmentManager = CommunityBeersFragment.this
+				.getActivity().getSupportFragmentManager();
+		android.support.v4.app.FragmentTransaction lFragmentTransaction = lFragmentManager
+				.beginTransaction();
+
+		lFragmentTransaction.replace(R.id.frame_container, lFragment);
+		lFragmentTransaction
+				.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		// Add to backstack
+		lFragmentTransaction.addToBackStack(lFragment.getClass().getName());
+		lFragmentTransaction.commit();
+
+		CommunityBeersFragment.this.getActivity().setTitle(lBeer.beer);
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		CommunityBeersFragment.this.getActivity().setTitle(mFragmentTitle);
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -467,7 +483,7 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 
 				String _url = getUrl(extras);
 				if (Logger.isLogEnabled())
-					Logger.log("doInBackground:URL=" + _url);
+					Logger.error("doInBackground:URL=" + _url);
 				String response[] = Util.getResult(_url);
 				if ((response[0] != null) && (response[0].startsWith("["))) {
 					beersJSONArray = new JSONArray(response[0]);

@@ -604,14 +604,16 @@
                 android:gravity="left"
                 android:text="@string/community_beer_comments_label"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <View
                 android:id="@+id/divider10"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/comments_label"
-                android:background="@drawable/divider" />
+                android:background="@drawable/divider"
+                android:visibility="gone" />
 
             <TableLayout
                 android:id="@+id/comments_table"
@@ -619,7 +621,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/comments_label"
                 android:layout_marginLeft="5dp"
-                android:shrinkColumns="0" >
+                android:shrinkColumns="0"
+                android:visibility="gone" >
             </TableLayout>
 
             <Button
@@ -630,7 +633,8 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="30dp"
                 android:gravity="center_vertical"
-                android:text="@string/community_beer_add_comments_label" />
+                android:text="@string/community_beer_add_comments_label"
+                android:visibility="gone" />
         </RelativeLayout>
     </ScrollView>
 
@@ -638,7 +642,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="right" >
+        android:gravity="right"
+        android:visibility="gone" >
 
         <ImageView
             android:id="@+id/community_icon"

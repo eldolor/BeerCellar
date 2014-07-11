@@ -40,6 +40,7 @@ import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cm.beer.activity.slidingmenu.LoginInterceptFragment;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
@@ -826,7 +827,7 @@ public class BeerList extends ListActivity {
 		// intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
 		// startActivityForResult(intent, ACTIVITY_SHARE);
 		Intent intent = new Intent(mMainActivity.getApplication(),
-				LoginIntercept.class);
+				LoginInterceptFragment.class);
 		intent.putExtra("FACEBOOK_PERMISSIONS", AppConfig.FACEBOOK_PERMISSIONS);
 		intent.putExtra(NotesDbAdapter.KEY_ROWID, rowId);
 		if (Logger.isLogEnabled())  Logger.log("shareOnFacebook:Row Id=" + rowId);

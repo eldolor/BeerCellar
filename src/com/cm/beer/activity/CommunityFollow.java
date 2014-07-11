@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.cm.beer.activity.slidingmenu.UserProfileFragment;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.transfer.ReviewCount;
 import com.cm.beer.util.ContentManager;
@@ -144,7 +145,7 @@ public class CommunityFollow extends ListActivity {
 		// startActivity(intent);
 
 		Intent intent = new Intent(mMainActivity.getApplication(),
-				UserProfile.class);
+				UserProfileFragment.class);
 		intent.putExtra("USERID", _reviewCount.getUserId());
 		startActivity(intent);
 

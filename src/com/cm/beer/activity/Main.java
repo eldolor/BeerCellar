@@ -35,6 +35,7 @@ import android.widget.ListView;
 
 import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
 import com.cm.beer.activity.slidingmenu.HomeFragment;
+import com.cm.beer.activity.slidingmenu.LoginInterceptFragment;
 import com.cm.beer.activity.slidingmenu.NavDrawerItem;
 import com.cm.beer.activity.slidingmenu.NavDrawerListAdapter;
 import com.cm.beer.config.AppConfig;
@@ -102,8 +103,8 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 
 		new RateAndReviewTask().execute("");
 		new UpdateCheckTask().execute("");
-		String _userId = (mUser.isLoggedIn()) ? mUser.getUserId() : "";
-		new AsyncGetRecommendationsTask().execute(_userId);
+		// String _userId = (mUser.isLoggedIn()) ? mUser.getUserId() : "";
+		// new AsyncGetRecommendationsTask().execute(_userId);
 		// }
 		// default to 1
 		long usageCount = mPreferences.getLong(
@@ -199,7 +200,9 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 		// Toast.makeText(HomeActivity.this, R.string.contacting_server,
 		// Toast.LENGTH_LONG).show();
 		// return true;
-
+		case android.R.id.home:
+			// do your stuff here, eg: finish();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -225,6 +228,8 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 
 		// update the main content by replacing fragments
 		android.support.v4.app.Fragment lFragment = null;
+		boolean lAddToBackStack = true;
+		boolean lAddFragment = true;
 
 		switch (position) {
 		case 0:
@@ -269,21 +274,23 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 					0);
 			mTracker.dispatch();
 			// If user id does not exist
+			Bundle bundle1 = new Bundle();
 			if (mUser.isLoggedIn()) {
 				lFragment = new CommunityBeersFragment();
 				{
-					Bundle bundle = new Bundle();
-					bundle.putString("OPTION",
+					bundle1.putString("OPTION",
 							AppConfig.COMMUNITY_MY_BEER_REVIEWS);
-					bundle.putString("USERID", mUser.getUserId());
-					lFragment.setArguments(bundle);
+					bundle1.putString("USERID", mUser.getUserId());
+					lFragment.setArguments(bundle1);
 				}
 			} else {
-				Intent lIntent = new Intent(this, LoginIntercept.class);
-				lIntent.putExtra("FACEBOOK_PERMISSIONS",
+				lAddToBackStack = false;
+				lFragment = new LoginInterceptFragment();
+				bundle1.putStringArray("FACEBOOK_PERMISSIONS",
 						AppConfig.FACEBOOK_PERMISSIONS);
-				startActivityForResult(lIntent,
-						LOGIN_INTERCEPT_FOR_MY_BEERS_REQUEST_CODE);
+				lFragment.setArguments(bundle1);
+				lAddFragment = true;
+				lAddToBackStack = false;
 			}
 			break;
 		case 5:
@@ -291,28 +298,40 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 					"Clicked", 0);
 			mTracker.dispatch();
 			// If user id does not exist
+			Bundle bundle2 = new Bundle();
 			if (mUser.isLoggedIn()) {
 				lFragment = new CommunityBeersFragment();
 				{
-					Bundle bundle = new Bundle();
-					bundle.putString("OPTION",
+					bundle2.putString("OPTION",
 							AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS);
-					bundle.putString("USERID", mUser.getUserId());
-					lFragment.setArguments(bundle);
+					bundle2.putString("USERID", mUser.getUserId());
+					lFragment.setArguments(bundle2);
 				}
 			} else {
-				Intent lIntent = new Intent(this, LoginIntercept.class);
-				lIntent.putExtra("FACEBOOK_PERMISSIONS",
+				lAddToBackStack = false;
+				lFragment = new LoginInterceptFragment();
+				bundle2.putStringArray("FACEBOOK_PERMISSIONS",
 						AppConfig.FACEBOOK_PERMISSIONS);
-				startActivityForResult(lIntent,
-						LOGIN_INTERCEPT_FOR_FAVORITE_BEERS_REQUEST_CODE);
+				lFragment.setArguments(bundle2);
+				lAddFragment = true;
+				lAddToBackStack = false;
 			}
 			break;
 		default:
 			break;
 		}
 
+		// pass the fragment title
 		if (lFragment != null) {
+			if (lFragment.getArguments() != null) {
+				lFragment.getArguments().putString("FRAGMENT_TITLE",
+						mNavMenuTitles[position]);
+			} else {
+				Bundle bundle = new Bundle();
+				bundle.putString("FRAGMENT_TITLE", mNavMenuTitles[position]);
+				lFragment.setArguments(bundle);
+			}
+
 			android.support.v4.app.FragmentManager lFragmentManager = getSupportFragmentManager();
 			android.support.v4.app.FragmentTransaction lFragmentTransaction = lFragmentManager
 					.beginTransaction();
@@ -321,7 +340,9 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 			lFragmentTransaction
 					.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			// Add to backstack
-			// lFragmentTransaction.addToBackStack(lFragment.getClass().getName());
+			if (lAddToBackStack)
+				lFragmentTransaction.addToBackStack(lFragment.getClass()
+						.getName());
 			lFragmentTransaction.commit();
 
 			// update selected item and title, then close the drawer
