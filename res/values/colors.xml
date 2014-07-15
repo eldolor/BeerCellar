@@ -7,6 +7,7 @@
     <drawable name="black">#000000</drawable>
     <drawable name="burgundy">#5b0100</drawable>
 
+    <color name="black">#000000</color>
     <color name="burgundy">#5b0100</color>
     <color name="white">#ffffff</color>
     <color name="list_item_title">#000000</color>

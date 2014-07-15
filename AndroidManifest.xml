@@ -47,14 +47,21 @@
             android:name=".BeerEdit"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_new_beer"
+            android:parentActivityName="com.cm.beer.activity.Main"
             android:screenOrientation="portrait"
             android:theme="@style/BeerCellarTheme" >
+
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cm.beer.activity.Main" />
+
             <intent-filter>
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".BeerList"
+            android:name="com.cm.beer.activity.slidingmenu.BeerListFragment"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_beer_list"
             android:screenOrientation="portrait"
@@ -103,7 +110,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Search"
+            android:name="com.cm.beer.activity.slidingmenu.SearchFragment"
             android:label="@string/title_search_beer_list"
             android:screenOrientation="portrait"
             android:theme="@style/BeerCellarTheme" >
@@ -157,7 +164,7 @@
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
             </intent-filter>
         </activity>
-        <activity
+<!--         <activity
             android:name="com.cm.beer.activity.slidingmenu.CommunityBeersFragment"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_community"
@@ -177,7 +184,7 @@
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
             </intent-filter>
         </activity>
-        <activity
+  -->       <activity
             android:name=".CommunityCountries"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_community"
@@ -206,7 +213,7 @@
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
             </intent-filter>
         </activity>
-        <activity
+ <!--        <activity
             android:name="com.cm.beer.activity.slidingmenu.LoginInterceptFragment"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_login"
@@ -216,7 +223,7 @@
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
             </intent-filter>
         </activity>
-        <activity
+ -->        <activity
             android:name=".BeerView"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_view_beer"
@@ -297,7 +304,7 @@
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
             </intent-filter>
         </activity>
-        <activity
+<!--         <activity
             android:name="com.cm.beer.activity.slidingmenu.UserProfileFragment"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_community"
@@ -307,7 +314,7 @@
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
             </intent-filter>
         </activity>
-        <activity
+ -->        <activity
             android:name=".UploadUserPhoto"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_community"
@@ -382,7 +389,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <service
-            android:name=".NotificationService"
+            android:name="com.cm.beer.service.NotificationService"
             android:enabled="true" >
         </service>
     </application>

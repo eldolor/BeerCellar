@@ -444,7 +444,7 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 	private void initFooterView() {
 		LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
-		mFooterView = vi.inflate(R.layout.beer_list_footer, getListView(),
+		mFooterView = vi.inflate(R.layout.fragment_beer_list_footer, getListView(),
 				false);
 		mFooterView.setOnClickListener(new OnClickListener() {
 
@@ -663,16 +663,16 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			if (option.equals(AppConfig.COMMUNITY_BEERS_FROM_AROUND_THE_WORLD)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity()
-								.getWindow()
-								.setTitle(
-										getActivity()
-												.getString(
-														R.string.title_beers_from_around_the_world));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity()
+//								.getWindow()
+//								.setTitle(
+//										getActivity()
+//												.getString(
+//														R.string.title_beers_from_around_the_world));
+//					}
+//				});
 
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_BEERS_Q
@@ -681,13 +681,13 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			} else if (option.equals(AppConfig.COMMUNITY_TOP_RATED_BEERS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_top_rated_beers));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_top_rated_beers));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_TOP_RATED_BEERS_Q
 						+ AppConfig.COMMUNITY_R
@@ -695,13 +695,13 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			} else if (option.equals(AppConfig.COMMUNITY_WORST_BEERS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_worst_beers));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_worst_beers));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_WORST_BEERS_Q
 						+ AppConfig.COMMUNITY_R
@@ -709,13 +709,13 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			} else if (option.equals(AppConfig.COMMUNITY_BEERS_BY_COUNTRY)) {
 				mTracker.trackEvent("CommunityBeers", option, country, 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_beers_by_country));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_beers_by_country));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_BEERS_BY_COUNTRY_Q
 						+ AppConfig.COMMUNITY_GET_BEERS_COUNTRY_PARAM
@@ -725,13 +725,13 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			} else if (option.equals(AppConfig.COMMUNITY_BEERS_BY_STATE)) {
 				mTracker.trackEvent("CommunityBeers", option, region, 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_beers_by_state));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_beers_by_state));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_BEERS_BY_STATES_Q
 						+ AppConfig.COMMUNITY_GET_BEERS_COUNTRY_PARAM
@@ -743,24 +743,24 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			} else if (option.equals(AppConfig.COMMUNITY_SEARCH_BEERS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_search_results));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_search_results));
+//					}
+//				});
 				return getSearchUrl(extras);
 			} else if (option.equals(AppConfig.COMMUNITY_MY_BEER_REVIEWS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_my_beer_reviews));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_my_beer_reviews));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_MY_BEERS_Q
 						+ AppConfig.COMMUNITY_USERID_PARAM
@@ -771,16 +771,16 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 					.equals(AppConfig.COMMUNITY_MOST_HELPFUL_BEER_REVIEWS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity()
-								.getWindow()
-								.setTitle(
-										getActivity()
-												.getString(
-														R.string.title_most_helpful_beer_reviews));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity()
+//								.getWindow()
+//								.setTitle(
+//										getActivity()
+//												.getString(
+//														R.string.title_most_helpful_beer_reviews));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_MOST_HELPFUL_BEER_REVIEWS_Q
 						+ AppConfig.COMMUNITY_R
@@ -788,13 +788,13 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			} else if (option.equals(AppConfig.COMMUNITY_NEW_BEER_REVIEWS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_new_beer_reviews));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_new_beer_reviews));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
 						+ AppConfig.COMMUNITY_BEERIDS_PARAM
@@ -804,13 +804,13 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			} else if (option.equals(AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_favorite_beer_reviews));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_favorite_beer_reviews));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_FAVORITE_BEERS_Q
 						+ AppConfig.COMMUNITY_USERID_PARAM
@@ -820,13 +820,13 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 			} else if (option.equals(AppConfig.COMMUNITY_BEER_OF_THE_DAY)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity().getWindow().setTitle(
-								getActivity().getString(
-										R.string.title_beer_of_the_day));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity().getWindow().setTitle(
+//								getActivity().getString(
+//										R.string.title_beer_of_the_day));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
 						+ AppConfig.COMMUNITY_BEERIDS_PARAM
@@ -837,16 +837,16 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 					.equals(AppConfig.COMMUNITY_COMPARABLE_BEER_REVIEWS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity()
-								.getWindow()
-								.setTitle(
-										getActivity()
-												.getString(
-														R.string.title_comparable_beer_reviews));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity()
+//								.getWindow()
+//								.setTitle(
+//										getActivity()
+//												.getString(
+//														R.string.title_comparable_beer_reviews));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
 						+ AppConfig.COMMUNITY_BEERIDS_PARAM
@@ -857,16 +857,16 @@ public class CommunityBeersFragment extends android.support.v4.app.ListFragment 
 					.equals(AppConfig.COMMUNITY_RECOMMENDED_BEER_REVIEWS)) {
 				mTracker.trackEvent("CommunityBeers", option, "Clicked", 0);
 				mTracker.dispatch();
-				getActivity().runOnUiThread(new Runnable() {
-					public void run() {
-						getActivity()
-								.getWindow()
-								.setTitle(
-										getActivity()
-												.getString(
-														R.string.title_recommended_beer_reviews));
-					}
-				});
+//				getActivity().runOnUiThread(new Runnable() {
+//					public void run() {
+//						getActivity()
+//								.getWindow()
+//								.setTitle(
+//										getActivity()
+//												.getString(
+//														R.string.title_recommended_beer_reviews));
+//					}
+//				});
 				return AppConfig.COMMUNITY_GET_BEERS_URL
 						+ AppConfig.COMMUNITY_GET_NEW_BEER_REVIEWS_Q
 						+ AppConfig.COMMUNITY_BEERIDS_PARAM

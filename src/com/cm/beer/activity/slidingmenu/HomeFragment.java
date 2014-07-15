@@ -415,12 +415,12 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
 			@Override
 			public void onClick(View v) {
-				Main mainActivity = (Main) getActivity();
+				Main lMainActivity = (Main) getActivity();
 				if (pOption.equals(AppConfig.COMMUNITY_MY_BEER_REVIEWS)) {
-					mainActivity.displayView(4, true);
+					lMainActivity.displayView(4, true);
 				} else if (pOption
 						.equals(AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS)) {
-					mainActivity.displayView(5, true);
+					lMainActivity.displayView(5, true);
 				}
 			}
 		});
@@ -453,29 +453,29 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 	}
 
 	private void displayMore(String pOption) {
-		Main mainActivity = (Main) getActivity();
+		Main lMainActivity = (Main) getActivity();
 		if (pOption.equals(AppConfig.COMMUNITY_BEERS_FROM_AROUND_THE_WORLD)) {
 			mTracker.trackEvent("CommunityOptions",
 					"BeersFromAroundTheWorldLoadMore", "Clicked", 0);
 			mTracker.dispatch();
-			mainActivity.displayView(1, true);
+			lMainActivity.displayView(1, true);
 		} else if (pOption.equals(AppConfig.COMMUNITY_TOP_RATED_BEERS)) {
 			mTracker.trackEvent("CommunityOptions", "TopRatedBeersLoadMore",
 					"Clicked", 0);
 			mTracker.dispatch();
-			mainActivity.displayView(2, true);
+			lMainActivity.displayView(2, true);
 		} else if (pOption.equals(AppConfig.COMMUNITY_WORST_BEERS)) {
 			mTracker.trackEvent("CommunityOptions", "WorstBeersLoadMore",
 					"Clicked", 0);
 			mTracker.dispatch();
-			mainActivity.displayView(3, true);
+			lMainActivity.displayView(3, true);
 		} else if (pOption.equals(AppConfig.COMMUNITY_MY_BEER_REVIEWS)) {
 			mTracker.trackEvent("CommunityOptions", "MyBeerReviews", "Clicked",
 					0);
 			mTracker.dispatch();
-			mainActivity.displayView(4, true);
+			lMainActivity.displayView(4, true);
 		} else if (pOption.equals(AppConfig.COMMUNITY_FAVORITE_BEER_REVIEWS)) {
-			mainActivity.displayView(5, true);
+			lMainActivity.displayView(5, true);
 		} else if (pOption.equals(AppConfig.COMMUNITY_BEER_OF_THE_DAY)) {
 		} else if (pOption.equals(AppConfig.COMMUNITY_COMPARABLE_BEER_REVIEWS)) {
 		} else if (pOption.equals(AppConfig.COMMUNITY_RECOMMENDED_BEER_REVIEWS)) {

@@ -195,7 +195,7 @@ public class CommunityFollow extends ListActivity {
 
 	private void initFooterView() {
 		LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mFooterView = vi.inflate(R.layout.beer_list_footer, getListView(),
+		mFooterView = vi.inflate(R.layout.fragment_beer_list_footer, getListView(),
 				false);
 		mFooterView.setOnClickListener(new OnClickListener() {
 

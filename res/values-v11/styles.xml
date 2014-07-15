@@ -3,8 +3,8 @@
 
     <style name="BeerCellarTheme" parent="@style/Theme.AppCompat.Light">
         <item name="android:colorBackground">@color/white</item>
-        <item name="android:windowBackground">@drawable/gradient</item>
-<!--          <item name="android:actionBarStyle">@style/BeerCellarActionBar</item> -->
+        <!-- <item name="android:windowBackground">@drawable/gradient</item> -->
+        <item name="android:actionBarStyle">@style/BeerCellarActionBar</item>
         <item name="android:editTextStyle">@style/BeerCellarEditTextTheme</item>
         <item name="android:textColor">@color/text_default</item>
 
@@ -21,8 +21,7 @@
 
     <!-- general styles for the action bar -->
     <style name="BeerCellarActionBar" parent="@style/Widget.AppCompat.ActionBar">
-
-<!--          <item name="android:titleTextStyle">@style/BeerCellarActionBarTitleText</item> -->
+        <item name="android:titleTextStyle">@style/BeerCellarActionBarTitleTextStyle</item>
         <item name="android:background">@drawable/beer_yellow</item>
         <!--
              <item name="android:backgroundStacked">@drawable/actionbar_background</item>

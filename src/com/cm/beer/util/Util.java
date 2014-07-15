@@ -65,11 +65,11 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 
-import com.cm.beer.activity.NotificationService;
 import com.cm.beer.activity.R;
 import com.cm.beer.config.AppConfig;
 import com.cm.beer.db.Note;
 import com.cm.beer.db.NotesDbAdapter;
+import com.cm.beer.service.NotificationService;
 import com.cm.beer.transfer.Beer;
 import com.facebook.android.Facebook;
 import com.google.ads.Ad;

@@ -4,13 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <!-- overlay a translucent dark to transparent gradient on top of the image, to modify the image to make it a little bit darker at the top -->
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/gradient" />
-
     <ScrollView
         android:id="@+id/ScrollView01"
         android:layout_width="match_parent"

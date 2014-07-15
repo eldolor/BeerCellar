@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="@string/search_label" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/search"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="@string/cancel_label" />
+
+    <ProgressBar
+        android:id="@+id/spinner"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/cancel"
+        android:indeterminate="true"
+        android:padding="10dp"
+        android:visibility="invisible" >
+    </ProgressBar>
+
+    <ScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/search"
+        android:layout_marginTop="20dp" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/rating_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/beer_edit_interrupt_rating_dialog_title"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/rating_label"
+                android:background="@drawable/divider" />
+
+            <RatingBar
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="1.0" />
+
+            <TextView
+                android:id="@+id/date_created_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rating"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/date_updated_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/date_created_label"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/beer_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rating"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/community_beer_beer_label"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/beer_label"
+                android:background="@drawable/divider" />
+
+            <AutoCompleteTextView
+                android:id="@+id/beer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider2"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusableInTouchMode="true"
+                android:gravity="left"
+                android:hint="@string/beer_edit_beer_hint"
+                android:lines="1"
+                android:nextFocusDown="@+id/alcohol"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@drawable/black" />
+
+            <TextView
+                android:id="@+id/share_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/beer"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/beer_edit_share_label"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/dividerShare"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/share_label"
+                android:background="@drawable/divider"
+                android:visibility="gone" />
+
+            <CheckBox
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dividerShare"
+                android:layout_marginLeft="5dp"
+                android:checked="false"
+                android:nextFocusDown="@+id/alcohol"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/alcohol_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/share"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/community_beer_alcohol_label"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/alcohol_label"
+                android:background="@drawable/divider"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/alcohol"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider3"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusableInTouchMode="true"
+                android:gravity="left"
+                android:hint="@string/beer_edit_alcohol_hint"
+                android:inputType="numberDecimal"
+                android:nextFocusDown="@+id/price"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@drawable/black"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/price_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/alcohol"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/community_beer_price_label"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/price_label"
+                android:background="@drawable/divider"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/price"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider4"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusableInTouchMode="true"
+                android:gravity="left"
+                android:hint="@string/beer_edit_price_hint"
+                android:inputType="numberDecimal"
+                android:nextFocusDown="@+id/style"
+                android:singleLine="true"
+                android:textColor="@drawable/black"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/style_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/price"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/community_beer_style_label"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/style_label"
+                android:background="@drawable/divider" />
+
+            <AutoCompleteTextView
+                android:id="@+id/style"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider5"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusableInTouchMode="true"
+                android:gravity="left"
+                android:hint="@string/beer_edit_style_hint"
+                android:nextFocusDown="@+id/brewery"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@drawable/black" />
+
+            <TextView
+                android:id="@+id/brewery_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/style"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/community_beer_brewery_label"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider6"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/brewery_label"
+                android:background="@drawable/divider" />
+
+            <EditText
+                android:id="@+id/brewery"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider6"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusableInTouchMode="true"
+                android:gravity="left"
+                android:hint="@string/beer_edit_brewery_hint"
+                android:nextFocusDown="@+id/state"
+                android:singleLine="true"
+                android:textColor="@drawable/black" />
+
+            <TextView
+                android:id="@+id/state_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/brewery"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/community_beer_state_label"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/divider7"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/state_label"
+                android:background="@drawable/divider"
+                android:visibility="gone" />
+
+            <AutoCompleteTextView
+                android:id="@+id/state"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider7"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusableInTouchMode="true"
+                android:gravity="left"
+                android:hint="@string/beer_edit_state_hint"
+                android:nextFocusDown="@+id/country"
+                android:singleLine="true"
+                android:textColor="@drawable/black"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/country_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/state"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="30dp"
+                android:gravity="left"
+                android:text="@string/community_beer_country_label"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider8"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/country_label"
+                android:background="@drawable/divider" />
+
+            <AutoCompleteTextView
+                android:id="@+id/country"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider8"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:focusableInTouchMode="true"
+                android:gravity="left"
+                android:hint="@string/beer_edit_country_hint"
+                android:singleLine="true"
+                android:textColor="@drawable/black" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

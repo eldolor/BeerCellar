@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -24,21 +25,28 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.cm.beer.activity.slidingmenu.BeerListFragment;
 import com.cm.beer.activity.slidingmenu.CommunityBeersFragment;
 import com.cm.beer.activity.slidingmenu.HomeFragment;
 import com.cm.beer.activity.slidingmenu.LoginInterceptFragment;
 import com.cm.beer.activity.slidingmenu.NavDrawerItem;
 import com.cm.beer.activity.slidingmenu.NavDrawerListAdapter;
+import com.cm.beer.activity.slidingmenu.SearchFragment;
 import com.cm.beer.config.AppConfig;
+import com.cm.beer.service.AlarmType;
+import com.cm.beer.service.NotificationService;
 import com.cm.beer.util.Logger;
 import com.cm.beer.util.User;
 import com.cm.beer.util.Util;
@@ -74,6 +82,9 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 	protected static final int LOGIN_INTERCEPT_FOR_FAVORITE_BEERS_REQUEST_CODE = 3;
 	protected static final int LOGIN_INTERCEPT_FOR_MY_PROFILE_REQUEST_CODE = 4;
 
+	private Bundle mExtras;
+	private boolean mIsTriggeredFromNotification;
+
 	public void onEulaAgreedTo() {
 		mTracker.trackEvent("Main", "AgreedToEULA", "Y", 0);
 		mTracker.dispatch();
@@ -97,6 +108,10 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 		mUser = new User(this);
 		mPreferences = getSharedPreferences(getString(R.string.app_name),
 				Activity.MODE_PRIVATE);
+		mExtras = getIntent().getExtras();
+
+		mIsTriggeredFromNotification = (mExtras != null && (mExtras
+				.getInt("NOTIFICATIONID") != 0)) ? true : false;
 
 		/** Start the Notification Service **/
 		Util.evaluateNotificationService(Main.this);
@@ -116,6 +131,93 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 		// Normal onCreate
 		setupActivity();
 		mAlreadyAgreedToEula = Eula.show(this);
+
+		scheduleNewBeerReviewAlarm(AppConfig.NOTIFICATION_CHECK_INTERVAL);
+		scheduleNewBeerReviewFromFollowingAlarm(AppConfig.NOTIFICATION_CHECK_INTERVAL);
+		scheduleBeerOfTheDayAlarm(AppConfig.NOTIFICATION_CHECK_INTERVAL);
+	}
+
+	private void scheduleNewBeerReviewFromFollowingAlarm(
+			long notificationCheckInterval) {
+
+		AlarmManager alarmManager = (AlarmManager) getApplicationContext()
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(getApplicationContext(),
+				NotificationService.class);
+		intent.putExtra("ALARM_TYPE",
+				AlarmType.NEW_BEER_REVIEW_FROM_FOLLOWING_ACTION.getType());
+		PendingIntent alarmIntent = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, intent, 0);
+		long timeToRefresh = SystemClock.elapsedRealtime()
+				+ notificationCheckInterval;
+		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+				timeToRefresh, notificationCheckInterval, alarmIntent);
+	}
+
+	private void scheduleBeerOfTheDayAlarm(long notificationCheckInterval) {
+		AlarmManager alarmManager = (AlarmManager) getApplicationContext()
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(getApplicationContext(),
+				NotificationService.class);
+		intent.putExtra("ALARM_TYPE",
+				AlarmType.BEER_OF_THE_DAY_ACTION.getType());
+		PendingIntent alarmIntent = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, intent, 0);
+		long timeToRefresh = SystemClock.elapsedRealtime()
+				+ notificationCheckInterval;
+		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+				timeToRefresh, notificationCheckInterval, alarmIntent);
+	}
+
+	private void scheduleNewBeerReviewAlarm(long notificationCheckInterval) {
+		AlarmManager alarmManager = (AlarmManager) getApplicationContext()
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(getApplicationContext(),
+				NotificationService.class);
+		intent.putExtra("ALARM_TYPE",
+				AlarmType.NEW_BEER_REVIEW_ACTION.getType());
+		PendingIntent alarmIntent = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, intent, 0);
+		long timeToRefresh = SystemClock.elapsedRealtime()
+				+ notificationCheckInterval;
+		alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+				timeToRefresh, notificationCheckInterval, alarmIntent);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_activity_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_search:
+			openSearch();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void openSearch() {
+		android.support.v4.app.Fragment lFragment = new SearchFragment();
+
+		android.support.v4.app.FragmentManager lFragmentManager = this
+				.getSupportFragmentManager();
+		android.support.v4.app.FragmentTransaction lFragmentTransaction = lFragmentManager
+				.beginTransaction();
+
+		lFragmentTransaction.replace(R.id.frame_container, lFragment);
+		lFragmentTransaction
+				.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		// Add to backstack
+		// lFragmentTransaction.addToBackStack(lFragment.getClass().getName());
+		lFragmentTransaction.commit();
 
 	}
 
@@ -158,55 +260,6 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 	protected void onStart() {
 		super.onStart();
 		setDisplayView();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// toggle nav drawer on selecting action bar app icon/title
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-		// Handle action bar actions click
-		switch (item.getItemId()) {
-		// case com.mavin.lockscreen.R.id.action_send_logs:
-		// EasyTracker.getInstance(this).send(
-		// MapBuilder.createEvent(
-		// "home_activity",
-		// "send_logs_menu_item_selected",
-		// RegisteredDevice.getInstance(
-		// getApplicationContext()).getUserId(), null)
-		// .build());
-		// MavinUtils.collectAndSendLogs(HomeActivity.this);
-		// return true;
-		// case com.mavin.lockscreen.R.id.action_send_ad_cache:
-		// EasyTracker.getInstance(this).send(
-		// MapBuilder.createEvent(
-		// "home_activity",
-		// "send_ad_cache_menu_item_selected",
-		// RegisteredDevice.getInstance(
-		// getApplicationContext()).getUserId(), null)
-		// .build());
-		// MavinUtils.sendAdCache(HomeActivity.this);
-		// return true;
-		// case com.mavin.lockscreen.R.id.action_refresh:
-		// EasyTracker.getInstance(this).send(
-		// MapBuilder.createEvent(
-		// "home_activity",
-		// "refresh_ads_menu_item_selected",
-		// RegisteredDevice.getInstance(
-		// getApplicationContext()).getUserId(), null)
-		// .build());
-		// // PSUtils.triggerCampaignDownload(HomeActivity.this);
-		// Toast.makeText(HomeActivity.this, R.string.contacting_server,
-		// Toast.LENGTH_LONG).show();
-		// return true;
-		case android.R.id.home:
-			// do your stuff here, eg: finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-
 	}
 
 	/**
@@ -276,13 +329,13 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 			// If user id does not exist
 			Bundle bundle1 = new Bundle();
 			if (mUser.isLoggedIn()) {
-				lFragment = new CommunityBeersFragment();
-				{
-					bundle1.putString("OPTION",
-							AppConfig.COMMUNITY_MY_BEER_REVIEWS);
-					bundle1.putString("USERID", mUser.getUserId());
-					lFragment.setArguments(bundle1);
-				}
+				lFragment = new BeerListFragment();
+//				{
+//					bundle1.putString("OPTION",
+//							AppConfig.COMMUNITY_MY_BEER_REVIEWS);
+//					bundle1.putString("USERID", mUser.getUserId());
+//					lFragment.setArguments(bundle1);
+//				}
 			} else {
 				lAddToBackStack = false;
 				lFragment = new LoginInterceptFragment();
@@ -396,7 +449,25 @@ public class Main extends android.support.v7.app.ActionBarActivity implements
 	}
 
 	private void setDisplayView() {
-		displayView(0, false);
+		if (mIsTriggeredFromNotification) {
+			android.support.v4.app.Fragment lFragment = new CommunityBeersFragment();
+			//carry forward the arguments
+			lFragment.setArguments(mExtras);
+
+			android.support.v4.app.FragmentManager lFragmentManager = getSupportFragmentManager();
+			android.support.v4.app.FragmentTransaction lFragmentTransaction = lFragmentManager
+					.beginTransaction();
+
+			lFragmentTransaction.replace(R.id.frame_container, lFragment);
+			lFragmentTransaction
+					.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			// Add to backstack
+			lFragmentTransaction.addToBackStack(lFragment.getClass().getName());
+			lFragmentTransaction.commit();
+
+		} else {
+			displayView(0, false);
+		}
 	}
 
 	private void setupNavDrawer() {

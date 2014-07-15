@@ -113,7 +113,7 @@ public class SearchResults extends ListActivity {
 				Activity.MODE_PRIVATE);
 
 		showDialog(AppConfig.DIALOG_LOADING_ID);
-		setContentView(R.layout.beer_list);
+		setContentView(R.layout.fragment_beer_list);
 
 		mDbHelper = new NotesDbAdapter(SearchResults.this);
 		mDbHelper.open();
@@ -136,7 +136,7 @@ public class SearchResults extends ListActivity {
 	 */
 	private void initFooterView() {
 		LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mFooterView = vi.inflate(R.layout.beer_list_footer, getListView(),
+		mFooterView = vi.inflate(R.layout.fragment_beer_list_footer, getListView(),
 				false);
 		mFooterView.setOnClickListener(new OnClickListener() {
 
@@ -605,7 +605,7 @@ public class SearchResults extends ListActivity {
 	private class BeerListResourceCursorAdapter extends ResourceCursorAdapter {
 
 		public BeerListResourceCursorAdapter(Context context, Cursor cur) {
-			super(context, R.layout.beer_list_row, cur);
+			super(context, R.layout.fragment_beer_list_row, cur);
 		}
 
 		/*
@@ -618,7 +618,7 @@ public class SearchResults extends ListActivity {
 		@Override
 		public View newView(Context context, Cursor cur, ViewGroup parent) {
 			LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			return li.inflate(R.layout.beer_list_row, parent, false);
+			return li.inflate(R.layout.fragment_beer_list_row, parent, false);
 		}
 
 		/*

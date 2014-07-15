@@ -3,15 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <!-- overlay a translucent dark to transparent gradient on top of the image, to modify the image to make it a little bit darker at the top -->
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/gradient" />
-
     <TableLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/headerTable"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -51,14 +43,14 @@
                 android:text="@string/community_landing_page_message" />
         </TableRow>
 
-        <TableRow>
+<!--         <TableRow>
 
             <TextView
                 android:id="@+id/txt"
                 android:layout_marginTop="5dp"
                 android:gravity="center" />
         </TableRow>
-    </TableLayout>
+ -->    </TableLayout>
 
     <TextView
         android:id="@+id/txt"
@@ -75,12 +67,10 @@
         android:layout_below="@+id/txt" >
 
         <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
             <TableLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:shrinkColumns="0"

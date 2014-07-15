@@ -961,7 +961,7 @@ public class ShareWithCommunity extends Activity
 				// The PendingIntent to launch our activity if the user selects
 				// this
 				// notification
-				Intent intent = new Intent(mMainActivity, CommunityBeersFragment.class);
+				Intent intent = new Intent(mMainActivity, Main.class);
 				intent.putExtra("OPTION",
 						AppConfig.COMMUNITY_COMPARABLE_BEER_REVIEWS);
 				intent.putExtra("BEERIDS", _mComparablesJsonArray.toString());
